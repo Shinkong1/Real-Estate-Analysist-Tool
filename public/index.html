@@ -1,0 +1,928 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#121923"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="UW Desk">
+<link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><link rel="icon" href="/icons/icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.UW_API='/api/extract';</script>
+</head><body>
+<title>Deal Underwriting Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --surface-2:#F4F6F8; --ink:#131A24; --ink-2:#4A5566; --ink-3:#5E6979;
+  --line:#D6DCE4; --line-2:#E6EAEF; --on-accent:#FFFFFF; --accent:#8E600F; --accent-soft:#F4E8CF; --accent-ink:#7A520C;
+  --nav:#121923; --nav-2:#1B2431; --nav-ink:#D3DAE3; --nav-ink-2:#7E8A9B;
+  --good:#1B7648; --good-bg:#E2F2E9; --warn:#955B00; --warn-bg:#FAEFD9; --bad:#AE2F2E; --bad-bg:#F8E3E2;
+  --focus:#2B67D1; --bar:#3E5670; --bar-neg:#C0504D;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1219; --surface:#151C26; --surface-2:#1A2230; --ink:#E5E9EF; --ink-2:#A3AEBD; --ink-3:#8793A7;
+    --line:#2A3543; --line-2:#222C39; --on-accent:#1A1206; --accent:#D8A64A; --accent-soft:#3A2F1A; --accent-ink:#EAC37C;
+    --nav:#090D13; --nav-2:#131A24; --nav-ink:#D3DAE3; --nav-ink-2:#6F7B8C;
+    --good:#56C58E; --good-bg:#16301F; --warn:#E3A541; --warn-bg:#342914; --bad:#EE7470; --bad-bg:#3A1A1A;
+    --focus:#6C9CF0; --bar:#7F9BB8; --bar-neg:#E0716D;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1219; --surface:#151C26; --surface-2:#1A2230; --ink:#E5E9EF; --ink-2:#A3AEBD; --ink-3:#8793A7;
+  --line:#2A3543; --line-2:#222C39; --on-accent:#1A1206; --accent:#D8A64A; --accent-soft:#3A2F1A; --accent-ink:#EAC37C;
+  --nav:#090D13; --nav-2:#131A24; --nav-ink:#D3DAE3; --nav-ink-2:#6F7B8C;
+  --good:#56C58E; --good-bg:#16301F; --warn:#E3A541; --warn-bg:#342914; --bad:#EE7470; --bad-bg:#3A1A1A;
+  --focus:#6C9CF0; --bar:#7F9BB8; --bar-neg:#E0716D;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:14.5px/1.5 "Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+h1,h2,h3,.disp{font-family:"Archivo","Public Sans",system-ui,sans-serif;font-stretch:108%;text-wrap:balance;margin:0}
+a{color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100%}
+.nav{background:var(--nav);color:var(--nav-ink);position:sticky;top:0;height:100vh;overflow-y:auto;padding:22px 12px 40px}
+.brand{padding:0 10px 18px;border-bottom:1px solid var(--nav-2);margin-bottom:10px}
+.brand .mk{font-family:"Archivo",sans-serif;font-stretch:125%;font-weight:800;font-size:17px;letter-spacing:.02em;color:#fff}
+.brand .mk span{color:var(--accent)}
+.brand small{display:block;color:var(--nav-ink-2);font-size:12px;margin-top:3px}
+.ng{margin-top:14px}
+.ng h4{font:600 10.5px/1 "Archivo",sans-serif;font-stretch:115%;letter-spacing:.14em;text-transform:uppercase;color:var(--nav-ink-2);margin:0 10px 6px}
+.nb{display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;background:none;border:0;color:var(--nav-ink);font:500 13.5px/1.3 "Public Sans",sans-serif;padding:7px 10px;border-radius:6px;cursor:pointer}
+.nb .no{font:600 10.5px "Archivo",sans-serif;color:var(--nav-ink-2);width:16px;flex:none}
+.nb:hover{background:var(--nav-2)}
+.nb[aria-current="true"]{background:var(--nav-2);color:#fff;box-shadow:inset 2px 0 0 var(--accent)}
+.nb[aria-current="true"] .no{color:var(--accent)}
+main{min-width:0;padding-inline:clamp(16px,3vw,36px);padding-block:22px 60px}
+.mnav{display:none;margin-bottom:16px}
+.mnav label{display:block;font:600 10.5px "Archivo",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.mnav select{width:100%;font:600 15px "Public Sans",sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+@media (max-width:900px){.app{grid-template-columns:1fr}.nav{display:none}.mnav{display:block}}
+.th{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.th h1{font-size:clamp(22px,2.6vw,30px);font-weight:750;letter-spacing:-.01em}
+.th p{margin:6px 0 0;color:var(--ink-2);max-width:68ch}
+.eyebrow{font:600 10.5px/1.2 "Archivo",sans-serif;font-stretch:115%;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:0 0 8px}
+.th .eyebrow{color:var(--accent-ink);margin-bottom:6px}
+.btn{font:600 13px "Public Sans",sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 12px;border-radius:7px;cursor:pointer}
+.btn:hover{border-color:var(--ink-3)}
+.btn.sm{padding:5px 10px;font-size:12.5px;margin-top:8px}
+.tool-grid{display:grid;grid-template-columns:minmax(280px,370px) minmax(0,1fr);gap:24px;align-items:start}
+.tool-grid.wide{grid-template-columns:minmax(0,1fr)}
+.tool-grid.wide .inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px;align-items:start}
+.tool-grid.wide .inputs .full{grid-column:1/-1}
+@media (min-width:1101px){.tool-grid:not(.wide) .inputs{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow-y:auto;padding-right:4px}}
+@media (max-width:1100px){.tool-grid{grid-template-columns:minmax(0,1fr)}}
+.inputs{display:flex;flex-direction:column;gap:12px;margin:0}
+.g{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 14px 14px;margin:0;min-width:0}
+.g legend,.g summary{font:650 12px "Archivo",sans-serif;font-stretch:112%;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding:0 4px}
+.g legend{float:left;width:100%;padding:0 0 8px}
+.g legend+*{clear:both}
+details.g summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.g summary::-webkit-details-marker{display:none}
+details.g summary::after{content:"+";font-size:16px;color:var(--ink-3)}
+details.g[open] summary::after{content:"–"}
+details.g[open] summary{margin-bottom:10px}
+.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 10px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f.w{grid-column:1/-1}
+.f .l{font-size:12px;font-weight:600;color:var(--ink-2);line-height:1.25}
+.in{display:flex;align-items:center;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);min-height:36px;padding:0 9px;gap:4px}
+.in:focus-within{border-color:var(--focus);box-shadow:0 0 0 2px color-mix(in srgb,var(--focus) 22%,transparent)}
+.in i{font-style:normal;color:var(--ink-3);font-size:12.5px;white-space:nowrap}
+.in input,.in select,.in textarea{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:500 14.5px "Public Sans",sans-serif;padding:7px 0;outline:none;font-variant-numeric:tabular-nums;width:100%}
+.in textarea{resize:vertical;min-height:58px;font-size:13.5px;line-height:1.4}
+.in select{cursor:pointer}
+.f small{font-size:11.5px;color:var(--ink-3);line-height:1.3}
+.f small.sg{color:var(--accent-ink)}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--ink);cursor:pointer;line-height:1.35}
+.chk input{margin-top:2px;accent-color:var(--accent);width:15px;height:15px;flex:none}
+.rt{border-collapse:collapse;width:100%;font-size:13px}
+.rt th{font:600 10.5px "Archivo",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:4px 4px 6px;white-space:nowrap}
+.rt td{padding:3px 3px}
+.rt input,.rt select{width:100%;min-width:64px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);color:var(--ink);font:500 13.5px "Public Sans",sans-serif;padding:6px 7px;font-variant-numeric:tabular-nums}
+.rt input.wtxt{min-width:130px}
+.x{border:0;background:none;color:var(--ink-3);font-size:18px;cursor:pointer;padding:2px 6px;border-radius:5px}
+.x:hover{color:var(--bad);background:var(--bad-bg)}
+.res{display:flex;flex-direction:column;gap:16px;min-width:0}
+.out{display:flex;flex-direction:column;gap:16px;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid var(--line-2);font-size:13.5px}
+.kv:last-child{border-bottom:0}
+.kv span{color:var(--ink-2)}
+.kv b{font-weight:650;text-align:right}
+.good{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)} .mut{color:var(--ink-3)}
+.verdict{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:10px;border:1px solid var(--line)}
+.verdict.good{background:var(--good-bg);border-color:color-mix(in srgb,var(--good) 35%,transparent)}
+.verdict.warn{background:var(--warn-bg);border-color:color-mix(in srgb,var(--warn) 35%,transparent)}
+.verdict.bad{background:var(--bad-bg);border-color:color-mix(in srgb,var(--bad) 35%,transparent)}
+.verdict h2{font-size:18px;font-weight:700;color:var(--ink)}
+.verdict p{margin:4px 0 0;color:var(--ink-2);font-size:13.5px}
+.pill{display:inline-block;font:700 11px/1 "Archivo",sans-serif;font-stretch:118%;letter-spacing:.1em;padding:6px 9px;border-radius:999px;white-space:nowrap;flex:none;margin-top:2px}
+.pill.good{background:var(--good);color:var(--surface)} .pill.warn{background:var(--warn);color:var(--surface)} .pill.bad{background:var(--bad);color:var(--surface)}
+.pill.mut{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.tag{display:inline-block;font:650 10px/1 "Archivo",sans-serif;letter-spacing:.08em;padding:4px 6px;border-radius:4px;text-transform:uppercase;white-space:nowrap}
+.tag.good{background:var(--good-bg);color:var(--good)} .tag.warn{background:var(--warn-bg);color:var(--warn)} .tag.bad{background:var(--bad-bg);color:var(--bad)} .tag.mut{background:var(--surface-2);color:var(--ink-2)}
+.tw{overflow-x:auto;min-width:0}
+.t{width:100%;border-collapse:collapse;font-size:13px}
+.t th{font:600 10.5px "Archivo",sans-serif;font-stretch:110%;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.t th:first-child,.t td:first-child{text-align:left}
+.t td{padding:6px 8px;border-bottom:1px solid var(--line-2);text-align:right;white-space:nowrap}
+.t.txt td,.t.txt th{text-align:left;white-space:normal;vertical-align:top}
+.t tr.tot td{font-weight:700;border-top:1px solid var(--line);background:var(--surface-2)}
+.t tr.hl td{background:var(--accent-soft)}
+.t tr.sub td{color:var(--ink-2)}
+.big{font-family:"Archivo",sans-serif;font-stretch:105%;font-weight:750;font-size:clamp(30px,4vw,40px);letter-spacing:-.01em;line-height:1.05}
+.offer{text-align:center;padding:18px 18px 12px}
+.offer .sub{color:var(--ink-3);font-size:12.5px;margin-top:4px}
+.rng{position:relative;margin:16px 0 4px}
+input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:pointer}
+.ticks{position:relative;height:16px;font-size:11px;color:var(--ink-3)}
+.ticks span{position:absolute;transform:translateX(-50%)}
+.ticks span:first-child{transform:none;left:0}.ticks span:last-child{transform:none;right:0}
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:var(--ink-3);font:11px "Public Sans",sans-serif}
+.chart .gl{stroke:var(--line-2)} .chart .zl{stroke:var(--ink-3)}
+.note{font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.note ul,.card ul{margin:6px 0 0;padding-left:18px}
+.card li{margin:3px 0;font-size:13.5px}
+.flags{display:flex;flex-direction:column;gap:8px}
+.flag{display:flex;gap:10px;align-items:flex-start;font-size:13.5px}
+.flag .tag{margin-top:2px;min-width:52px;text-align:center}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat .v{font-family:"Archivo",sans-serif;font-weight:700;font-size:24px;line-height:1.1}
+.stat .k{font-size:12px;color:var(--ink-2)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px 18px}
+.meter{height:8px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line-2);overflow:hidden}
+.meter>i{display:block;height:100%;background:var(--accent)}
+.cl{display:flex;flex-direction:column}
+.cli{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:10px 0;border-bottom:1px solid var(--line-2)}
+.cli:last-child{border-bottom:0}
+.cli input{accent-color:var(--accent);width:16px;height:16px;margin-top:2px}
+.cli .nm{font-weight:650;font-size:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.cli .dt{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px 16px;margin-top:5px;font-size:12.5px;color:var(--ink-2)}
+.cli .dt b{display:block;font:600 10px "Archivo",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.cli.done .nm span.t1{text-decoration:line-through;color:var(--ink-3)}
+.src{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.src a{font-size:12px;padding:2px 7px;border:1px solid var(--line);border-radius:5px;text-decoration:none;background:var(--surface-2)}
+.src a:hover{border-color:var(--accent)}
+.opt{display:flex;flex-direction:column;gap:10px}
+.opt .hd{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.opt h3{font-size:16px;font-weight:700}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.empty{padding:28px;text-align:center;color:var(--ink-3);border:1px dashed var(--line);border-radius:10px}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);max-width:80ch}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn:disabled{opacity:.55;cursor:progress}
+.nb.imp{background:var(--accent);color:var(--on-accent);font-weight:650;margin:4px 0 6px}
+.nb.imp .no{color:var(--on-accent);font-size:15px}
+.nb.imp:hover{filter:brightness(1.08);background:var(--accent)}
+.nb.imp[aria-current="true"]{background:var(--accent);box-shadow:0 0 0 2px var(--nav),0 0 0 3px var(--accent)}
+.active-deal{margin:4px 2px 2px;padding:9px 10px;border:1px solid var(--nav-2);border-radius:7px;display:flex;flex-direction:column;gap:3px}
+.active-deal b{color:#fff;font-size:13px;font-weight:600;line-height:1.3}
+.active-deal .eyebrow{color:var(--nav-ink-2)}
+.mnav .row{display:flex;gap:8px;align-items:stretch}
+.mnav .row select{flex:1;min-width:0}
+.rt.rv td:first-child{font-size:13px;color:var(--ink-2);white-space:nowrap;padding-right:10px}
+.rt.rv input,.rt.rv select{min-width:120px}
+.qbar{background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:12px 14px;margin-bottom:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 0 0 3px var(--accent-soft)}
+.qbar label{font:700 12px "Archivo",sans-serif;font-stretch:112%;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink)}
+.qrow{display:flex;gap:8px}
+.qrow .in{flex:1;min-width:0;min-height:44px}
+.qrow .in input{font-size:16px}
+.qrow .btn{padding:0 18px;font-size:15px;min-height:44px}
+.qbar small{font-size:12px;color:var(--ink-3)}
+@media (max-width:480px){.fg{grid-template-columns:minmax(0,1fr)}.f.w{grid-column:auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="app">
+  <nav class="nav" aria-label="Tools">
+    <div class="brand"><div class="mk">UNDERWRITING<span>/</span>DESK</div><small>Paste a listing, get the numbers</small></div>
+    <div id="navList"></div>
+  </nav>
+  <main>
+    <div class="mnav"><label for="toolSel">Tool</label><div class="row"><select id="toolSel"></select><button type="button" class="btn primary" id="mImport">+ Import</button></div></div>
+    <form class="qbar" id="qbar" autocomplete="off" novalidate><label for="qUrl">Analyze a listing</label><div class="qrow"><span class="in"><input id="qUrl" type="url" inputmode="url" placeholder="Paste a listing link — LoopNet, Crexi, Zillow, Redfin…"></span><button type="submit" class="btn primary">Analyze</button></div><small id="qHint">Paste the link, tap Analyze, then add a screenshot of the listing if prices or rents come back missing.</small></form>
+    <div id="panels"></div>
+    <footer class="foot">Screening estimates only. Figures shown on load are example inputs, not market data; replace them with your deal and verify tax, legal and lending items with your CPA, attorney and lender. Your entries are saved in this browser only.</footer>
+  </main>
+</div>
+<script>
+
+/* ---------- core ---------- */
+const TOOLS=[]; const REPC={}; let CUR='';
+const S=(()=>{try{const s=JSON.parse(localStorage.getItem('uwdesk.v1'));if(s&&s.v)return s;}catch(e){}return {v:{},r:{},c:{}};})();
+let saveT;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('uwdesk.v1',JSON.stringify(S));}catch(e){}},250);}
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function sv(k,d){const t=S.v[CUR];return t&&k in t?t[k]:d;}
+const fin=x=>typeof x==='number'&&isFinite(x);
+const fm=(n,d=0)=>fin(n)?(n<0?'−$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const fa=(n)=>fin(n)?(n<0?'('+fm(-n)+')':fm(n)):'—';
+const fk=n=>{if(!fin(n))return '—';const a=Math.abs(n),s=n<0?'−$':'$';if(a>=1e6)return s+(a/1e6).toFixed(a>=1e7?1:2)+'M';if(a>=1e4)return s+Math.round(a/1e3)+'K';if(a>=1e3)return s+(a/1e3).toFixed(1)+'K';return s+Math.round(a);};
+const pc=(x,d=2)=>fin(x)?(x*100).toFixed(d)+'%':'—';
+const nx=(x,d=2)=>fin(x)?x.toFixed(d)+'x':'—';
+const nm=(x,d=0)=>fin(x)?x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const sum=a=>a.reduce((s,x)=>s+(fin(x)?x:0),0);
+const median=a=>{const b=a.filter(fin).sort((x,y)=>x-y);if(!b.length)return NaN;const m=b.length>>1;return b.length%2?b[m]:(b[m-1]+b[m])/2;};
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const toN=v=>{const s=String(v==null?'':v).replace(/[$,%\s]/g,'');if(s==='')return NaN;const x=parseFloat(s);return fin(x)?x:NaN;};
+function pmtM(rate,years,pv){if(!pv||!years)return 0;const r=rate/12,n=years*12;return r===0?pv/n:pv*r/(1-Math.pow(1+r,-n));}
+function balAfter(pv,rate,years,months){if(!pv)return 0;const r=rate/12,p=pmtM(rate,years,pv);if(months>=years*12)return 0;return r===0?pv-p*months:pv*Math.pow(1+r,months)-p*(Math.pow(1+r,months)-1)/r;}
+function irr(cfs){const npv=r=>cfs.reduce((a,c,i)=>a+c/Math.pow(1+r,i),0);let lo=-0.95,hi=5;let fl=npv(lo),fh=npv(hi);if(!fin(fl)||!fin(fh)||fl*fh>0)return NaN;for(let i=0;i<120;i++){const m=(lo+hi)/2,fmv=npv(m);if(fl*fmv<=0){hi=m;}else{lo=m;fl=fmv;}}return (lo+hi)/2;}
+function lv(x,good,ok,higher=true){if(!fin(x))return 'mut';return higher?(x>=good?'good':x>=ok?'warn':'bad'):(x<=good?'good':x<=ok?'warn':'bad');}
+const addDays=(d,n)=>{const x=new Date(d.getTime());x.setDate(x.getDate()+n);return x;};
+const fdate=d=>d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+/* ---------- input builders (use CUR) ---------- */
+function N(k,label,d,o={}){const val=sv(k,d);return `<label class="f${o.w?' w':''}"><span class="l">${label}</span><span class="in">${o.pre?`<i>${o.pre}</i>`:''}<input id="${CUR}-${k}" data-k="${k}" inputmode="decimal" autocomplete="off" value="${esc(val)}"${o.ph!=null?` placeholder="${esc(o.ph)}"`:''}>${o.suf?`<i>${o.suf}</i>`:''}</span>${o.hint!=null?`<small id="${CUR}-${k}-h"${o.sg?' class="sg"':''}>${o.hint}</small>`:''}</label>`;}
+function T(k,label,d,o={}){const val=sv(k,d);return `<label class="f${o.w!==false?' w':''}"><span class="l">${label}</span><span class="in"><input id="${CUR}-${k}" data-k="${k}" autocomplete="off" value="${esc(val)}"${o.ph?` placeholder="${esc(o.ph)}"`:''}></span>${o.hint?`<small>${o.hint}</small>`:''}</label>`;}
+function A(k,label,d,o={}){const val=sv(k,d);return `<label class="f w"><span class="l">${label}</span><span class="in"><textarea id="${CUR}-${k}" data-k="${k}" rows="${o.rows||2}"${o.ph?` placeholder="${esc(o.ph)}"`:''}>${esc(val)}</textarea></span></label>`;}
+function Sel(k,label,opts,d,o={}){const val=sv(k,d);return `<label class="f${o.w?' w':''}"><span class="l">${label}</span><span class="in"><select id="${CUR}-${k}" data-k="${k}">${opts.map(op=>{const [v,l]=Array.isArray(op)?op:[op,op];return `<option value="${esc(v)}"${String(v)===String(val)?' selected':''}>${esc(l)}</option>`;}).join('')}</select></span>${o.hint?`<small>${o.hint}</small>`:''}</label>`;}
+function C(k,label,d){const val=sv(k,d);return `<label class="chk f w"><input type="checkbox" id="${CUR}-${k}" data-k="${k}"${val?' checked':''}><span>${label}</span></label>`;}
+function G(title,...f){return `<fieldset class="g"><legend>${title}</legend><div class="fg">${f.join('')}</div></fieldset>`;}
+function GF(title,...f){return `<fieldset class="g full"><legend>${title}</legend>${f.join('')}</fieldset>`;}
+function ADV(title,open,...f){return `<details class="g"${open?' open':''}><summary>${title}</summary><div class="fg">${f.join('')}</div></details>`;}
+function R(k,cols,def,noun){const key=CUR+'.'+k;REPC[key]={cols,noun,def};if(!S.r[key])S.r[key]=JSON.parse(JSON.stringify(def));return `<div class="f w" data-rep="${k}"></div>`;}
+function renderRep(id,k){const key=id+'.'+k,rows=S.r[key],{cols,noun}=REPC[key];const host=document.querySelector(`#t-${id} [data-rep="${k}"]`);if(!host)return;
+  host.innerHTML=`<div class="tw"><table class="rt"><thead><tr>${cols.map(c=>`<th>${c.l}</th>`).join('')}<th></th></tr></thead><tbody>${rows.map((r,i)=>`<tr>${cols.map(c=>`<td>${c.o?`<select data-ri="${i}" data-ck="${c.k}" aria-label="${esc(c.l)}">${c.o.map(v=>`<option${String(v)===String(r[c.k])?' selected':''}>${esc(v)}</option>`).join('')}</select>`:`<input data-ri="${i}" data-ck="${c.k}" aria-label="${esc(c.l)}" value="${esc(r[c.k])}"${c.t?' class="wtxt"':' inputmode="decimal"'}>`}</td>`).join('')}<td><button type="button" class="x" data-rm="${k}" data-i="${i}" aria-label="Remove ${noun}">×</button></td></tr>`).join('')}</tbody></table></div><button type="button" class="btn sm" data-add="${k}">+ Add ${noun}</button>`;}
+
+/* ---------- output helpers ---------- */
+const card=(title,inner,cls='')=>`<div class="card ${cls}">${title?`<h3 class="eyebrow">${title}</h3>`:''}${inner}</div>`;
+const kv=(l,v,c='')=>`<div class="kv"><span>${l}</span><b class="${c}">${v}</b></div>`;
+const PL={good:'GO',warn:'CAUTION',bad:'PASS',mut:'—'};
+const verdict=(lvl,head,body,label)=>`<div class="verdict ${lvl}"><span class="pill ${lvl}">${label||PL[lvl]}</span><div><h2>${head}</h2>${body?`<p>${body}</p>`:''}</div></div>`;
+const tag=(lvl,t)=>`<span class="tag ${lvl}">${t}</span>`;
+const empty=m=>`<div class="empty">${m}</div>`;
+function tbl(head,rows,cls=''){return `<div class="tw" tabindex="0" role="region" aria-label="Table"><table class="t ${cls}"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>{const c=Array.isArray(r)?r:r.c;return `<tr class="${r.cls||''}">${c.map(x=>`<td>${x}</td>`).join('')}</tr>`;}).join('')}</tbody></table></div>`;}
+const stat=(k,v,c='')=>`<div class="stat"><span class="v ${c}">${v}</span><span class="k">${k}</span></div>`;
+const flags=list=>`<div class="flags">${list.map(f=>`<div class="flag">${tag(f[0],{good:'OK',warn:'Check',bad:'Flag',mut:'Note'}[f[0]])}<span>${f[1]}</span></div>`).join('')}</div>`;
+const ul=items=>`<ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+const gl=(q)=>`https://www.google.com/search?q=${encodeURIComponent(q)}`;
+const lk=(label,url)=>`<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
+function niceStep(x){const p=Math.pow(10,Math.floor(Math.log10(x)));const f=x/p;return (f<=1?1:f<=2?2:f<=5?5:10)*p;}
+function barChart(vals,labels,o={}){const W=640,H=o.h||190,pl=54,pr=10,pt=12,pb=24;let mx=Math.max(0,...vals),mn=Math.min(0,...vals);if(mx===mn)mx=mn+1;const st=niceStep((mx-mn)/4);const top=Math.ceil(mx/st)*st,bot=Math.floor(mn/st)*st;const y=v=>pt+(top-v)/(top-bot)*(H-pt-pb);const bw=(W-pl-pr)/vals.length;let s=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label||'chart')}">`;
+  for(let v=bot;v<=top+st/2;v+=st){s+=`<line class="${Math.abs(v)<st/1e6?'zl':'gl'}" x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end">${o.fmt?o.fmt(v):fk(v)}</text>`;}
+  vals.forEach((v,i)=>{const x=pl+i*bw+bw*0.18,w=bw*0.64,y0=y(0),y1=y(v);const hl=o.hl&&o.hl(i);s+=`<rect x="${x}" y="${Math.min(y0,y1)}" width="${w}" height="${Math.max(1,Math.abs(y1-y0))}" rx="2" fill="${v<0?'var(--bar-neg)':hl?'var(--accent)':'var(--bar)'}"/><text x="${x+w/2}" y="${H-7}" text-anchor="middle">${labels[i]}</text>`;});
+  return s+'</svg>';}
+
+/* ---------- tool registry & runtime ---------- */
+function tool(t){TOOLS.push(t);}
+function reader(sec){const vals={};sec.querySelectorAll('[data-k]').forEach(el=>{vals[el.dataset.k]=el.type==='checkbox'?el.checked:el.value;});
+  return {raw:vals,n(k,d=NaN){const x=toN(vals[k]);return fin(x)?x:d;},p(k,d=NaN){const x=toN(vals[k]);return fin(x)?x/100:d;},s(k){return vals[k]==null?'':String(vals[k]);},b(k){return !!vals[k];},blank(k){return !fin(toN(vals[k]));}};}
+function ctx(id){const sec=document.getElementById('t-'+id);return {id,sec,rows:k=>S.r[id+'.'+k]||[],ck:c=>!!S.c[id+'.'+c],
+  set(sel,html){const e=sec.querySelector(sel);if(e)e.innerHTML=html;},hint(k,txt){const e=document.getElementById(id+'-'+k+'-h');if(e)e.innerHTML=txt;}};}
+const pend={};
+function schedule(id){if(pend[id])return;pend[id]=requestAnimationFrame(()=>{pend[id]=0;run(id);});}
+function run(id){const t=TOOLS.find(x=>x.id===id),sec=document.getElementById('t-'+id);if(!sec)return;const out=sec.querySelector('.out');
+  try{out.innerHTML=t.calc(reader(sec),ctx(id));}catch(e){out.innerHTML=empty('Something in the inputs could not be calculated: '+esc(e.message));console.error(e);}}
+function build(id){const t=TOOLS.find(x=>x.id===id);CUR=id;let sec=document.getElementById('t-'+id);const fresh=!sec;
+  if(!sec){sec=document.createElement('section');sec.className='tool';sec.id='t-'+id;document.getElementById('panels').appendChild(sec);}
+  sec.innerHTML=`<header class="th"><div><div class="eyebrow">${t.group}</div><h1>${t.name}</h1><p>${t.blurb}</p></div><button type="button" class="btn" data-reset>Reset to example</button></header>
+  <div class="tool-grid${t.wide?' wide':''}"><form class="inputs" autocomplete="off">${t.inputs()}</form><div class="res">${t.top?t.top():''}<div class="out" aria-live="polite"></div></div></div>`;
+  Object.keys(REPC).filter(k=>k.startsWith(id+'.')).forEach(k=>renderRep(id,k.slice(id.length+1)));
+  if(fresh)wire(sec,id);run(id);}
+function wire(sec,id){
+  sec.addEventListener('submit',e=>e.preventDefault());
+  sec.addEventListener('input',e=>{const el=e.target;
+    if(el.dataset.k){(S.v[id]=S.v[id]||{})[el.dataset.k]=el.type==='checkbox'?el.checked:el.value;save();schedule(id);}
+    else if(el.dataset.ri!=null){const k=el.closest('[data-rep]').dataset.rep;S.r[id+'.'+k][+el.dataset.ri][el.dataset.ck]=el.value;save();schedule(id);}
+    else if(el.dataset.c){S.c[id+'.'+el.dataset.c]=el.checked;save();schedule(id);}});
+  sec.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.add){const key=id+'.'+b.dataset.add;const cols=REPC[key].cols;const last=S.r[key][S.r[key].length-1]||{};const row={};cols.forEach(c=>row[c.k]=c.t?'':c.o?c.o[0]:(last[c.k]!=null&&c.copy?last[c.k]:''));S.r[key].push(row);save();renderRep(id,b.dataset.add);schedule(id);}
+    else if(b.dataset.rm){const key=id+'.'+b.dataset.rm;S.r[key].splice(+b.dataset.i,1);save();renderRep(id,b.dataset.rm);schedule(id);}
+    else if(b.hasAttribute('data-reset')){if(b.dataset.armed){delete S.v[id];Object.keys(S.r).forEach(k=>{if(k.startsWith(id+'.'))delete S.r[k];});Object.keys(S.c).forEach(k=>{if(k.startsWith(id+'.'))delete S.c[k];});save();build(id);}else{b.dataset.armed='1';b.textContent='Click again to reset';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent='Reset to example';}},3000);}}});
+}
+
+/* =================== 1. FIVE-MINUTE ANALYSIS =================== */
+function fiveParams(V){return {units:Math.max(1,V.n('units',1)),rent:V.n('rent',0),occ:V.p('occ',.95),mkt:V.n('mkt',V.n('rent',0)),ltv:clamp(V.p('ltv',.75),0,.99),rate:V.p('rate',.07),amort:V.n('amort',30),io:Math.max(0,V.n('io',0)),expR:V.p('expR',.42),res:V.n('res',0),oth:V.n('oth',0),vacS:V.p('vacS',.05),mktYr:clamp(Math.round(V.n('mktYr',2)),1,clamp(Math.round(V.n('hold',5)),1,10)),rg:V.p('rg',.03),eg:V.p('eg',.03),reno:V.n('reno',0),close:V.p('close',.03),hold:clamp(Math.round(V.n('hold',5)),1,10),exitCap:V.p('exitCap',.07),sell:V.p('sell',.03),lp:clamp(V.p('lp',1),0,1)};}
+function fiveModel(p,offer){const loan=offer*p.ltv,reno=p.reno*p.units,equity=offer-loan+offer*p.close+reno;const pa=pmtM(p.rate,p.amort,loan)*12;
+  const ds=t=>t<=p.io?loan*p.rate:pa;const bal=t=>t<=p.io?loan:balAfter(loan,p.rate,p.amort,(t-p.io)*12);
+  const rows=[];let fixed0=0,rent=p.rent;const vr=0.3*p.expR;
+  for(let t=0;t<=p.hold+1;t++){if(t>0){rent=t<p.mktYr?p.rent:t===p.mktYr?Math.max(p.mkt,p.rent):rent*(1+p.rg);}
+    const vac=(t===0||t<p.mktYr)?1-p.occ:p.vacS;const gpr=rent*p.units*12,vl=gpr*vac,oth=p.oth*p.units*12*Math.pow(1+p.rg,Math.max(0,t-1)),egi=gpr-vl+oth;
+    if(t===0)fixed0=0.7*p.expR*egi;const opex=fixed0*Math.pow(1+p.eg,t)+vr*egi,res=p.res*p.units*Math.pow(1+p.eg,t);const noi=egi-opex-res,d=ds(Math.max(1,t)),cf=noi-d;
+    rows.push({t,rent,gpr,vl,vac,oth,egi,opex,res,noi,ds:d,cf,coc:cf/equity,dscr:noi/d,bal:bal(t)});}
+  const Rr=rows.slice(1,p.hold+1);const sale=rows[p.hold+1].noi/p.exitCap,netSale=sale*(1-p.sell)-bal(p.hold);const s=p.lp;
+  const saleDist=netSale>equity?equity+(netSale-equity)*s:netSale;const flows=[-equity,...Rr.map((r,i)=>r.cf*s+(i===Rr.length-1?saleDist:0))];const dist=sum(flows.slice(1));
+  return {rows,loan,equity,reno,sale,netSale,saleDist,irr:irr(flows),em:dist/equity,aar:(dist-equity)/equity/p.hold,avgCoc:sum(Rr.map(r=>r.cf*s))/Rr.length/equity,capIn:rows[0].noi/offer,dscr0:rows[0].noi/ds(1),k:loan?ds(1)/loan:0};}
+function maxFor(pred,ask){let lo=ask*0.2,hi=ask*2;if(!pred(lo))return 0;if(pred(hi))return hi;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(pred(m))lo=m;else hi=m;}return lo;}
+tool({id:'five',group:'Deal analysis',name:'5-Minute Analysis',blurb:'Screen a multifamily or commercial deal in minutes. Slide the offer price and watch DSCR, cash-on-cash, IRR and the 5-year cash flow projection respond.',
+ top:()=>`<div class="card offer"><div class="eyebrow">Offer price</div><div class="big" id="five-offerVal">—</div><div class="sub" id="five-offerSub"></div><div class="rng"><input type="range" id="five-offerPct" data-k="offerPct" min="60" max="115" step="0.5" value="${esc(S.v.five&&S.v.five.offerPct||100)}" aria-label="Offer as a percent of asking price"></div><div class="ticks"><span>60%</span><span style="left:72.7%">Asking</span><span>115%</span></div></div>`,
+ inputs:()=>G('Property',Sel('ptype','Property type',['Multifamily','Retail','Office','Industrial','Mixed-use'],'Multifamily'),N('price','Asking price',1000000,{pre:'$'}),N('units','Units / suites',12),N('year','Year built',1985),N('rent','In-place avg rent',1050,{pre:'$',suf:'/unit/mo'}),N('occ','In-place occupancy',94,{suf:'%'}),N('mkt','Market rent after your plan',1200,{pre:'$',suf:'/unit/mo',w:true,hint:'The rent you are underwriting after renovations or lease-up'}),N('goal','Monthly cash-flow goal',10000,{pre:'$',w:true,hint:'What you want this deal to pay you each month once stabilized'}))
+  +ADV('Financing',false,N('ltv','Loan-to-value',75,{suf:'%'}),N('rate','Interest rate',6.75,{suf:'%'}),N('amort','Amortization',30,{suf:'yrs'}),N('io','Interest-only period',0,{suf:'yrs'}))
+  +ADV('Operations',false,N('expR','Expense ratio',42,{suf:'% EGI',hint:'',w:true}),N('res','Reserves',300,{pre:'$',suf:'/unit/yr'}),N('oth','Other income',25,{pre:'$',suf:'/unit/mo'}),N('vacS','Stabilized vacancy',5,{suf:'%'}),N('mktYr','Year market rent hits',2),N('rg','Rent growth',3,{suf:'%/yr'}),N('eg','Expense growth',3,{suf:'%/yr'}))
+  +ADV('Capital & exit',false,N('reno','Renovation budget',4000,{pre:'$',suf:'/unit'}),N('close','Closing costs',3,{suf:'%'}),N('hold','Hold period',5,{suf:'yrs'}),N('exitCap','Exit cap rate',7,{suf:'%'}),N('sell','Selling costs',3,{suf:'%'}),N('lp','Your share of cash flow',100,{suf:'%',hint:'Use 70–80% if you syndicate and the sponsor keeps a split'}))
+  +ADV('Your hurdles',false,N('hDscr','Minimum DSCR',1.25,{suf:'x'}),N('hCoc','Target avg cash-on-cash',8,{suf:'%'}),N('hIrr','Target IRR',14,{suf:'%'})),
+ calc(V,x){const p=fiveParams(V),ask=V.n('price',0),pct=V.n('offerPct',100)/100,offer=Math.round(ask*pct/1000)*1000;const com=V.s('ptype')!=='Multifamily';
+  x.set('#five-offerVal',fm(offer));x.set('#five-offerSub',Math.abs(pct-1)<1e-9?'At asking price':`${pct>1?'+':''}${pc(pct-1,1)} vs asking`);
+  x.hint('expR',com?'Typical: 15–25% NNN, 30–40% gross lease':'Typical: 35–45% newer, 45–55% older or small buildings');
+  if(!(ask>0&&p.rent>0))return empty('Enter an asking price and rent to see the analysis.');
+  const m=fiveModel(p,offer),h={dscr:V.n('hDscr',1.25),coc:V.p('hCoc',.08),irr:V.p('hIrr',.14)};const r0=m.rows[0],stab=m.rows[p.mktYr],last=m.rows[p.hold];
+  const mo={dscr:maxFor(o=>fiveModel(p,o).dscr0>=h.dscr,ask),coc:maxFor(o=>fiveModel(p,o).avgCoc>=h.coc,ask),irr:maxFor(o=>{const q=fiveModel(p,o).irr;return fin(q)&&q>=h.irr;},ask)};const mx=Math.min(mo.dscr,mo.coc,mo.irr);
+  const okD=m.dscr0>=h.dscr,okC=m.avgCoc>=h.coc,okI=fin(m.irr)&&m.irr>=h.irr,n=okD+okC+okI;
+  const lvl=n===3?'good':(n>=2&&m.dscr0>=1.15)||(mx>0&&offer<=mx*1.08)?'warn':'bad';
+  const head=n===3?'Clears all three hurdles at this price':mx>0?`Works at ${fm(Math.round(mx/1000)*1000)} or less`:'No price in range clears your hurdles';
+  const body=mx>0?`Your DSCR, cash-on-cash and IRR targets are all met at or below ${fm(Math.round(mx/1000)*1000)} (${pc(mx/ask-1,1)} vs asking). ${n<3?'Missing at this offer: '+[!okD&&'DSCR',!okC&&'cash-on-cash',!okI&&'IRR'].filter(Boolean).join(', ')+'.':''}`:'Even at 20% of asking the deal misses a hurdle. Rents, expenses or financing terms need to change.';
+  const bo=(r0.opex+r0.res+r0.ds)/(r0.gpr+r0.oth);const lev=m.capIn>m.k;const yoc=stab.noi/(offer*(1+p.close)+m.reno);const s=p.lp;
+  const moCF=stab.cf*s/12,goal=V.n('goal',0);const perU=moCF/p.units;
+  let goalHtml='';if(goal>0){goalHtml=card('Your monthly goal',`${kv(`Stabilized cash flow (year ${p.mktYr})`,fm(moCF)+'/mo',moCF>=goal?'good':'bad')}${kv('Goal',fm(goal)+'/mo')}${kv('Gap',moCF>=goal?'Goal met':fm(goal-moCF)+'/mo short',moCF>=goal?'good':'bad')}${kv('Cash flow per unit',fm(perU)+'/mo')}${perU>0&&moCF<goal?kv('Units needed at this profile',nm(Math.ceil(goal/perU))+' units'):''}<p class="note" style="margin:8px 0 0">${perU>0?(moCF>=goal?'This deal alone meets your target.':`At about ${fm(perU)} per unit per month, reaching ${fm(goal)} takes roughly ${nm(Math.ceil(goal/perU))} units with this rent, expense and debt profile, or several deals like this one. Lower leverage raises monthly cash flow but also the cash you put in.`):'The deal does not produce positive stabilized cash flow at this price.'}</p>`);}
+  const yrs=m.rows.slice(0,p.hold+1);const hd=['Line item',...yrs.map(r=>r.t===0?'Year 0 (takeover)':'Year '+r.t)];
+  const line=(l,f,cls)=>({c:[l,...yrs.map(f)],cls});
+  const pf=tbl(hd,[line('Average rent / unit',r=>fm(r.rent)),line('Gross potential rent',r=>fm(r.gpr)),line('Vacancy loss',r=>fa(-r.vl),'sub'),line('Other income',r=>fm(r.oth),'sub'),line('Effective gross income',r=>fm(r.egi)),line('Operating expenses',r=>fa(-r.opex),'sub'),line('Reserves',r=>fa(-r.res),'sub'),line('Net operating income',r=>fm(r.noi),'tot'),line('Debt service',r=>fa(-r.ds),'sub'),line('Property cash flow',r=>`<span class="${r.cf<0?'bad':''}">${fa(r.cf)}</span>`,'tot'),line('Cash-on-cash',r=>pc(r.coc,1)),...(s<1?[line('Your cash flow ('+pc(s,0)+')',r=>fa(r.cf*s)),line('Your cash-on-cash',r=>pc(r.coc*s,1))]:[]),line('DSCR',r=>nx(r.dscr))]);
+  const cum=[];let c=0;m.rows.slice(1,p.hold+1).forEach(r=>{c+=r.cf*s;cum.push(c);});
+  return verdict(lvl,head,body,{good:'GO',warn:'NEGOTIATE',bad:'PASS'}[lvl])
+  +`<div class="cards">${card('Deal checklist & key metrics',kv('DSCR (going-in)',nx(m.dscr0),lv(m.dscr0,h.dscr,1.15))+kv('Going-in cap rate',pc(m.capIn),lv(m.capIn,p.rate,p.rate-0.01))+kv('Interest rate',pc(p.rate))+kv('Leverage (LTV)',pc(p.ltv,0))+kv('Loan constant',pc(m.k))+kv('Leverage position',lev?'Positive leverage':'Negative leverage',lev?'good':'bad')+kv('Price per unit',fm(offer/p.units))+kv('Gross rent multiplier',nx(offer/(r0.gpr+r0.oth),1).replace('x',''))+kv('Break-even occupancy',pc(bo,1),lv(bo,.8,.88,false)))}
+   ${card('NOI growth',kv('Takeover NOI',fk(r0.noi))+kv(`Year ${p.hold} NOI`,fk(last.noi))+kv('Growth',(last.noi>=r0.noi?'+':'')+pc(last.noi/r0.noi-1,1),last.noi>=r0.noi?'good':'bad')+kv(`Stabilized NOI (yr ${p.mktYr})`,fk(stab.noi))+kv('Yield on cost (stabilized)',pc(yoc),lv(yoc,m.capIn+0.01,m.capIn))+kv('Takeover cap → exit-year yield',`${pc(m.capIn)} → ${pc(last.noi/offer)}`)+kv('Spread',`${(last.noi/offer-m.capIn)>=0?'+':''}${Math.round((last.noi/offer-m.capIn)*1e4)} bps`,last.noi/offer>m.capIn?'good':'bad'))}
+   ${card('Investor returns',kv('Cash to close',fm(m.equity))+kv('Hold period',p.hold+' years')+kv('Avg cash-on-cash',pc(m.avgCoc),lv(m.avgCoc,h.coc,h.coc*0.6))+kv('Equity multiple',nx(m.em),lv(m.em,1.8,1.4))+kv('Average annual return',pc(m.aar,1))+kv('Estimated IRR',pc(m.irr,1),lv(m.irr,h.irr,h.irr*0.7))+kv(`Exit value (yr ${p.hold})`,fk(m.sale))+kv('Net sale proceeds',fk(m.netSale)))}
+   ${goalHtml}
+   ${card('Max offer by hurdle',kv(`DSCR ≥ ${nx(h.dscr)}`,mo.dscr?fm(Math.round(mo.dscr/1000)*1000):'None',offer<=mo.dscr?'good':'bad')+kv(`Avg cash-on-cash ≥ ${pc(h.coc,0)}`,mo.coc?fm(Math.round(mo.coc/1000)*1000):'None',offer<=mo.coc?'good':'bad')+kv(`IRR ≥ ${pc(h.irr,0)}`,mo.irr?fm(Math.round(mo.irr/1000)*1000):'None',offer<=mo.irr?'good':'bad')+kv('Binding hurdle',mx?(mx===mo.dscr?'DSCR':mx===mo.coc?'Cash-on-cash':'IRR'):'—')+`<p class="note" style="margin:8px 0 0">Price range where each target still holds, with everything else unchanged.</p>`)}</div>`
+  +card(`${p.hold}-year pro forma & cash flow projection`,pf)
+  +card('Annual cash flow to you',barChart(m.rows.slice(1,p.hold+1).map(r=>r.cf*s),m.rows.slice(1,p.hold+1).map(r=>'Yr '+r.t),{label:'Annual cash flow by year',hl:i=>i+1===p.mktYr})+`<p class="note">Cumulative after year ${p.hold}: <b>${fm(cum[cum.length-1])}</b>. Highlighted bar is the year rents reach market.</p>`)
+  +`<p class="note">Assumptions: 70% of operating expenses are fixed and grow with expense growth; 30% move with income. Renovation budget and closing costs are paid in cash. Exit value uses the year-${p.hold+1} NOI at the exit cap rate. ${p.io?`Loan is interest-only for ${p.io} year(s).`:''}</p>`;}});
+
+/* =================== 2. INITIAL SCREENING =================== */
+tool({id:'screen',group:'Deal analysis',name:'Initial Deal Screening',blurb:'Quick go / no-go math: GRM, price per unit and square foot, a 50%-rule cap rate and cash flow, and the 1% rule, with flags for numbers that look off.',
+ inputs:()=>G('Property details',T('mkt','Address / market','',{ph:'City, State, Neighborhood'}),Sel('type','Property type',['Single family','Multifamily','Commercial','Mixed use'],'Multifamily',{w:true}),N('price','Asking price',1000000,{pre:'$'}),N('units','Units',12),N('sf','Total square feet',9600),N('year','Year built',1972),N('rent','Current gross rent',12600,{pre:'$',suf:'/mo'}),N('vac','Listed vacancy',6,{suf:'%'}),N('tax','Annual property taxes',14000,{pre:'$'}),N('ins','Insurance estimate',9600,{pre:'$',suf:'/yr'}),A('issues','Known issues','Original windows; one unit down with water damage (example)'))
+  +ADV('Financing for the cash-flow check',true,N('down','Down payment',25,{suf:'%'}),N('rate','Interest rate',7,{suf:'%'}),N('amort','Amortization',30,{suf:'yrs'}))
+  +ADV('Local benchmarks (optional)',false,N('mcap','Market cap rate','',{suf:'%',ph:'e.g. 6.5'}),N('mppu','Market price / unit','',{pre:'$'}),N('mgrm','Market GRM','',{ph:'e.g. 9'}),N('mppsf','Market price / SF','',{pre:'$'})),
+ calc(V){const price=V.n('price',0),units=Math.max(1,V.n('units',1)),sf=V.n('sf',NaN),rent=V.n('rent',0),vac=V.p('vac',0),tax=V.n('tax',0),ins=V.n('ins',0),yr=V.n('year',NaN),type=V.s('type');
+  if(!(price>0&&rent>0))return empty('Enter an asking price and monthly rent.');
+  const ann=rent*12,grm=price/ann,ppu=price/units,ppsf=price/sf,noi=ann*0.5,cap=noi/price;const loan=price*(1-V.p('down',.25)),pi=pmtM(V.p('rate',.07),V.n('amort',30),loan),cf=rent*0.5-pi,one=rent/price;const mcap=V.p('mcap',NaN),bench=fin(mcap)?mcap:(type==='Commercial'?0.07:0.065);
+  const com=type==='Commercial';const f=[];
+  const effTax=tax/price;if(tax>0&&effTax<0.005)f.push(['warn',`Taxes are ${pc(effTax)} of price. Many counties reassess on sale, so model taxes at your county's rate on the purchase price.`]);if(effTax>0.025)f.push(['warn',`Taxes are ${pc(effTax)} of price, which is high. Confirm the millage and whether an appeal is possible.`]);if(!tax)f.push(['bad','No property taxes entered.']);
+  const ipu=ins/units;if(ins&&ipu<350)f.push(['warn',`Insurance of ${fm(ipu)}/unit looks light. Get a quote at replacement cost before relying on it.`]);if(ipu>2500)f.push(['warn',`Insurance of ${fm(ipu)}/unit is high. Check flood zone, coastal exposure and the claims history.`]);if(!ins)f.push(['bad','No insurance estimate entered.']);
+  const fixedShare=(tax+ins)/ann;if(fixedShare>0.25)f.push(['warn',`Taxes and insurance alone use ${pc(fixedShare,0)} of gross rent, so the 50% rule is probably optimistic here.`]);
+  if(vac===0)f.push(['warn','Zero listed vacancy usually means a pro forma, not history. Ask for the T-12 and rent roll.']);if(vac>0.10)f.push(['warn',`${pc(vac,0)} vacancy is high. Find out whether it is the building, management or the submarket.`]);
+  if(fin(yr)){if(yr<1978)f.push(['mut','Built before 1978: federal lead-paint disclosure applies; budget for lead-safe work.']);if(yr<1960)f.push(['warn','Built before 1960: check for galvanized or cast-iron plumbing and older wiring.']);if(yr>=1965&&yr<=1973)f.push(['mut','Built 1965–1973: ask about aluminum branch wiring.']);}
+  if(fin(sf)&&!com){const rps=rent/sf;if(rps<0.6||rps>4)f.push(['warn',`Rent of ${fm(rps,2)}/SF per month is unusual. Verify the square footage and rent roll.`]);const spu=sf/units;if(spu<350||spu>2200)f.push(['warn',`${nm(spu)} SF per unit is unusual. Check whether commercial or common space is included.`]);}
+  if(grm>14)f.push(['warn',`GRM of ${grm.toFixed(1)} means the price relies on appreciation more than rent.`]);if(grm<5)f.push(['warn',`GRM of ${grm.toFixed(1)} is very low, which often signals condition, location or rent-roll problems.`]);
+  const mppu=V.n('mppu',NaN);if(fin(mppu)){const d=ppu/mppu-1;if(Math.abs(d)>0.2)f.push([d>0?'warn':'mut',`Price per unit is ${pc(Math.abs(d),0)} ${d>0?'above':'below'} your market benchmark.`]);}
+  const mppsf=V.n('mppsf',NaN);if(fin(mppsf)&&fin(ppsf)){const d=ppsf/mppsf-1;if(Math.abs(d)>0.2)f.push([d>0?'warn':'mut',`Price per SF is ${pc(Math.abs(d),0)} ${d>0?'above':'below'} your market benchmark.`]);}
+  const mgrm=V.n('mgrm',NaN);if(fin(mgrm)&&Math.abs(grm/mgrm-1)>0.2)f.push(['warn',`GRM differs from your market benchmark (${mgrm}) by ${pc(Math.abs(grm/mgrm-1),0)}.`]);
+  if(fin(mcap)&&cap<mcap-0.005)f.push(['warn',`50%-rule cap rate is ${Math.round((mcap-cap)*1e4)} bps below the market cap you entered.`]);
+  if(V.s('issues').trim())f.push(['mut','Known issues listed: get contractor bids and deduct them from your offer before deeper analysis.']);
+  if(com)f.push(['mut','For commercial, the 50% rule overstates expenses on NNN leases. Use the Cap Rate or Seller Financials tabs with actual expenses.']);
+  let pts=0;pts+=cap>=bench?1:0;pts+=cf>0?1:0;pts+=grm<=11?1:0;pts+=one>=0.008?1:0;
+  const lvl=pts>=3?'good':pts===2?'warn':'bad';const tgtPrice=noi/bench;
+  const rows=[['Gross rent multiplier (GRM)',grm.toFixed(2),'Price ÷ annual gross rent',tag(lv(grm,9,12,false),grm<=9?'Strong':grm<=12?'Fair':'High')],
+   ['Price per unit',fm(ppu),'Price ÷ units',fin(mppu)?tag(ppu<=mppu*1.05?'good':'warn',ppu<=mppu*1.05?'At/below mkt':'Above mkt'):tag('mut','Compare')],
+   ['Price per square foot',fin(ppsf)?fm(ppsf,2):'—','Price ÷ SF',fin(mppsf)?tag(ppsf<=mppsf*1.05?'good':'warn',ppsf<=mppsf*1.05?'At/below mkt':'Above mkt'):tag('mut','Compare')],
+   ['Cap rate (50% expense ratio)',pc(cap),`NOI ${fm(noi)} ÷ price`,tag(cap>=bench?'good':cap>=bench-0.01?'warn':'bad',cap>=bench?'Meets '+pc(bench,1):'Below '+pc(bench,1))],
+   ['Monthly cash flow (50% rule)',fa(cf),`Rent × 50% − P&I ${fm(pi)}`,tag(cf>100*units?'good':cf>0?'warn':'bad',cf>0?fm(cf/units)+'/unit':'Negative')],
+   ['1% rule',pc(one),'Monthly rent ÷ price',tag(one>=0.01?'good':one>=0.008?'warn':'bad',one>=0.01?'Pass':one>=0.008?'Near':'Fail')]];
+  return verdict(lvl,lvl==='good'?'Worth deeper analysis':lvl==='warn'?'Borderline: dig in only if the price can move':'Pass at this price',`${pts} of 4 quick tests passed. The 50%-rule cap reaches ${pc(bench,1)} at about ${fm(Math.round(tgtPrice/5000)*5000)} (${pc(tgtPrice/price-1,0)} vs asking).`,{good:'DIG IN',warn:'MAYBE',bad:'PASS'}[lvl])
+  +card('Quick metrics',tbl(['Metric','Value','How it is calculated','Read'],rows))
+  +card('Numbers to question',f.length?flags(f):'<p class="note">Nothing unusual in the numbers entered.</p>')
+  +card('What the 50% rule assumes',`<p class="note" style="margin:0">Half of gross rent goes to vacancy, taxes, insurance, repairs, management, reserves and owner-paid utilities. It is a screening shortcut; real expense ratios run 35–55% for residential depending on age, size and who pays utilities. Move to the Full Cash Flow tab for line-item expenses.</p>`);}});
+
+/* =================== 3. FULL CASH FLOW =================== */
+tool({id:'cashflow',group:'Deal analysis',name:'Full Cash Flow Analysis',blurb:'Line-item monthly cash flow from gross income to NOI to cash flow after debt, with cash-on-cash, cap rate, DSCR, break-even occupancy and a rent sensitivity table.',
+ inputs:()=>G('Purchase & loan',T('addr','Property','4-unit on Example St (example)'),N('price','Purchase price',480000,{pre:'$'}),N('down','Down payment',25,{suf:'%',hint:''}),N('rate','Interest rate',7,{suf:'%'}),N('term','Term',30,{suf:'yrs'}),N('cc','Closing costs',2,{suf:'% of price'}),N('year','Year built',1978,{hint:'Drives suggested reserves'}))
+  +G('Income',R('units',[{k:'name',l:'Unit',t:1},{k:'rent',l:'Rent / mo'}],[{name:'Unit 1',rent:1450},{name:'Unit 2',rent:1400},{name:'Unit 3',rent:1350},{name:'Unit 4',rent:1350}],'unit'),N('oth','Other income (laundry, parking, storage)',80,{pre:'$',suf:'/mo',w:true}))
+  +G('Monthly expenses — blank uses a suggestion',N('tax','Property taxes',520,{pre:'$'}),N('ins','Insurance',210,{pre:'$'}),N('pm','Management','',{suf:'% rent',hint:'',sg:1}),N('maint','Maintenance','',{suf:'% rent',hint:'',sg:1}),N('capex','CapEx reserve','',{suf:'% rent',hint:'',sg:1}),N('vac','Vacancy reserve','',{suf:'%',hint:'',sg:1}),N('util','Owner-paid utilities',250,{pre:'$'}),N('hoa','HOA / condo fees',0,{pre:'$'}),N('lawn','Lawn / snow',60,{pre:'$'}),N('otherx','Other (trash, pest, admin)',40,{pre:'$'})),
+ calc(V,x){const rows=x.rows('units');const GR=sum(rows.map(r=>toN(r.rent))),nU=rows.length,oth=V.n('oth',0),GPI=GR+oth;const price=V.n('price',0),yr=V.n('year',1985);
+  const sug={pm:nU<=4?0.08:0.07,maint:yr<1960?0.12:yr<1990?0.10:0.07,capex:yr<1980?0.08:yr<2000?0.06:0.05,vac:nU<=4?0.08:0.06};
+  ['pm','maint','capex','vac'].forEach(k=>x.hint(k,V.blank(k)?`Using suggested ${pc(sug[k],0)}`:`Suggested ${pc(sug[k],0)}`));
+  const loan=price*(1-V.p('down',.25));const pi=pmtM(V.p('rate',.07),V.n('term',30),loan);x.hint('down',`Loan ${fm(loan)} · P&I ${fm(pi)}/mo`);
+  if(!(GR>0&&price>0))return empty('Add unit rents and a purchase price.');
+  const pmR=V.p('pm',sug.pm),mR=V.p('maint',sug.maint),cR=V.p('capex',sug.capex),vR=V.p('vac',sug.vac);const fixed={tax:V.n('tax',0),ins:V.n('ins',0),util:V.n('util',0),hoa:V.n('hoa',0),lawn:V.n('lawn',0),otherx:V.n('otherx',0)};const fx=sum(Object.values(fixed));
+  const model=f=>{const gr=GR*f,gpi=gr+oth,vl=gr*vR,egi=gpi-vl,pm=pmR*(gr-vl),mt=mR*gr,cx=cR*gr,opex=pm+mt+cx+fx,noi=egi-opex,cf=noi-pi;return {gr,gpi,vl,egi,pm,mt,cx,opex,noi,cf};};
+  const b=model(1),cash=price*V.p('down',.25)+price*V.p('cc',.02);const coc=b.cf*12/cash,cap=b.noi*12/price,dscr=pi?b.noi/pi:Infinity;const beo=(fx+b.mt+b.cx+pi)/(GPI-pmR*GR);
+  const L=(l,m,c)=>({c:[l,fa(m),fa(m*12),pc(m/b.egi,1)],cls:c});
+  const st=tbl(['','Monthly','Annual','% of EGI'],[L('Gross scheduled rent',b.gr),L('Other income',oth,'sub'),L('Gross potential income',b.gpi,'tot'),L(`Vacancy reserve (${pc(vR,0)})`,-b.vl,'sub'),L('Effective gross income',b.egi,'tot'),L('Property taxes',-fixed.tax,'sub'),L('Insurance',-fixed.ins,'sub'),L(`Management (${pc(pmR,0)} of collected)`,-b.pm,'sub'),L(`Maintenance (${pc(mR,0)})`,-b.mt,'sub'),L(`CapEx reserve (${pc(cR,0)})`,-b.cx,'sub'),L('Utilities',-fixed.util,'sub'),L('HOA / condo',-fixed.hoa,'sub'),L('Lawn / snow',-fixed.lawn,'sub'),L('Other',-fixed.otherx,'sub'),L('Total operating expenses',-b.opex,'tot'),L('Net operating income',b.noi,'tot hl'),L('Debt service (P&I)',-pi,'sub'),{c:['Cash flow after debt service',`<span class="${b.cf<0?'bad':'good'}">${fa(b.cf)}</span>`,`<span class="${b.cf<0?'bad':'good'}">${fa(b.cf*12)}</span>`,pc(b.cf/b.egi,1)],cls:'tot'}]);
+  const sens=[-.10,-.05,0,.05,.10].map(d=>{const m=model(1+d);return {c:[d===0?'Actual':(d>0?'+':'')+pc(d,0),fm(m.gr),fa(m.cf),fa(m.cf*12),pc(m.cf*12/cash,1),nx(pi?m.noi/pi:NaN)],cls:d===0?'hl':''};});
+  const lvl=dscr>=1.25&&coc>=0.08?'good':dscr>=1.1&&b.cf>0?'warn':'bad';
+  return verdict(lvl,`${fa(b.cf)}/mo cash flow · ${pc(coc,1)} cash-on-cash`,`On ${fm(cash)} cash invested (down payment plus closing). ${b.cf<0?'The property does not carry its debt at these rents.':dscr<1.25?'DSCR is below the 1.25x most lenders want.':''}`,{good:'SOLID',warn:'THIN',bad:'NEGATIVE'}[lvl])
+  +`<div class="card"><div class="stats">${stat('Annual cash flow',fa(b.cf*12),b.cf<0?'bad':'')}${stat('Cash-on-cash',pc(coc,1),lv(coc,.08,.04))}${stat('Cap rate',pc(cap),lv(cap,.07,.055))}${stat('DSCR',nx(dscr),lv(dscr,1.25,1.1))}${stat('Break-even occupancy',pc(beo,1),lv(beo,.8,.9,false))}${stat('Cash invested',fm(cash))}</div></div>`
+  +card('Monthly cash flow statement',st)+card('Rent sensitivity',tbl(['Rent level','Monthly rent','Monthly CF','Annual CF','Cash-on-cash','DSCR'],sens))
+  +`<p class="note">Break-even occupancy is the share of potential income you must collect to pay all operating expenses and debt service, with management scaling to collections. CapEx reserve is included above NOI here; some lenders place it below.</p>`;}});
+
+/* =================== 4. CAP RATE & VALUATION =================== */
+const CAPS={'Multifamily – Class A':[4.75,5.75],'Multifamily – Class B':[5.25,6.5],'Multifamily – Class C':[6.0,7.75],'Small multifamily (5–20 units)':[6.0,7.75],'Retail – strip / neighborhood':[6.5,8.0],'Retail – single-tenant NNN':[5.5,7.0],'Office – suburban':[7.5,9.5],'Industrial / flex':[5.25,7.0],'Self-storage':[5.5,6.75],'Mobile home park':[5.5,7.25],'Mixed-use':[6.0,7.5]};
+tool({id:'caprate',group:'Deal analysis',name:'Cap Rate & Valuation',blurb:'What the asking price implies, what the property is worth at market cap rates, the NOI needed to justify the price, and how a moving cap rate changes value.',
+ inputs:()=>G('Property',T('desc','Property','12-unit apartment building (example)'),T('mkt','Market','',{ph:'City, State'}),Sel('type','Property type',Object.keys(CAPS),'Small multifamily (5–20 units)',{w:true}),N('price','Purchase / asking price',1000000,{pre:'$'}),N('units','Units',12))
+  +G('Net operating income',Sel('mode','NOI source',['Enter NOI','Build from income & expenses'],'Enter NOI',{w:true}),N('noi','Current NOI',64000,{pre:'$',suf:'/yr'}),N('gross','Gross scheduled income',151200,{pre:'$',suf:'/yr'}),N('vac','Vacancy & credit loss',6,{suf:'%'}),N('opex','Operating expenses',78000,{pre:'$',suf:'/yr'}))
+  +G('Market cap rates — blank uses typical range',N('c1','Low','',{suf:'%',hint:'',sg:1}),N('c2','Mid','',{suf:'%',hint:'',sg:1}),N('c3','High','',{suf:'%',hint:'',sg:1}),N('tgt','Your target cap',7,{suf:'%'}),N('prior','Market cap ~12 months ago','',{suf:'%',ph:'optional'}),N('tsy','10-yr Treasury yield','',{suf:'%',ph:'check today'}),N('g','Expected NOI growth',2.5,{suf:'%/yr'})),
+ calc(V,x){const [lo,hi]=CAPS[V.s('type')]||[6,7.5];const mid=(lo+hi)/2;const sugg={c1:lo,c2:mid,c3:hi};['c1','c2','c3'].forEach(k=>x.hint(k,V.blank(k)?`Using ${sugg[k].toFixed(2)}%`:`Typical ${sugg[k].toFixed(2)}%`));
+  const price=V.n('price',0),units=V.n('units',NaN);const built=V.s('mode')!=='Enter NOI';const egi=V.n('gross',0)*(1-V.p('vac',0));const noi=built?egi-V.n('opex',0):V.n('noi',0);
+  if(!(price>0&&noi))return empty('Enter a price and NOI (or income and expenses).');
+  const cap=noi/price,caps=[V.p('c1',lo/100),V.p('c2',mid/100),V.p('c3',hi/100)],tgt=V.p('tgt',.07),need=price*tgt,gap=need-noi,g=V.p('g',.025);
+  const pos=cap<lo/100?'below the typical range, so the price is rich for this asset type':cap>hi/100?'above the typical range: either a bargain or a riskier asset than the label suggests':'inside the typical range';
+  const lvl=cap>=tgt?'good':cap>=tgt-0.0075?'warn':'bad';
+  const vals=caps.map((c,i)=>[['Low cap (strong demand)','Mid cap','High cap (weaker demand)'][i],pc(c),fm(Math.round(noi/c/1000)*1000),`<span class="${noi/c>=price?'good':'bad'}">${(noi/c>=price?'+':'')+pc(noi/c/price-1,1)}</span>`]);
+  const W=640,H=86,x0=30,x1=W-30,cmin=3.5,cmax=10.5;const X=c=>x0+(c-cmin)/(cmax-cmin)*(x1-x0);
+  let svg=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Cap rate against typical range"><rect x="${X(lo)}" y="30" width="${X(hi)-X(lo)}" height="14" rx="3" fill="var(--accent-soft)" stroke="var(--accent)"/><line class="gl" x1="${x0}" x2="${x1}" y1="37" y2="37"/>`;
+  for(let c=4;c<=10;c++)svg+=`<text x="${X(c)}" y="${H-6}" text-anchor="middle">${c}%</text>`;
+  const mk=(c,l,col,yy)=>{const cx=X(clamp(c*100,cmin,cmax));return `<line x1="${cx}" x2="${cx}" y1="22" y2="52" stroke="${col}" stroke-width="2.5"/><text x="${cx}" y="${yy}" text-anchor="middle" style="fill:${col};font-weight:600">${l}</text>`;};
+  svg+=mk(cap,'This deal '+pc(cap,2),'var(--ink)',16)+mk(tgt,'Target','var(--good)',66)+'</svg>';
+  const prior=V.p('prior',NaN),tsy=V.p('tsy',NaN);let trend='';
+  if(fin(prior)){const d=(caps[1]-prior)*1e4;trend=`Market mid cap moved ${d>=0?'+':''}${Math.round(d)} bps in a year: <b>${Math.abs(d)<15?'roughly flat':d>0?'expanding':'compressing'}</b>. ${d>0?'Expanding caps lower values for the same NOI; underwrite a higher exit cap and lean on NOI growth, not appreciation.':d<0?'Compressing caps raise values; be careful not to buy at a peak multiple and assume it holds at exit.':''}`;}else trend='Enter last year’s market cap rate to see whether caps are compressing (values rising) or expanding (values falling).';
+  const sens=[-100,-50,-25,0,25,50,100].map(b=>{const c=caps[1]+b/1e4;return {c:[(b>0?'+':'')+b+' bps',pc(c),fm(Math.round(noi/c/1000)*1000),fa(noi/c-noi/caps[1])],cls:b===0?'hl':''};});
+  return verdict(lvl,`${pc(cap)} cap at the asking price`,`The asking price is justified only if buyers in this market accept a ${pc(cap)} cap. That sits ${pos}.`,{good:'MEETS TARGET',warn:'CLOSE',bad:'BELOW TARGET'}[lvl])
+  +`<div class="card"><div class="stats">${stat('Current NOI',fm(noi))}${stat('Cap rate at asking',pc(cap))}${stat(`NOI needed at ${pc(tgt,1)}`,fm(need))}${stat('NOI gap',gap>0?fm(gap):'None',gap>0?'bad':'good')}${fin(units)&&gap>0?stat('Rent lift needed',fm(gap/units/12)+'/unit/mo'):''}${stat(`Value at ${pc(tgt,1)}`,fm(Math.round(noi/tgt/1000)*1000))}</div></div>`
+  +card('Implied value at market cap rates',tbl(['Scenario','Cap rate','Implied value','vs asking'],vals))
+  +card(`Where ${pc(cap)} sits for ${esc(V.s('type'))}`,svg+`<p class="note">Shaded band: broad national range for this asset type (approximate, recent years). Local markets and deal size move it; verify with a local broker, CBRE/JLL cap rate surveys or CoStar.</p>`)
+  +`<div class="two">${card('Cap rate trend',`<p class="note" style="margin:0">${trend}</p>${fin(tsy)?`<p class="note">Spread over the 10-year Treasury: <b>${Math.round((cap-tsy)*1e4)} bps</b>. Spreads under ~150 bps leave little cushion if rates rise; 250–400 bps is a healthier margin.</p>`:''}<p class="note">Unlevered return shortcut: cap rate + NOI growth ≈ <b>${pc(cap+g,1)}</b>.</p>`)}${card('Value sensitivity (mid cap)',tbl(['Change','Cap','Value','Δ value'],sens))}</div>`
+  +card('Assumptions to verify',ul(['NOI should be trailing-12 actuals with taxes re-set to the purchase price and a management fee even if the seller self-manages.','Market cap rates come from recent closed sales of similar size and class, not asking caps on listings.','Typical ranges above are national approximations; tertiary markets and small deals usually trade 50–100 bps higher.','Cap rate trend: ask two local brokers what cap rates traded 12 months ago versus today.']));}});
+
+/* =================== 5. NEIGHBORHOOD =================== */
+const HOOD=[
+ {k:'d',t:'Demand drivers',items:[
+  ['Unemployment rate & trend','Below the national rate and falling is healthy.',[['BLS LAUS','https://www.bls.gov/lau/'],['FRED','https://fred.stlouisfed.org']]],
+  ['Job growth (YoY) & industry mix','Over ~1%/yr, and no single industry above ~20% of jobs.',[['BLS QCEW','https://www.bls.gov/cew/'],['Search: major employers','Q:major employers']]],
+  ['Major employers: expansions, closures, WARN notices','New HQs and hospital or university growth are strong signals; layoff notices are warnings.',[['Search: WARN notices','Q:WARN notices layoffs'],['Search: business journal expansions','Q:company expansion new jobs']]],
+  ['Population & household growth (5-yr)','Steady growth and positive net migration.',[['Census data','https://data.census.gov'],['Census population estimates','https://www.census.gov/programs-surveys/popest.html']]],
+  ['Median household income & growth','Rising incomes support rent growth.',[['Census ACS','https://data.census.gov']]],
+  ['University, hospital or military anchors','Enrollment and staffing trends; distance to campus or base.',[['Search: enrollment trend','Q:university enrollment trend']]],
+  ['Transit & access','Commute times, transit stops, highway access, planned lines.',[['Walk Score','https://www.walkscore.com'],['Search: transit plan','Q:transit expansion plan']]]]},
+ {k:'s',t:'Supply factors',items:[
+  ['Building permits (5+ units) trend','A spike in multifamily permits means new competition in 18–36 months.',[['Census Building Permits Survey','https://www.census.gov/construction/bps/'],['Search: city permit data','Q:building permits multifamily']]],
+  ['Construction pipeline within 3 miles','Units under construction and planned, with delivery dates.',[['Search: planning commission agenda','Q:planning commission apartment proposal'],['CoStar / Yardi Matrix (paid)','https://www.costar.com']]],
+  ['Inventory & months of supply','Under ~4 months of supply favors sellers.',[['Redfin Data Center','https://www.redfin.com/news/data-center/'],['Realtor.com research','https://www.realtor.com/research/data/']]],
+  ['Days on market & sale-to-list ratio','Rising DOM and falling sale-to-list signal softening.',[['Redfin Data Center','https://www.redfin.com/news/data-center/']]],
+  ['Rental listing count trend','More listings and longer rental DOM point to oversupply.',[['Zillow Research','https://www.zillow.com/research/data/']]]]},
+ {k:'r',t:'Rent trends',items:[
+  ['Current rent by unit type (studio–3BR)','Build a table of 5–10 comps per unit type.',[['Zillow Research (ZORI)','https://www.zillow.com/research/data/'],['Rentometer','https://www.rentometer.com'],['HUD Fair Market Rents','https://www.huduser.gov/portal/datasets/fmr.html']]],
+  ['Rent growth: 1-year and 3-year','Positive and at or above inflation.',[['Apartment List rent data','https://www.apartmentlist.com/research/category/data-rent-estimates'],['Zillow Research','https://www.zillow.com/research/data/']]],
+  ['Rent-to-income ratio','Annual rent ÷ median renter income; under ~30% leaves room to raise rents.',[['Census ACS','https://data.census.gov']]],
+  ['Concessions on new lease-ups','Free-month offers signal oversupply.',[['Search: apartments move-in special','Q:apartments move-in special']]],
+  ['Section 8 payment standards vs market','If payment standards beat market rent, voucher demand supports occupancy.',[['Search: housing authority payment standards','Q:housing authority payment standards']]]]},
+ {k:'k',t:'Risk factors',items:[
+  ['Crime trend (3-year, block level)','Direction matters more than level. Compare to the city average.',[['FBI Crime Data Explorer','https://cde.ucr.cjis.gov'],['Search: police crime map','Q:police crime map']]],
+  ['Flood zone & climate risk','Special Flood Hazard Areas require flood insurance on financed property.',[['FEMA Flood Map Service Center','https://msc.fema.gov/portal/home'],['First Street risk','https://firststreet.org']]],
+  ['Environmental sites nearby','Former industrial, gas station or dry-cleaner sites.',[['EPA Envirofacts','https://enviro.epa.gov']]],
+  ['Rent control, just-cause eviction, rental licensing','Any cap on increases directly limits value-add upside.',[['Municode (local codes)','https://library.municode.com'],['Search: rent control ordinance','Q:rent control ordinance']]],
+  ['Eviction process & timeline','Weeks from notice to possession; tenant right-to-counsel rules.',[['Eviction Lab','https://evictionlab.org'],['Search: eviction process timeline','Q:eviction process timeline landlord']]],
+  ['Property tax trajectory','Millage history, reassessment cycle, reassessment on sale.',[['Tax Foundation','https://taxfoundation.org'],['Search: county assessor','Q:county assessor property search']]],
+  ['Insurance availability & cost','Get a quote early; some areas have few carriers left.',[['Search: landlord insurance rates','Q:landlord insurance premium increase']]]]},
+ {k:'c',t:'Comparable properties',items:[
+  ['Sold comps (last 12 months)','Same type, ±25% of unit count, within 1–3 miles: price/unit, price/SF, cap rate, GRM.',[['LoopNet','https://www.loopnet.com'],['Crexi','https://www.crexi.com'],['Search: county deed records','Q:county recorder deed search']]],
+  ['Active listings vs sold','The gap between asking and sold caps shows how much negotiating room exists.',[['LoopNet','https://www.loopnet.com'],['Crexi','https://www.crexi.com']]],
+  ['Rent comps','5–10 comparable units with size, condition and amenities (see Rental Market tab).',[['Rentometer','https://www.rentometer.com'],['Zillow Rentals','https://www.zillow.com/rent/']]],
+  ['Expense comps','Tax per unit and insurance per unit on similar buildings.',[['Search: county assessor','Q:county assessor property search']]],
+  ['Sale velocity','How many similar buildings traded in 24 months; thin markets are harder to exit.',[['Local commercial broker','Q:multifamily broker']]]]}];
+tool({id:'hood',group:'Market research',name:'Neighborhood Analysis',blurb:'A research framework for one neighborhood or ZIP code: the data points to find, what good looks like, and where to get each one. Rate each category as you go.',
+ inputs:()=>G('Area',T('area','Neighborhood / ZIP','',{ph:'e.g. Hampden or 21211'}),T('city','City, State','',{ph:'e.g. Baltimore, MD'}))+HOOD.map(c=>G(c.t,Sel('r'+c.k,'Your rating',[['','Not rated'],['1','1 · Weak'],['2','2'],['3','3 · Neutral'],['4','4'],['5','5 · Strong']],'',{w:true}),A('n'+c.k,'Notes',''))).join(''),
+ calc(V,x){const loc=[V.s('area'),V.s('city')].filter(s=>s.trim()).join(' ');const rated=HOOD.filter(c=>V.n('r'+c.k,0)>0);const avg=rated.length?sum(rated.map(c=>V.n('r'+c.k)))/rated.length:NaN;
+  const done=HOOD.reduce((a,c)=>a+c.items.filter((_,i)=>x.ck(c.k+i)).length,0),tot=HOOD.reduce((a,c)=>a+c.items.length,0);
+  const lvl=!fin(avg)?'mut':avg>=3.8?'good':avg>=2.8?'warn':'bad';
+  const head=!fin(avg)?'Rate each category as you research':`${avg.toFixed(1)} / 5 across ${rated.length} categor${rated.length===1?'y':'ies'}`;
+  const src=s=>`<div class="src">${s.map(([l,u])=>lk(l,u.startsWith('Q:')?gl((loc?loc+' ':'')+u.slice(2)):u)).join('')}</div>`;
+  return verdict(lvl,head,`${done} of ${tot} data points gathered${loc?' for '+esc(loc):''}. ${fin(avg)?(avg>=3.8?'Strong fundamentals so far.':avg>=2.8?'Mixed: price the risks into your offer.':'Weak fundamentals: needs a deep discount to make sense.'):''}`,fin(avg)?{good:'STRONG',warn:'MIXED',bad:'WEAK'}[lvl]:'IN PROGRESS')
+  +card('Scorecard',HOOD.map(c=>{const r=V.n('r'+c.k,0),d=c.items.filter((_,i)=>x.ck(c.k+i)).length;return `<div class="kv"><span>${c.t} <span class="mut">· ${d}/${c.items.length} found</span></span><b class="${r?lv(r,4,3):'mut'}">${r?r+' / 5':'—'}</b></div>`;}).join(''))
+  +HOOD.map(c=>card(c.t,`<div class="cl">${c.items.map((it,i)=>{const on=x.ck(c.k+i);return `<label class="cli${on?' done':''}"><input type="checkbox" data-c="${c.k+i}"${on?' checked':''}><div><div class="nm"><span class="t1">${it[0]}</span></div><div class="note">${it[1]}</div>${src(it[2])}</div></label>`;}).join('')}</div>`)).join('')
+  +`<p class="note">Search links add your neighborhood and city to the query. Paid sources (CoStar, Yardi) are often available through a commercial broker.</p>`;}});
+
+/* =================== 6. MARKET COMPARISON =================== */
+const MK=[{p:'a',d:['Market A (example)',285000,1950,1.4,2.1,'4',4,'None',0.9,2100,'2',7.2,'3',3.5,'4']},{p:'b',d:['Market B (example)',410000,2350,0.6,1.2,'2',12,'Local',1.3,1600,'1',5.6,'4',4.8,'2']},{p:'c',d:['Market C (example)',225000,1700,1.9,2.6,'5',3,'None',1.6,3900,'4',7.8,'2',3.0,'5']}];
+const S15=(lo,hi)=>[['1','1 · '+lo],['2','2'],['3','3'],['4','4'],['5','5 · '+hi]];
+const WTS={'Buy and hold':{ptr:18,grow:17,ll:15,tax:8,risk:10,cap:17,entry:7,appr:8,str:0},'Flip':{ptr:0,grow:20,ll:0,tax:8,risk:10,cap:0,entry:27,appr:35,str:0},'BRRRR':{ptr:18,grow:12,ll:13,tax:7,risk:8,cap:14,entry:10,appr:18,str:0},'Short-term rental':{ptr:8,grow:10,ll:5,tax:8,risk:14,cap:10,entry:10,appr:10,str:25}};
+tool({id:'markets',group:'Market research',name:'Market Comparison',blurb:'Compare two or three markets side by side and score them against your strategy. Replace the example figures with current local data.',wide:true,
+ inputs:()=>G('Strategy',Sel('strat','Investment strategy',Object.keys(WTS),'Buy and hold'),T('budget','Budget','$250K – $450K',{w:false}),T('target','Target property','Small multifamily',{w:false}),C('useC','Include Market C',true))
+  +MK.map(m=>G('Market '+m.p.toUpperCase(),T(m.p+'name','Market (City, State)',m.d[0]),N(m.p+'price','Median price, target type',m.d[1],{pre:'$'}),N(m.p+'rent','Median rent / unit',m.d[2],{pre:'$',suf:'/mo'}),N(m.p+'pop','Population growth',m.d[3],{suf:'%/yr'}),N(m.p+'job','Job growth',m.d[4],{suf:'%/yr'}),Sel(m.p+'ll','Landlord-friendliness',S15('Tenant-leaning','Landlord-friendly'),m.d[5]),N(m.p+'ev','Eviction timeline',m.d[6],{suf:'weeks'}),Sel(m.p+'rc','Rent control',['None','Local','Statewide cap'],m.d[7]),N(m.p+'tax','Effective property tax',m.d[8],{suf:'%'}),N(m.p+'ins','Insurance / property',m.d[9],{pre:'$',suf:'/yr'}),Sel(m.p+'risk','Natural disaster risk',S15('Low','High'),m.d[10]),N(m.p+'cap','Typical cap rate',m.d[11],{suf:'%'}),Sel(m.p+'comp','Buyer competition',S15('Light','Fierce'),m.d[12]),N(m.p+'appr','Appreciation (5-yr avg)',m.d[13],{suf:'%/yr'}),Sel(m.p+'str','STR regulation',S15('Strict / banned','Permissive'),m.d[14]))).join(''),
+ calc(V){const strat=V.s('strat'),w=WTS[strat];const ms=MK.filter(m=>m.p!=='c'||V.b('useC')).map(m=>{const g=k=>V.n(m.p+k,NaN);const price=g('price'),rent=g('rent');return {p:m.p,name:V.s(m.p+'name')||'Market '+m.p.toUpperCase(),price,rent,ptr:price/(rent*12),one:rent/price,pop:g('pop'),job:g('job'),ll:g('ll'),ev:g('ev'),rc:V.s(m.p+'rc'),rcN:{None:0,Local:1,'Statewide cap':2}[V.s(m.p+'rc')],tax:g('tax'),ins:g('ins'),risk:g('risk'),cap:g('cap'),comp:g('comp'),appr:g('appr'),str:g('str')};});
+  const norm=(k,hi=true)=>{const v=ms.map(m=>m[k]).filter(fin);const mn=Math.min(...v),mx=Math.max(...v);ms.forEach(m=>{m['n_'+k]=!fin(m[k])?0.5:mx===mn?0.5:hi?(m[k]-mn)/(mx-mn):(mx-m[k])/(mx-mn);});};
+  norm('ptr',false);norm('pop');norm('job');norm('ll');norm('ev',false);norm('rcN',false);norm('tax',false);norm('ins',false);norm('risk',false);norm('cap');norm('price',false);norm('comp',false);norm('appr');norm('str');
+  ms.forEach(m=>{m.sc={ptr:m.n_ptr,grow:(m.n_pop+m.n_job)/2,ll:(m.n_ll+m.n_ev+m.n_rcN)/3,tax:m.n_tax,risk:(m.n_ins+m.n_risk)/2,cap:m.n_cap,entry:(m.n_price+m.n_comp)/2,appr:m.n_appr,str:m.n_str};m.total=Object.keys(w).reduce((a,k)=>a+w[k]*m.sc[k],0);m.char=m.ptr<12?'Cash-flow market':m.ptr>18?'Appreciation market':'Balanced';});
+  const best=[...ms].sort((a,b)=>b.total-a.total);const win=best[0];
+  const bestIdx=(f,hi=true)=>{const v=ms.map(f);const t=hi?Math.max(...v.filter(fin)):Math.min(...v.filter(fin));return v.map(x=>x===t);};
+  const row=(l,f,fmt,hi=true)=>{const b=bestIdx(f,hi);return [l,...ms.map((m,i)=>`<span class="${b[i]&&ms.length>1?'good':''}">${fmt(f(m))}${b[i]&&ms.length>1?' ★':''}</span>`)];};
+  const cmp=tbl(['Metric',...ms.map(m=>esc(m.name))],[row('Price-to-rent ratio',m=>m.ptr,v=>v.toFixed(1),false),row('Rent ÷ price (1% rule)',m=>m.one,v=>pc(v,2)),row('Population growth',m=>m.pop,v=>pc(v/100,1)),row('Job growth',m=>m.job,v=>pc(v/100,1)),row('Landlord-friendliness',m=>m.ll,v=>v+' / 5'),row('Eviction timeline',m=>m.ev,v=>v+' wks',false),['Rent control',...ms.map(m=>m.rc)],row('Property tax rate',m=>m.tax,v=>pc(v/100,2),false),row('Insurance / yr',m=>m.ins,fm,false),row('Disaster risk',m=>m.risk,v=>v+' / 5',false),row('Typical cap rate',m=>m.cap,v=>pc(v/100,1)),row('Median price (entry)',m=>m.price,fk,false),row('Buyer competition',m=>m.comp,v=>v+' / 5',false),row('Appreciation',m=>m.appr,v=>pc(v/100,1)),...(w.str?[row('STR regulation',m=>m.str,v=>v+' / 5')]:[]),['Character',...ms.map(m=>m.char)],{c:['<b>Strategy score</b>',...ms.map(m=>`<b class="${m===win?'good':''}">${Math.round(m.total)} / 100</b>`)],cls:'tot'}]);
+  const lbl={ptr:'price-to-rent',grow:'population and job growth',ll:'landlord rules',tax:'property taxes',risk:'insurance and disaster risk',cap:'cap rates',entry:'barrier to entry',appr:'appreciation',str:'STR regulation'};
+  const ks=Object.keys(w).filter(k=>w[k]>0);const strengths=ks.filter(k=>win.sc[k]>=0.99).sort((a,b)=>w[b]-w[a]).slice(0,3).map(k=>lbl[k]);const weak=ks.filter(k=>win.sc[k]<=0.01).sort((a,b)=>w[b]-w[a]).slice(0,2).map(k=>lbl[k]);
+  const margin=best[1]?win.total-best[1].total:100;
+  const scoreRows=ks.map(k=>[lbl[k][0].toUpperCase()+lbl[k].slice(1)+` <span class="mut">(${w[k]}%)</span>`,...ms.map(m=>`<span style="display:inline-flex;gap:8px;align-items:center">${Math.round(m.sc[k]*100)}<span class="meter" style="width:60px;display:inline-block"><i style="width:${m.sc[k]*100}%"></i></span></span>`)]);
+  return verdict(margin>8?'good':'warn',`${esc(win.name)} fits ${strat.toLowerCase()} best`,`${strengths.length?'Leads on '+strengths.join(', ')+'. ':''}${weak.length?'Weakest on '+weak.join(' and ')+'. ':''}${margin<=8&&best[1]?`Close call with ${esc(best[1].name)} (${Math.round(margin)} points); let deal-level numbers decide.`:''}`,margin>8?'BEST FIT':'CLOSE CALL')
+  +card('Side-by-side',cmp)+card(`Category scores for ${strat.toLowerCase()} (weight)`,tbl(['Category',...ms.map(m=>esc(m.name))],scoreRows))
+  +`<div class="two">${card('Reading the result',ul(ms.map(m=>`<b>${esc(m.name)}</b>: ${m.char.toLowerCase()} (price-to-rent ${m.ptr.toFixed(1)}). ${m.rc!=='None'?'Rent regulation limits rent growth. ':''}${m.risk>=4?'High disaster risk: insurance can erase cash flow. ':''}${m.ev>=10?'Slow evictions raise the cost of a bad tenant. ':''}`)))}${card('Verify with current local sources',ul(['Median prices and rents: Zillow Research, Redfin Data Center, local MLS (sold, not list).','Population and jobs: Census population estimates, BLS metro employment.','Landlord rules: state landlord-tenant statute and city code; a local eviction attorney for real timelines.','Property tax: county assessor effective rate and whether sales trigger reassessment.','Insurance: actual quotes from two agents; disaster risk from FEMA and First Street.','Cap rates: recent closed sales from a local broker, not national surveys.']))}</div>`
+  +`<p class="note">Scores are relative: each market is scored 0–100 against the others on each category, then weighted for your strategy. Adding or removing a market changes the scale.</p>`;}});
+
+/* =================== 7. RENTAL MARKET =================== */
+const AMEN=[['wd','In-unit washer/dryer',50,150],['park','Off-street parking',25,150],['ac','Central AC',25,75],['dw','Dishwasher',15,40],['pets','Pet-friendly (plus pet rent)',25,75],['out','Private outdoor space',25,75],['kit','Updated kitchen',75,200],['stor','Extra storage',15,50],['ev','EV charging',25,50],['furn','Furnished (mid-term)',150,400]];
+const COND={'Updated':3,'Average':2,'Needs work':1};
+tool({id:'rent',group:'Market research',name:'Rental Market Analysis',blurb:'Set a target rent from adjusted comparables, see which amenities justify the top of the range, and test whether short-term rental would beat a long-term lease.',wide:true,
+ inputs:()=>G('Subject property',T('type','Property type','Duplex unit',{w:false}),T('loc','Neighborhood, City, State','',{ph:'e.g. Hampden, Baltimore, MD',w:false}),N('beds','Bedrooms',2),N('baths','Bathrooms',1),N('sf','Square feet',950),Sel('cond','Condition',Object.keys(COND),'Updated'))
+  +G('Amenities the unit has',...AMEN.map(a=>C('a_'+a[0],a[1],['park','ac','dw','out','kit'].includes(a[0]))))
+  +GF('Rent comparables',R('comps',[{k:'addr',l:'Comp',t:1},{k:'beds',l:'Beds'},{k:'baths',l:'Baths'},{k:'sf',l:'SF'},{k:'cond',l:'Condition',o:Object.keys(COND)},{k:'rent',l:'Rent / mo'},{k:'adj',l:'Other adj $'}],[{addr:'Comp 1 (example)',beds:2,baths:1,sf:900,cond:'Average',rent:1395,adj:0},{addr:'Comp 2 (example)',beds:2,baths:1.5,sf:1050,cond:'Updated',rent:1595,adj:0},{addr:'Comp 3 (example)',beds:3,baths:1,sf:1150,cond:'Average',rent:1625,adj:0},{addr:'Comp 4 (example)',beds:2,baths:1,sf:880,cond:'Needs work',rent:1250,adj:0},{addr:'Comp 5 (example, has garage)',beds:2,baths:2,sf:1000,cond:'Updated',rent:1650,adj:-50}],'comp'))
+  +G('Adjustment values',N('aSF','Per square foot','',{pre:'$',hint:'',sg:1}),N('aBed','Per bedroom',125,{pre:'$'}),N('aBath','Per bathroom',60,{pre:'$'}),N('aCond','Per condition step',90,{pre:'$'}),N('lvac','Local vacancy rate','',{suf:'%',ph:'from research',w:true}))
+  +G('Short-term rental test',N('adr','Average nightly rate',165,{pre:'$'}),N('occ','Occupancy',62,{suf:'%'}),N('stay','Average stay',3,{suf:'nights'}),N('cfee','Cleaning fee charged',95,{pre:'$'}),N('ccost','Cleaning cost / turn',85,{pre:'$'}),N('plat','Platform fee',3,{suf:'%'}),N('smgmt','STR management',20,{suf:'%'}),N('sops','Utilities, supplies, software',450,{pre:'$',suf:'/mo'}),N('furn','Furnishing (one-time)',15000,{pre:'$'}),N('ltpm','Long-term mgmt',8,{suf:'%'})),
+ calc(V,x){const comps=x.rows('comps').map(c=>({...c,beds:toN(c.beds),baths:toN(c.baths),sf:toN(c.sf),rent:toN(c.rent),adj:toN(c.adj)||0,cv:COND[c.cond]||2})).filter(c=>fin(c.rent));
+  const s={beds:V.n('beds',2),baths:V.n('baths',1),sf:V.n('sf',NaN),cv:COND[V.s('cond')]||2};const autoSF=0.5*median(comps.filter(c=>fin(c.sf)).map(c=>c.rent/c.sf));const aSF=V.n('aSF',autoSF);x.hint('aSF',V.blank('aSF')?`Using ${fm(autoSF,2)} (half the comps' rent/SF)`:`Auto would be ${fm(autoSF,2)}`);
+  if(!comps.length)return empty('Add at least one comparable rent.');
+  const adj=comps.map(c=>{const dSF=fin(s.sf)&&fin(c.sf)?(s.sf-c.sf)*aSF:0,dB=(s.beds-(fin(c.beds)?c.beds:s.beds))*V.n('aBed',0),dBa=(s.baths-(fin(c.baths)?c.baths:s.baths))*V.n('aBath',0),dC=(s.cv-c.cv)*V.n('aCond',0);return {...c,dSF,dB,dBa,dC,a:c.rent+dSF+dB+dBa+dC+c.adj};});
+  const vals=adj.map(c=>c.a),lo=Math.min(...vals),hi=Math.max(...vals),md=median(vals);const has=AMEN.filter(a=>V.b('a_'+a[0])),lacks=AMEN.filter(a=>!V.b('a_'+a[0]));
+  const pos=has.length>=6?0.75:has.length>=4?0.5:0.3;const target=Math.round((lo+(hi-lo)*pos)/5)*5;
+  const ct=tbl(['Comp','Rent','Size adj','Bed adj','Bath adj','Condition','Other','Adjusted'],adj.map(c=>[esc(c.addr),fm(c.rent),fa(c.dSF),fa(c.dB),fa(c.dBa),fa(c.dC),fa(c.adj),`<b>${fm(c.a)}</b>`]));
+  const ad=V.n('adr',0),oc=V.p('occ',0),nights=30.4*oc,turns=nights/Math.max(1,V.n('stay',3));const rev=nights*ad+turns*V.n('cfee',0);const sCost=rev*(V.p('plat',0)+V.p('smgmt',0))+turns*V.n('ccost',0)+V.n('sops',0);const strNet=rev-sCost;const ltNet=target*(1-V.p('lvac',.05))*(1-V.p('ltpm',.08));const diff=strNet-ltNet;const pay=diff>0?V.n('furn',0)/diff:Infinity;const beOcc=(()=>{let l=0,h=1;for(let i=0;i<40;i++){const m=(l+h)/2,n=30.4*m,t=n/Math.max(1,V.n('stay',3)),r=n*ad+t*V.n('cfee',0),c=r*(V.p('plat',0)+V.p('smgmt',0))+t*V.n('ccost',0)+V.n('sops',0);if(r-c>=ltNet)h=m;else l=m;}return h;})();
+  const beds=s.beds;const demo=beds<=1?'Young professionals, grad students and single renters. They prioritize location, commute, in-unit laundry, fast internet and a modern kitchen, and they move more often.':beds===2?'Couples, roommates and small families. They weigh parking, laundry, a second bathroom, storage and pet policy; roommates care about similar-size bedrooms.':'Families and roommate groups. School district, yard, parking for two cars, pets, storage and a laundry setup drive decisions; they stay longer, which lowers turnover.';
+  const season=[62,68,82,92,100,100,98,94,80,70,56,52];
+  return verdict('good',`Target ${fm(target)}/mo`,`Adjusted comps range ${fm(lo)}–${fm(hi)}, median ${fm(md)}. With ${has.length} of ${AMEN.length} listed amenities, price in the ${pos>=0.75?'upper':pos>=0.5?'middle':'lower'} part of the range.`,'RENT')
+  +`<div class="card"><div class="stats">${stat('Low (adjusted)',fm(lo))}${stat('Median',fm(md))}${stat('High (adjusted)',fm(hi))}${stat('Recommended list',fm(target),'good')}${fin(s.sf)?stat('Rent / SF',fm(target/s.sf,2)):''}${stat('Vacancy used',pc(V.p('lvac',.05),0))}</div></div>`
+  +card('Adjusted comparables',ct+`<p class="note">Method: start with each comp's rent, add value for features the subject has that the comp lacks and subtract the reverse. Use 5–10 comps leased in the last 90 days within about a mile. Weight the closest matches most.</p>`)
+  +`<div class="two">${card('Amenities that move rent',tbl(['Amenity','Subject','Typical premium'],AMEN.map(a=>[a[1],V.b('a_'+a[0])?tag('good','Has'):tag('mut','Lacks'),`${fm(a[2])}–${fm(a[3])}/mo`]),'')+`<p class="note">Premiums are rules of thumb; confirm against comps with and without each feature. Cheapest upgrades to add: ${lacks.filter(a=>['dw','stor','ev','ac','wd'].includes(a[0])).map(a=>a[1].toLowerCase()).slice(0,3).join(', ')||'none flagged'}.</p>`)}
+    ${card('Seasonal leasing pattern',barChart(season,['J','F','M','A','M','J','J','A','S','O','N','D'],{label:'Relative leasing demand by month',fmt:v=>Math.round(v),h:170,hl:i=>i>=4&&i<=7})+`<p class="note">Typical U.S. pattern (relative demand). Best to list April–August; hardest November–January. College towns peak around lease signing for the next school year. Time lease expirations for spring and summer.</p>`)}</div>`
+  +`<div class="two">${card('Who rents this',`<p class="note" style="margin:0">${demo}</p>`)}${card('How to stand out',ul(['Professional photos and a floor plan; most renters decide from the listing.','Quote rent with utilities clearly explained.','Offer online applications, online rent payment and fast maintenance response.','Allow pets with pet rent and deposit where legal: it widens the pool.','Refresh paint, lighting and hardware before listing: low cost, high perceived value.']))}</div>`
+  +card('Short-term rental comparison',`<div class="stats">${stat('STR gross / mo',fm(rev))}${stat('STR costs / mo',fm(sCost))}${stat('STR net / mo',fm(strNet),strNet>ltNet?'good':'bad')}${stat('Long-term net / mo',fm(ltNet))}${stat('Monthly difference',fa(diff),diff>0?'good':'bad')}${stat('Break-even STR occupancy',pc(beOcc,0))}</div><p class="note">${diff>0?`STR clears long-term by ${fm(diff)}/mo; furnishing pays back in about ${nm(pay,1)} months. It also takes more work, more volatility and more regulatory risk.`:'At these assumptions a long-term lease nets more. STR only wins with a higher nightly rate or occupancy.'} Nightly rate and occupancy: check AirDNA or comparable listings.</p><h3 class="eyebrow" style="margin-top:12px">Regulatory check before any STR</h3>${ul(['Is STR allowed in this zone, and is a permit or license required?','Primary-residence rules or caps on nights per year?','Occupancy and hotel taxes you must collect and remit.','HOA or condo bylaws that prohibit rentals under 30 days.','Does your insurance and loan allow STR use?'])}<div class="src">${lk('Search: STR ordinance',gl((V.s('loc')||'')+' short term rental ordinance permit'))}${lk('AirDNA',"https://www.airdna.co")}</div>`)
+  +card('Where to find the data',ul([`Market rent: ${lk('Rentometer','https://www.rentometer.com')}, ${lk('Zillow Rentals','https://www.zillow.com/rent/')}, Apartments.com, local property managers.`,`Vacancy: ${lk('Census Housing Vacancy Survey','https://www.census.gov/housing/hvs/')} for metro level; local PMs for the submarket.`,`Fair Market Rents and Section 8 standards: ${lk('HUD FMR','https://www.huduser.gov/portal/datasets/fmr.html')} and the local housing authority.`,'Demographics: Census ACS renter age, household size and income for the tract.']));}});
+
+/* =================== 8. FIVE-YEAR PROJECTION =================== */
+tool({id:'fiveyr',group:'Deal analysis',name:'Five-Year Projection',blurb:'Year-by-year cash flow, equity buildup, tax benefits, IRR and equity multiple for a rental you plan to hold for five years.',
+ inputs:()=>G('Purchase',T('addr','Property','12-unit building (example)'),Sel('ptype','Depreciation class',['Residential (27.5 yr)','Commercial (39 yr)'],'Residential (27.5 yr)',{w:true}),N('price','Purchase price',1000000,{pre:'$'}),N('units','Units',12),N('cc','Closing costs','',{pre:'$',hint:'',sg:1}),N('reno','Renovation budget',48000,{pre:'$'}),N('sv','Value after renovation','',{pre:'$',hint:'',sg:1,w:true}))
+  +G('Financing',N('ltv','Loan-to-value',75,{suf:'%'}),N('rate','Interest rate',6.75,{suf:'%'}),N('amort','Amortization',30,{suf:'yrs'}),N('io','Interest-only',0,{suf:'yrs'}))
+  +G('Year 1 operations',N('egi','Effective gross income',145000,{pre:'$'}),N('noi','Net operating income',72000,{pre:'$'}))
+  +G('Assumptions — blank uses a default',N('rg','Rent growth','',{suf:'%/yr',hint:'',sg:1}),N('eg','Expense growth','',{suf:'%/yr',hint:'',sg:1}),N('ap','Appreciation','',{suf:'%/yr',hint:'',sg:1}),N('cx','CapEx reserve','',{pre:'$',suf:'/yr',hint:'',sg:1}),N('tr','Income tax rate','',{suf:'%',hint:'',sg:1}),N('land','Land share of price',20,{suf:'%'}),N('sell','Selling costs at exit',5,{suf:'%'})),
+ calc(V,x){const price=V.n('price',0),units=V.n('units',1);const D={rg:.03,eg:.035,ap:.03,tr:.24};const cc=V.n('cc',price*0.03),reno=V.n('reno',0),sv=V.n('sv',price+reno),cx=V.n('cx',300*units);
+  x.hint('cc',V.blank('cc')?`Using 3%: ${fm(price*0.03)}`:'');x.hint('sv',V.blank('sv')?`Using price + renovation: ${fm(price+reno)}`:'');['rg','eg','ap','tr'].forEach(k=>x.hint(k,V.blank(k)?`Using ${pc(D[k],1)}`:''));x.hint('cx',V.blank('cx')?`Using $300/unit: ${fm(300*units)}`:'');
+  if(!(price>0&&V.n('noi',0)))return empty('Enter a price and Year 1 NOI.');
+  const rg=V.p('rg',D.rg),eg=V.p('eg',D.eg),ap=V.p('ap',D.ap),tr=V.p('tr',D.tr),sell=V.p('sell',.05);const loan=price*V.p('ltv',.75),rate=V.p('rate',.07),am=V.n('amort',30),io=V.n('io',0);const cash=price-loan+cc+reno;
+  const egi1=V.n('egi',0),noi1=V.n('noi',0),opex1=egi1-noi1;const life=V.s('ptype').startsWith('Comm')?39:27.5;const depr=((price+cc)*(1-V.p('land',.2))+reno)/life;
+  const pa=pmtM(rate,am,loan)*12;const bal=t=>t<=io?loan:balAfter(loan,rate,am,(t-io)*12);const Y=[];let cum=0,cumAT=0;
+  for(let t=1;t<=30;t++){const egi=egi1*Math.pow(1+rg,t-1),opex=opex1*Math.pow(1+eg,t-1),noi=egi-opex,capex=cx*Math.pow(1+eg,t-1),ds=t<=io?loan*rate:pa,prin=bal(t-1)-bal(t),int=ds-prin,cf=noi-capex-ds;const dep=t<=life?depr:0;const taxable=noi-int-dep;const tax=taxable*tr;const at=cf-tax;cum+=cf;cumAT+=at;const val=sv*Math.pow(1+ap,t);const eq=val-bal(t);
+   Y.push({t,egi,opex,noi,capex,ds,prin,int,cf,dep,taxable,tax,at,cum,cumAT,val,bal:bal(t),eq,coc:cf/cash});}
+  const F=Y.slice(0,5),y5=F[4];const net5=y5.val*(1-sell)-y5.bal;const flows=[-cash,...F.map((y,i)=>y.at+(i===4?net5:0))];const I=irr(flows);const dist=sum(flows.slice(1));const em=dist/cash;const profit=dist-cash;
+  const eq0=sv-loan;const prinTot=sum(F.map(y=>y.prin)),apprTot=y5.val-sv,taxBen=sum(F.map(y=>y.dep))*tr,cfTot=sum(F.map(y=>y.cf));
+  const pb=Y.find(y=>y.cumAT>=cash);const pbEq=Y.find(y=>y.cumAT+y.val*(1-sell)-y.bal>=cash*1.0001);
+  const H=['','Year 1','Year 2','Year 3','Year 4','Year 5'];const L=(l,f,c)=>({c:[l,...F.map(f)],cls:c});
+  const t1=tbl(H,[L('Effective gross income',y=>fm(y.egi)),L('Operating expenses',y=>fa(-y.opex),'sub'),L('Net operating income',y=>fm(y.noi),'tot'),L('CapEx reserve',y=>fa(-y.capex),'sub'),L('Debt service',y=>fa(-y.ds),'sub'),L('Pre-tax cash flow',y=>`<span class="${y.cf<0?'bad':''}">${fa(y.cf)}</span>`,'tot'),L('Cumulative cash flow',y=>fa(y.cum)),L('Cash-on-cash',y=>pc(y.coc,1)),L('Depreciation',y=>fa(-y.dep),'sub'),L('Taxable income',y=>fa(y.taxable),'sub'),L('Tax (−) or tax saving (+)',y=>fa(-y.tax)),L('After-tax cash flow',y=>fa(y.at),'tot')]);
+  const t2=tbl(H,[L('Property value',y=>fm(y.val)),L('Loan balance',y=>fa(-y.bal),'sub'),L('Equity',y=>fm(y.eq),'tot'),L('Principal paydown (year)',y=>fm(y.prin)),L('Appreciation (year)',y=>fm(y.val-(y.t===1?sv:F[y.t-2].val))),L('Net worth change (year)',(y,i)=>fa(y.at+y.eq-(y.t===1?eq0:F[y.t-2].eq))),L('Net worth vs. start, after sale costs',y=>fa(y.cumAT+y.val*(1-sell)-y.bal-cash),'tot')]);
+  const lvl=I>=0.14?'good':I>=0.09?'warn':'bad';
+  return verdict(lvl,`${pc(I,1)} IRR · ${nx(em)} equity multiple`,`Total 5-year return of ${fm(profit)} on ${fm(cash)} invested, about ${pc(profit/cash/5,1)} per year on average. ${pb?`Cash flow alone returns your cash in year ${pb.t}.`:'Cash flow alone does not return your cash within 30 years.'}`,{good:'STRONG',warn:'MODERATE',bad:'WEAK'}[lvl])
+  +`<div class="card"><div class="stats">${stat('Cash invested',fm(cash))}${stat('5-yr cash flow (pre-tax)',fa(cfTot),cfTot<0?'bad':'')}${stat('Principal paydown',fm(prinTot))}${stat('Appreciation',fm(apprTot))}${stat('Depreciation tax shield',fm(taxBen))}${stat('Net sale proceeds (yr 5)',fm(net5))}</div></div>`
+  +card('Cash flow statement',t1)+card('Equity buildup & net worth',t2)
+  +`<div class="two">${card('Return summary',kv('Total 5-year profit',fm(profit),profit>0?'good':'bad')+kv('Average annual return',pc(profit/cash/5,1))+kv('IRR (after tax, before recapture)',pc(I,1),lvl)+kv('Equity multiple',nx(em))+kv('Cash-flow breakeven',pb?'Year '+pb.t:'30+ years')+kv('Breakeven incl. sale equity',pbEq?'Year '+pbEq.t:'—'))}${card('Where the return comes from',barChart([cfTot,prinTot,apprTot-y5.val*sell,taxBen],['Cash flow','Paydown','Apprec. net of sale','Tax shield'],{label:'Sources of five-year return',h:180}))}</div>`
+  +`<p class="note">Tax savings assume losses are usable against other income; passive-loss limits may defer them (see Tax Deductions tab). Depreciation recapture (up to 25%) and capital gains tax at sale are not deducted, so after-sale figures are pre-tax on the sale.</p>`;}});
+
+/* =================== 9. RENOVATION ROI =================== */
+tool({id:'reno',group:'Deal analysis',name:'Renovation ROI',blurb:'Rank planned renovations by return, see the after-repair value they support, and check whether a BRRRR cash-out refinance works.',wide:true,
+ inputs:()=>G('Property today',T('desc','Property','12-unit building (example)'),N('val','Current value',1000000,{pre:'$'}),N('units','Units',12),N('rent','Current total rent',12600,{pre:'$',suf:'/mo'}),N('noi','Current NOI',64000,{pre:'$',suf:'/yr'}),N('pi','Current mortgage P&I',4865,{pre:'$',suf:'/mo'}),N('lb','Current loan balance',745000,{pre:'$'}),N('cashIn','Cash already in the deal',285000,{pre:'$'}))
+  +G('Valuation',N('cap','Cap rate for value',7,{suf:'%'}),N('leak','Lost to vacancy & mgmt',12,{suf:'% of new rent',hint:'Share of each rent increase that never reaches NOI'}))
+  +GF('Planned renovations',R('items',[{k:'name',l:'Renovation',t:1},{k:'cost',l:'Total cost $'},{k:'inc',l:'Rent lift $/unit/mo'},{k:'n',l:'Units affected'},{k:'direct',l:'Extra value $'}],[{name:'Kitchen refresh',cost:36000,inc:75,n:12,direct:0},{name:'LVP flooring',cost:30000,inc:40,n:12,direct:0},{name:'Washer/dryer hookups',cost:18000,inc:60,n:6,direct:0},{name:'Exterior paint & curb appeal',cost:15000,inc:10,n:12,direct:10000}],'renovation'))
+  +G('BRRRR refinance',N('rltv','Refi loan-to-value',75,{suf:'%'}),N('rrate','Refi rate',7,{suf:'%'}),N('ram','Refi amortization',30,{suf:'yrs'}),N('rcost','Refi costs',2,{suf:'% of loan'})),
+ calc(V,x){const cap=V.p('cap',.07),leak=V.p('leak',.12),val=V.n('val',0),noi=V.n('noi',0),pi=V.n('pi',0);
+  const it=x.rows('items').map(r=>({name:r.name||'Untitled',cost:toN(r.cost)||0,inc:toN(r.inc)||0,n:toN(r.n)||0,direct:toN(r.direct)||0})).filter(r=>r.cost>0);
+  if(!it.length)return empty('Add at least one renovation with a cost.');
+  it.forEach(r=>{r.ann=r.inc*r.n*12;r.noi=r.ann*(1-leak);r.vi=r.noi/cap+r.direct;r.pay=r.ann>0?r.cost/r.ann:Infinity;r.roi=r.ann/r.cost;r.vroi=(r.vi-r.cost)/r.cost;});
+  const rk=[...it].sort((a,b)=>b.roi-a.roi||b.vroi-a.vroi);rk.forEach((r,i)=>r.rank=i+1);
+  const tc=sum(it.map(r=>r.cost)),ta=sum(it.map(r=>r.ann)),tn=sum(it.map(r=>r.noi)),tv=sum(it.map(r=>r.vi)),arv=val+tv;const newNoi=noi+tn,cf0=noi/12-pi,cf1=newNoi/12-pi;
+  const nl=arv*V.p('rltv',.75),rc=nl*V.p('rcost',.02),out=nl-V.n('lb',0)-rc;const npi=pmtM(V.p('rrate',.07),V.n('ram',30),nl);const cfR=newNoi/12-npi;const dscrR=newNoi/(npi*12);const inDeal=V.n('cashIn',0)+tc;const left=inDeal-Math.max(0,out);
+  const brrrr=out>=tc&&dscrR>=1.2?'good':out>0&&dscrR>=1.1?'warn':'bad';
+  const tb=tbl(['Rank','Renovation','Cost','Annual rent lift','Payback','Cash ROI','Value added','Value ROI'],rk.map(r=>({c:[`<b>${r.rank}</b>`,esc(r.name),fm(r.cost),fm(r.ann),fin(r.pay)?nm(r.pay,1)+' yrs':'—',`<span class="${lv(r.roi,.2,.1)}">${pc(r.roi,1)}</span>`,fm(r.vi),`<span class="${r.vroi>=0?'good':'bad'}">${pc(r.vroi,0)}</span>`],cls:r.rank===1?'hl':''})).concat([{c:['','Total',fm(tc),fm(ta),ta?nm(tc/ta,1)+' yrs':'—',pc(ta/tc,1),fm(tv),pc((tv-tc)/tc,0)],cls:'tot'}]));
+  const lvl=tv>=tc*1.5?'good':tv>=tc?'warn':'bad';
+  return verdict(lvl,`${fm(tc)} of work adds about ${fm(tv)} of value`,`That is ${pc(tv/tc,0).replace('%','')}¢ of value per dollar spent at a ${pc(cap,1)} cap. Do ${esc(rk[0].name)} first: it pays back in ${fin(rk[0].pay)?nm(rk[0].pay,1)+' years':'n/a'}.`,{good:'CREATES VALUE',warn:'BREAK-EVEN',bad:'DESTROYS VALUE'}[lvl])
+  +card('Renovations ranked by cash ROI',tb+`<p class="note">Cash ROI = annual rent increase ÷ cost. Value added = rent lift after ${pc(leak,0)} leakage, capitalized at ${pc(cap,1)}, plus any extra value you entered. A common rule: only renovate when value added is at least 1.5× cost.</p>`)
+  +`<div class="two">${card('After renovation',kv('Total renovation budget',fm(tc))+kv('After-repair value (ARV)',fm(arv))+kv('Monthly rent',`${fm(V.n('rent',0))} → ${fm(V.n('rent',0)+ta/12)}`)+kv('NOI',`${fm(noi)} → ${fm(newNoi)}`)+kv('Monthly cash flow (same loan)',`${fa(cf0)} → ${fa(cf1)}`,cf1>cf0?'good':'')+kv('Cash-on-cash on new money',pc((cf1-cf0)*12/tc,1)))}
+   ${card('BRRRR refinance check',kv('New loan at '+pc(V.p('rltv',.75),0)+' of ARV',fm(nl))+kv('Pay off existing loan',fa(-V.n('lb',0)))+kv('Refi costs',fa(-rc))+kv('Cash out',fa(out),out>0?'good':'bad')+kv('Cash left in deal',fm(left))+kv('New P&I',fm(npi)+'/mo')+kv('Cash flow after refi',fa(cfR)+'/mo',cfR>0?'good':'bad')+kv('DSCR after refi',nx(dscrR),lv(dscrR,1.25,1.1))+`<p class="note" style="margin:8px 0 0">${tag(brrrr,{good:'Works',warn:'Partial',bad:'Does not work'}[brrrr])} ${out>=tc?'The refinance returns the full renovation budget.':out>0?`The refinance returns ${pc(out/tc,0)} of the renovation budget.`:'The refinance would not return cash at this ARV and LTV.'} Most lenders need 6–12 months of seasoning and a DSCR of 1.20–1.25x.</p>`)}</div>`;}});
+
+/* =================== 10. DUE DILIGENCE =================== */
+const DD=[
+['Financial verification','C','Certified rent roll','The basis of your income underwriting.','Seller or listing broker; seller certifies at closing','Rents far above market, many move-ins in the last 90 days, family-member tenants','2–5 days','all'],
+['Financial verification','C','Trailing 12-month P&L (T-12) plus prior 2 years','Shows real operating history and trends, not a pro forma.','Seller, bookkeeper or property manager','Numbers that do not reconcile to bank deposits; missing expense categories','3–7 days','all'],
+['Financial verification','C','12 months of bank statements','Independent proof that reported rent was collected.','Seller (account numbers redacted)','Deposits below reported income; cash rents with no trail','3–7 days','all'],
+['Financial verification','I','Tax returns / Schedule E (2 years)','Sellers rarely overstate income to the IRS, so this caps their claims.','Seller','Tax-return income far below the T-12','1–2 weeks (often refused; note it)','all'],
+['Financial verification','I','Utility bills (12–24 months)','Verifies owner-paid utilities and seasonality.','Seller or the utilities, with authorization','Missing winter months; water bills rising (leaks)','1–2 weeks','all'],
+['Financial verification','C','All leases and amendments','You inherit the leases, not the rent roll.','Seller or property manager','Side agreements, long below-market leases, purchase options, undisclosed concessions','3–7 days','all'],
+['Financial verification','C','Security deposit ledger','You owe these deposits back to tenants after closing.','Seller or property manager; credited at closing','Deposits missing or not held as state law requires','3–5 days','all'],
+['Financial verification','I','Delinquency / aging report','Shows collection problems hidden in gross rent.','Property management software','More than 5% of rent 30+ days late','2–3 days','all'],
+['Financial verification','I','Service contracts and vendor list','Some contracts transfer with the property.','Seller','Long laundry or cable contracts with unfavorable revenue splits','3–5 days','all'],
+['Financial verification','C','CAM and expense reconciliations (2–3 years)','Recoveries are a large share of commercial income.','Seller or property manager','Under-billed recoveries or tenant disputes over CAM','1 week','com'],
+['Physical inspection','C','General building inspection','Sets condition and your repair budget.','Licensed commercial or home inspector','Deferred maintenance larger than your reserves','3–10 days','all'],
+['Physical inspection','C','Walk every unit','Sellers show the best units; the worst set your budget.','You or your property manager, with notice','Unauthorized occupants, water damage, units used for storage','1–2 days','all'],
+['Physical inspection','C','Structural and foundation','The most expensive defect to cure.','Structural engineer if the inspector flags cracks','Stair-step cracks, bowing walls, sloping floors','1–2 weeks','all'],
+['Physical inspection','C','Roof','Remaining life drives near-term capex.','Roofer inspection; permit history','Under 5 years of life left; multiple layers; active leaks','2–7 days','all'],
+['Physical inspection','I','HVAC and water heaters','Per-unit replacements add up fast.','HVAC contractor; data plates for age','Equipment over 15 years old; R-22 systems','2–7 days','all'],
+['Physical inspection','C','Plumbing and sewer camera scope','Sewer laterals and old supply lines fail expensively.','Plumber with a camera','Cast-iron or Orangeburg sewer; galvanized or polybutylene supply','2–7 days','all'],
+['Physical inspection','C','Electrical','Fire risk and insurability.','Licensed electrician','Knob-and-tube, aluminum branch wiring, Federal Pacific or Zinsco panels','2–7 days','all'],
+['Physical inspection','C','Phase I Environmental Site Assessment','Contamination liability can exceed the property value; most commercial lenders require it.','Environmental consultant','Former gas station or dry cleaner, underground tanks, recognized environmental conditions','2–3 weeks','big'],
+['Physical inspection','I','Pest / wood-destroying insects','Termite and rodent damage is often hidden.','Licensed pest inspector','Active infestation; structural wood damage','2–5 days','all'],
+['Physical inspection','I','Mold, radon, asbestos, lead paint','Health hazards bring remediation cost and liability.','Certified testers','Elevated radon, friable asbestos, peeling paint in pre-1978 units','1–2 weeks','all'],
+['Physical inspection','I','Code compliance and open violations','Open violations transfer to you and can block rental licenses.','City code enforcement or building department','Open violations, illegal units, unpermitted conversions','3–10 days','all'],
+['Legal and title','C','Title search and title commitment','Confirms the seller can convey clean ownership.','Title company or real estate attorney','Unreleased liens, judgments, gaps in chain of title','1–2 weeks','all'],
+['Legal and title','I','Survey (ALTA for commercial)','Confirms boundaries, encroachments and access.','Licensed surveyor','Encroachments; buildings over setback lines; no legal access','2–4 weeks','all'],
+['Legal and title','C','Zoning verification','Current use and unit count must be legal to rebuild after a loss.','Zoning office letter or zoning report','Legal non-conforming use; more units than zoning permits','1–3 weeks','all'],
+['Legal and title','I','Permit history','Unpermitted work can void insurance and require re-work.','Building department records','Additions or unit conversions with no permits','1–2 weeks','all'],
+['Legal and title','C','Liens and judgments search','Mechanics and tax liens attach to the property.','Title company; county recorder','Recent contractor liens; unpaid property taxes','With title','all'],
+['Legal and title','I','Easements and restrictions','May limit use, expansion or parking.','Title commitment, Schedule B','Easements under buildings; use restrictions','With title','all'],
+['Legal and title','I','HOA or condo documents','Rental caps and special assessments hit returns.','HOA management company (resale certificate)','Rental restrictions, pending special assessments, litigation','1–2 weeks','res'],
+['Insurance','C','Insurance quote on your terms','Premiums have risen sharply in many markets; quote before you commit.','Independent commercial insurance agent','Carriers declining; premium far above the seller’s policy','3–10 days','all'],
+['Insurance','I','Seller’s current policy and declarations','Shows coverage and current cost.','Seller','Coverage well below replacement cost','2–5 days','all'],
+['Insurance','I','Loss runs (5-year claims history)','Prior claims raise your premium and reveal hidden problems.','Seller requests from their carrier','Water, fire or liability claims; repeat claims','1–2 weeks','all'],
+['Insurance','C','Flood zone determination','Zones A and V require flood insurance on financed property.','FEMA flood map; lender flood certificate','Special Flood Hazard Area; floor elevation below base flood elevation','1–3 days','all'],
+['Insurance','I','Required coverage types','Lenders and leases set minimums.','Lender requirements; your agent','Missing loss-of-rents, ordinance-or-law or umbrella coverage','Before closing','all'],
+['Market verification','C','Comparable sales','Supports your price and the appraisal.','Broker, LoopNet/Crexi/CoStar, county records','Price per unit well above recent sales','2–5 days','all'],
+['Market verification','C','Comparable rents','Tests whether in-place and pro forma rents are achievable.','Rentometer, Zillow, local property managers','Pro forma rents above the top of the comp set','2–3 days','all'],
+['Market verification','I','Vacancy verification','Confirms occupancy is real.','Unit walk, utility usage, local PM data','Units shown as leased with no utilities on','During unit walk','all'],
+['Market verification','I','Neighborhood trend check','Direction matters as much as today’s numbers.','Neighborhood Analysis tab','Rising crime, a new supply wave, a major employer leaving','1–3 days','all'],
+['Tenant verification','C','Lease audit against the rent roll','Every rent-roll figure needs a signed lease behind it.','Seller’s lease files','Missing or expired leases; month-to-month tenants','2–5 days','all'],
+['Tenant verification','I','Payment history (12 months)','Shows who pays late.','Property management ledger','Chronic late or partial payments','2–3 days','all'],
+['Tenant verification','C','Tenant estoppel certificates','Tenants confirm rent, deposit and no disputes in writing.','Seller distributes; require it in the purchase agreement','Tenant claims different rent, prepaid rent or promised repairs','1–2 weeks','all'],
+['Tenant verification','I','Section 8 / HAP contracts','Assistance contracts must be assigned and units must pass inspection.','Seller; local housing authority','Failed inspections; abated payments','1–3 weeks','res'],
+['Tenant verification','C','Tenant financials and lease abstracts','A commercial tenant’s credit is the income.','Seller; tenant','Weak tenant financials, co-tenancy clauses, early termination options','1–2 weeks','com'],
+['Tenant verification','I','SNDAs','Protect your lender and tenants if there is a foreclosure.','Seller; tenants','Tenants refusing to sign; leases subordinate without non-disturbance','1–3 weeks','com'],
+['Regulatory','C','Landlord-tenant law review','Notice periods, deposits and eviction rules vary by state and city.','State statute; local attorney','Long eviction timelines; strict deposit rules with penalties','1–3 days','res'],
+['Regulatory','C','Rent control / stabilization','Caps rent growth and value-add upside.','City and county code; state statute','Units subject to caps or just-cause eviction rules','1–3 days','res'],
+['Regulatory','C','Lead-based paint (pre-1978)','Federal disclosure is mandatory; some states add registration or certificates.','EPA/HUD rule; state lead program','No required lead certificates or registrations','1–2 weeks','res'],
+['Regulatory','I','Certificate of occupancy / rental license','Some cities require licenses and inspections to collect rent.','City licensing department','Expired licenses; failed inspections; over-occupancy','1–4 weeks','all'],
+['Regulatory','I','ADA and fire code','Non-compliance creates liability and retrofit costs.','Fire marshal; ADA consultant','No accessible entrance; expired sprinkler or alarm inspections','1–2 weeks','com'],
+['Regulatory','I','Property tax reassessment on sale','Many jurisdictions reset taxes to the purchase price.','County assessor','Current taxes based on a much older value','1–3 days','all']];
+const STATES=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+function stateNotes(st){const n=[];if(['California','Oregon','Washington'].includes(st))n.push(`${st} has a statewide cap on annual rent increases for many residential units, and some cities add stricter local rules. Confirm which units are exempt.`);
+ if(['New York','New Jersey','Maryland','District of Columbia','Minnesota','Maine','California'].includes(st))n.push(`Some jurisdictions in ${st} have local rent control or stabilization. Check the specific city and county.`);
+ if(st==='Maryland')n.push('Maryland requires registration and lead-risk-reduction inspections for rentals built before 1978, and some counties (such as Montgomery) have rent stabilization. Verify current rules.');
+ if(st==='Massachusetts')n.push('Massachusetts Lead Law applies when a child under 6 lives in a pre-1978 unit.');if(st==='Rhode Island')n.push('Rhode Island requires lead certificates for most pre-1978 rentals.');
+ if(['Florida','Louisiana','Texas','South Carolina'].includes(st))n.push(`Insurance and wind/flood coverage in ${st} can be expensive or hard to place. Get binding quotes early.`);
+ if(!n.length)n.push(`Most rules that matter live in ${st}'s landlord-tenant statute and your city code. Many states preempt rent control, but still confirm local licensing and inspection rules.`);return n;}
+tool({id:'dd',group:'Execution',name:'Due Diligence Checklist',blurb:'A checklist tailored to property type, marked Critical (deal-breaker if unresolved) or Important (affects price), with why it matters, where to get it, the red flag, and timing.',
+ inputs:()=>G('Deal',Sel('type','Property type',['Multifamily (5+ units)','Small multifamily (2–4)','Single family','Commercial / retail','Mixed use'],'Multifamily (5+ units)',{w:true}),Sel('st','State',STATES,'Maryland',{w:true}),Sel('show','Show',['All items','Critical only','Open items only'],'All items',{w:true}),T('close','Target closing date','',{ph:'YYYY-MM-DD'}),T('ddEnd','Due diligence ends','',{ph:'YYYY-MM-DD'})),
+ calc(V,x){const ty=V.s('type'),st=V.s('st'),show=V.s('show');const com=/Commercial|Mixed/.test(ty),res=!/Commercial/.test(ty),big=/5\+|Commercial|Mixed/.test(ty);
+  const items=DD.map((d,i)=>({i,cat:d[0],lvl:d[1],name:d[2],why:d[3],where:d[4],red:d[5],time:d[6],sc:d[7]})).filter(d=>d.sc==='all'||(d.sc==='com'&&com)||(d.sc==='res'&&res)||(d.sc==='big'&&big));
+  const done=items.filter(d=>x.ck('d'+d.i)),crit=items.filter(d=>d.lvl==='C'),critOpen=crit.filter(d=>!x.ck('d'+d.i));
+  const end=V.s('ddEnd');let dl='';if(/^\d{4}-\d{2}-\d{2}$/.test(end)){const days=Math.ceil((new Date(end+'T00:00')-new Date())/864e5);dl=` ${days>=0?days+' days left in due diligence.':'Due diligence period has ended.'}`;}
+  const lvl=critOpen.length===0?'good':critOpen.length<=5?'warn':'bad';
+  const cats=[...new Set(items.map(d=>d.cat))];
+  const vis=d=>show==='All items'||(show==='Critical only'&&d.lvl==='C')||(show==='Open items only'&&!x.ck('d'+d.i));
+  return verdict(lvl,`${done.length} of ${items.length} items cleared`,`${critOpen.length} critical item${critOpen.length===1?'':'s'} still open.${dl} Do not waive contingencies until every critical item is resolved or priced in.`,critOpen.length?'OPEN':'CLEAR')
+  +card(`${st} notes`,ul(stateNotes(st)))
+  +cats.map(c=>{const ci=items.filter(d=>d.cat===c),cd=ci.filter(d=>x.ck('d'+d.i)).length,vi=ci.filter(vis);if(!vi.length)return '';return card(`${c} · ${cd}/${ci.length}`,`<div class="meter" style="margin-bottom:6px"><i style="width:${cd/ci.length*100}%"></i></div><div class="cl">${vi.map(d=>{const on=x.ck('d'+d.i);return `<label class="cli${on?' done':''}"><input type="checkbox" data-c="d${d.i}"${on?' checked':''}><div><div class="nm"><span class="t1">${d.name}</span>${tag(d.lvl==='C'?'bad':'warn',d.lvl==='C'?'Critical':'Important')}</div><div class="dt"><div><b>Why</b>${d.why}</div><div><b>Where</b>${d.where}</div><div><b>Red flag</b>${d.red}</div><div><b>Timeline</b>${d.time}</div></div></div></label>`;}).join('')}</div>`);}).join('');}});
+
+/* =================== 11. SELLER FINANCIALS =================== */
+const SX=[['tax','Property taxes',null],['ins','Insurance',[600,1200]],['util','Utilities (owner-paid)',[700,1500]],['rep','Repairs & maintenance',[600,1100]],['mgmt','Management',null],['pay','Payroll / on-site staff',null],['adm','Admin, legal, accounting',[150,350]],['mkt','Marketing & leasing',[50,150]],['land','Landscaping & snow',[150,350]],['trash','Trash & pest',[120,300]],['turn','Turnover / make-ready',[300,700]],['res','Replacement reserves',[250,400]],['oth','Other',[0,0]]];
+const SQ={tax:'Taxes are shown at the current assessment. What will they be after a sale at this price, and when does the county reassess?',ins:'Can you share the current insurance declarations and five years of loss runs?',util:'Which utilities do tenants pay, and can you share 24 months of owner-paid utility bills?',rep:'What repairs were done in the last 24 months, and were any paid outside the operating statement?',mgmt:'Who manages today, and what does that cost? If you self-manage, how many hours a month does it take?',pay:'Who handles leasing, maintenance and cleaning on site, and how are they paid?',adm:'Where are accounting, legal and eviction costs recorded?',mkt:'How are vacant units marketed, and what did leasing cost last year?',land:'Who handles landscaping and snow removal, and what does it cost?',trash:'Who pays for trash and pest control?',turn:'What does a typical unit turn cost, and how many turned last year?',res:'What capital items were replaced in the last five years, and what is due in the next three?'};
+tool({id:'seller',group:'Deal analysis',name:'Seller Financials Review',blurb:'Stress-test the seller’s numbers. Each expense is compared to typical ranges, missing items are filled in, and you get an adjusted NOI, the real cap rate and the questions to ask.',
+ inputs:()=>G('Property',T('desc','Property','12-unit apartment building (example)'),N('price','Asking price',1000000,{pre:'$'}),N('units','Units',12),N('etr','Your county tax rate',1.1,{suf:'% of price',hint:'Effective rate applied to the purchase price'}),N('mvac','Market vacancy',6,{suf:'%'}),N('bad','Bad debt / credit loss',1,{suf:'%'}),N('mfee','Realistic mgmt fee',8,{suf:'% of EGI'}))
+  +G('Seller’s reported numbers (per year)',N('gross','Gross rental income',151200,{pre:'$'}),N('vac','Vacancy',3,{suf:'%'}),N('oinc','Other income',3600,{pre:'$'}),...SX.map(s=>N('x_'+s[0],s[1],{tax:9800,ins:5400,util:9600,rep:6000,mgmt:0,pay:0,adm:900,mkt:0,land:1800,trash:2400,turn:0,res:0,oth:0}[s[0]],{pre:'$'})),N('rnoi','Reported NOI','',{pre:'$',ph:'blank = calculated'}),N('rcap','Advertised cap rate',8.4,{suf:'%'})),
+ calc(V){const u=Math.max(1,V.n('units',1)),price=V.n('price',0),gross=V.n('gross',0),oinc=V.n('oinc',0);if(!(gross>0&&price>0))return empty('Enter the asking price and reported gross income.');
+  const sVac=V.p('vac',0),egiS=gross*(1-sVac)+oinc;const vacA=Math.max(sVac,V.p('mvac',.06))+V.p('bad',.01),egiA=gross*(1-vacA)+oinc;
+  const rows=SX.map(([k,l,b])=>{const s=V.n('x_'+k,0);let lo,hi,adj,note;
+   if(k==='tax'){lo=hi=price*V.p('etr',.011);adj=Math.max(s,lo);note='Reset to purchase price';}
+   else if(k==='mgmt'){lo=egiA*.06;hi=egiA*.10;adj=Math.max(s,egiA*V.p('mfee',.08));note='Charge a fee even if self-managed';}
+   else if(k==='pay'){lo=u>=20?800*u:0;hi=u>=20?1400*u:0;adj=Math.max(s,(lo+hi)/2);note=u>=20?'Buildings 20+ units usually need staff':'Usually none under 20 units';}
+   else{lo=b[0]*u;hi=b[1]*u;adj=s>hi?s:Math.max(s,(lo+hi)/2);note='';}
+   const st=lo>0&&s===0?'bad':s<lo*0.85?'warn':'good';return {k,l,s,lo,hi,adj,st,note,gap:adj-s};});
+  const othR=rows.find(r=>r.k==='oth');if(othR&&othR.s>0){const added=sum(rows.filter(r=>r.s===0&&r.k!=='oth').map(r=>r.adj));const credit=Math.min(othR.s,added);othR.adj=othR.s-credit;othR.gap=othR.adj-othR.s;if(credit>0){othR.note='Unallocated total, credited against the missing lines above';othR.st='mut';}}
+  const opS=sum(rows.map(r=>r.s)),opA=sum(rows.map(r=>r.adj));const noiC=egiS-opS,noiR=V.n('rnoi',noiC),noiA=egiA-opA;const capR=V.p('rcap',noiR/price),capA=noiA/price,capS=noiR/price;const worth=noiA/capR;const over=noiR/noiA-1;
+  const lvl=over<=0.08?'good':over<=0.2?'warn':'bad';
+  const t=tbl(['Expense','Seller','Typical range','Adjusted','Status'],rows.map(r=>[r.l+(r.note?`<br><span class="mut" style="font-size:11.5px">${r.note}</span>`:''),fm(r.s),r.lo===r.hi?fm(r.lo):`${fm(r.lo)}–${fm(r.hi)}`,`<b>${fm(r.adj)}</b>`,tag(r.st,r.st==='bad'?'Missing':r.st==='warn'?'Low':r.st==='mut'?'Credited':'OK')]).concat([{c:['Total operating expenses',fm(opS),'',`<b>${fm(opA)}</b>`,`${pc(opA/egiA,0)} of EGI`],cls:'tot'}]),'');
+  const top=[...rows].filter(r=>r.gap>0&&SQ[r.k]).sort((a,b)=>b.gap-a.gap).map(r=>SQ[r.k]);const std=['Can you provide a T-12 and rent roll that tie to bank deposits for the same months?','Are there any tenants on concessions, payment plans or month-to-month leases?','What capital projects are needed in the next three years that are not in these numbers?'];
+  const qs=[...top,...std].slice(0,5);
+  return verdict(lvl,`Real NOI about ${fm(Math.round(noiA/100)*100)}, a ${pc(capA)} cap`,`The seller’s ${fm(noiR)} NOI (${pc(capS)} cap) looks ${over>0?pc(over,0)+' overstated':'reasonable'}. At the advertised ${pc(capR,1)} cap, adjusted NOI supports about ${fm(Math.round(worth/5000)*5000)}, ${pc(worth/price-1,0)} vs asking.`,{good:'CREDIBLE',warn:'PADDED',bad:'OVERSTATED'}[lvl])
+  +`<div class="card"><div class="stats">${stat('Seller NOI',fm(noiR))}${stat('Adjusted NOI',fm(noiA),'good')}${stat('Advertised cap',pc(capR,2))}${stat('Real cap at asking',pc(capA,2),capA<capR-0.005?'bad':'')}${stat('Expense ratio: seller',pc(opS/egiS,0))}${stat('Expense ratio: adjusted',pc(opA/egiA,0))}</div></div>`
+  +card('Income',tbl(['','Seller','Adjusted'],[['Gross rental income',fm(gross),fm(gross)],['Vacancy & credit loss',`${fa(-gross*sVac)} (${pc(sVac,0)})`,`${fa(-gross*vacA)} (${pc(vacA,0)})`],['Other income',fm(oinc),fm(oinc)],{c:['Effective gross income',fm(egiS),fm(egiA)],cls:'tot'}])+`<p class="note">${sVac<V.p('mvac',.06)?`Seller vacancy of ${pc(sVac,0)} is below the ${pc(V.p('mvac',.06),0)} market rate you entered. `:''}Underwrite at least market vacancy plus bad debt, even if the building is full today.</p>`)
+  +card('Expense review (annual)',t+`<p class="note">Typical ranges are per-unit rules of thumb for small and mid-size apartments; adjust for your market. Insurance in coastal and storm-prone states often runs 2–3× these figures. For commercial, check which expenses tenants reimburse.</p>`)
+  +`<div class="two">${card('Commonly missing from seller statements',ul(['Management fee (owner self-manages)','Replacement reserves and capex','Turnover and make-ready costs','Property tax reset after sale','Realistic vacancy and bad debt','Payroll or the owner’s own labor','Legal, accounting and eviction costs','Rising insurance at renewal']))}${card('Documents to request',ul(['T-12 operating statement, month by month','Two prior years’ P&L','Current rent roll with lease dates, deposits and concessions','12 months of bank statements','Schedule E or entity tax returns','Utility bills (24 months)','Insurance declarations and 5-year loss runs','Property tax bills and any appeal notices','Service contracts and a capex history']))}</div>`
+  +card('Top 5 questions for the seller or broker',`<ol style="margin:0;padding-left:20px">${qs.map(q=>`<li style="margin:5px 0">${q}</li>`).join('')}</ol>`);}});
+
+/* =================== 12. PORTFOLIO =================== */
+tool({id:'portfolio',group:'Portfolio & tax',name:'Portfolio Performance Review',blurb:'Portfolio-level returns, which properties carry the portfolio, concentration and debt risk, and how much equity you could put toward the next acquisition.',wide:true,
+ inputs:()=>GF('Properties (example rows — replace with yours)',R('props',[{k:'name',l:'Property',t:1},{k:'mkt',l:'Market',t:1},{k:'type',l:'Type',o:['SFR','Small MF (2–4)','MF (5+)','Retail','Office','Industrial','Mixed use','STR']},{k:'yr',l:'Bought'},{k:'price',l:'Price $'},{k:'val',l:'Value $'},{k:'loan',l:'Loan bal $'},{k:'rate',l:'Rate %'},{k:'lt',l:'Loan type',o:['Fixed','ARM','Balloon','HELOC']},{k:'cf',l:'Cash flow $/mo'},{k:'noi',l:'NOI $/yr'},{k:'ds',l:'Debt svc $/yr'},{k:'eq',l:'Cash invested $'}],[{name:'Rental house (example)',mkt:'Market 1',type:'SFR',yr:2019,price:210000,val:300000,loan:150000,rate:3.75,lt:'Fixed',cf:425,noi:16200,ds:11100,eq:55000},{name:'Duplex (example)',mkt:'Market 1',type:'Small MF (2–4)',yr:2022,price:340000,val:365000,loan:262000,rate:6.5,lt:'Fixed',cf:460,noi:25400,ds:19870,eq:90000},{name:'Retail condo (example)',mkt:'Market 2',type:'Retail',yr:2024,price:250000,val:255000,loan:180000,rate:7.75,lt:'Balloon',cf:170,noi:17500,ds:15470,eq:75000}],'property'))
+  +G('Targets',N('tltv','Max LTV for cash-out',75,{suf:'%'}),N('down','Down payment on next deal',25,{suf:'%'}),N('cc','Closing costs on next deal',3,{suf:'%'})),
+ calc(V,x){const P=x.rows('props').map(r=>({name:r.name||'Untitled',mkt:(r.mkt||'Unspecified').trim(),type:r.type,yr:r.yr,price:toN(r.price)||0,val:toN(r.val)||0,loan:toN(r.loan)||0,rate:toN(r.rate)/100,lt:r.lt,cf:toN(r.cf)||0,noi:toN(r.noi),ds:toN(r.ds),eq:toN(r.eq)||0})).filter(p=>p.val>0);
+  if(!P.length)return empty('Add at least one property with a current value.');
+  P.forEach(p=>{p.acf=p.cf*12;p.coc=p.eq?p.acf/p.eq:NaN;p.ne=p.val-p.loan;p.roe=p.ne>0?p.acf/p.ne:NaN;p.cap=p.noi/p.val;p.dscr=p.ds?p.noi/p.ds:NaN;p.ltv=p.loan/p.val;});
+  const tv=sum(P.map(p=>p.val)),tl=sum(P.map(p=>p.loan)),te=sum(P.map(p=>p.eq)),tcf=sum(P.map(p=>p.acf)),tn=sum(P.map(p=>p.noi)),tds=sum(P.map(p=>p.ds));const wr=tl?sum(P.map(p=>p.loan*(fin(p.rate)?p.rate:0)))/tl:0;
+  const rank=[...P].sort((a,b)=>(b.roe||-9)-(a.roe||-9));const worst=[...P].sort((a,b)=>((a.dscr||9)<1.2?-1:0)-((b.dscr||9)<1.2?-1:0)||(a.roe||0)-(b.roe||0))[0];
+  const share=k=>{const m={};P.forEach(p=>m[p[k]]=(m[p[k]]||0)+p.val);return Object.entries(m).sort((a,b)=>b[1]-a[1]);};const bm=share('mkt'),bt=share('type');
+  const tltv=V.p('tltv',.75);const access=sum(P.map(p=>Math.max(0,p.val*tltv-p.loan)));const buy=access/(V.p('down',.25)+V.p('cc',.03));
+  const lvl=tds&&tn/tds>=1.25&&tcf>0?'good':tcf>0?'warn':'bad';
+  const tb=tbl(['#','Property','Value','Equity','Cash flow/yr','Cash-on-cash','Return on equity','Cap rate','DSCR','LTV','Rate'],rank.map((p,i)=>({c:[i+1,esc(p.name),fk(p.val),fk(p.ne),fa(p.acf),`<span class="${lv(p.coc,.08,.04)}">${pc(p.coc,1)}</span>`,`<span class="${lv(p.roe,.06,.03)}">${pc(p.roe,1)}</span>`,pc(p.cap,1),`<span class="${lv(p.dscr,1.25,1.1)}">${nx(p.dscr)}</span>`,pc(p.ltv,0),`${pc(p.rate,2)} ${p.lt!=='Fixed'?tag('warn',p.lt):''}`],cls:p===worst?'hl':''})).concat([{c:['','Portfolio',fk(tv),fk(tv-tl),fa(tcf),pc(te?tcf/te:NaN,1),pc(tcf/(tv-tl),1),pc(tn/tv,1),nx(tn/tds),pc(tl/tv,0),pc(wr,2)],cls:'tot'}]));
+  const conc=(list,label)=>list.map(([k,v])=>`<div class="kv"><span>${esc(k)}</span><b class="${v/tv>0.6&&list.length>0?'warn':''}">${pc(v/tv,0)}</b></div>`).join('')+(list[0][1]/tv>0.6?`<p class="note" style="margin:6px 0 0">${tag('warn','Concentrated')} ${pc(list[0][1]/tv,0)} of value is in one ${label}.</p>`:'');
+  const var_=P.filter(p=>p.lt!=='Fixed');const types=new Set(P.map(p=>p.type)),mkts=new Set(P.map(p=>p.mkt));
+  const nextIdea=[!['MF (5+)'].some(t=>types.has(t))&&'A 5+ unit multifamily would add scale and spread vacancy risk across more doors.',mkts.size<2&&'A second market would reduce exposure to one local economy, tax regime and insurance market.',!types.has('Industrial')&&types.has('Retail')&&'Small-bay industrial or flex space would balance retail tenant risk.',tl/tv>0.7&&'Keep the next deal at lower leverage; portfolio LTV is already high.'].filter(Boolean);
+  return verdict(lvl,`${fa(tcf/12)}/mo portfolio cash flow`,`${fm(tv-tl)} of equity across ${P.length} properties, ${pc(tl/tv,0)} LTV, ${nx(tn/tds)} portfolio DSCR. Focus first on ${esc(worst.name)}.`,{good:'HEALTHY',warn:'WATCH',bad:'AT RISK'}[lvl])
+  +`<div class="card"><div class="stats">${stat('Total value',fk(tv))}${stat('Total debt',fk(tl))}${stat('Equity (market)',fk(tv-tl))}${stat('Cash invested',fk(te))}${stat('Annual cash flow',fa(tcf),tcf<0?'bad':'')}${stat('Avg cash-on-cash',pc(te?tcf/te:NaN,1))}${stat('Portfolio cap rate',pc(tn/tv,2))}${stat('Weighted rate',pc(wr,2))}</div></div>`
+  +card('Performance ranking (by return on equity)',tb+`<p class="note">Return on equity uses today’s equity, not what you paid in. A low figure means “lazy equity” that could work harder through a cash-out refi, sale or 1031 exchange.</p>`)
+  +`<div class="two">${card('Concentration by market',conc(bm,'market'))}${card('Concentration by type',conc(bt,'property type'))}</div>`
+  +`<div class="two">${card('Debt & rate exposure',kv('Portfolio LTV',pc(tl/tv,1),lv(tl/tv,.65,.75,false))+kv('Portfolio DSCR',nx(tn/tds),lv(tn/tds,1.25,1.1))+kv('Weighted interest rate',pc(wr,2))+kv('Non-fixed debt',var_.length?`${var_.length} loan${var_.length>1?'s':''} · ${fk(sum(var_.map(p=>p.loan)))}`:'None',var_.length?'warn':'good')+kv('Impact of +2% on non-fixed debt',fa(-sum(var_.map(p=>p.loan))*0.02)+'/yr')+(var_.length?`<p class="note" style="margin:6px 0 0">Balloon and adjustable loans: know each reset date and the DSCR a refinance would need.</p>`:''))}
+   ${card('Capacity for the next acquisition',kv(`Equity accessible at ${pc(tltv,0)} LTV`,fm(access))+kv('Purchase price that equity supports',fm(buy))+kv('Portfolio LTV after (approx.)',pc((tl+access+buy*(1-V.p('down',.25)))/(tv+buy),0))+`<p class="note" style="margin:6px 0 0">${access>0?'Cash-out refi or HELOC on the properties with the most equity could fund a down payment, but only if the new debt still leaves each property at or above 1.20x DSCR.':'Not enough equity to tap at this LTV; the next purchase needs outside cash or a partner.'}</p>`+(nextIdea.length?`<h3 class="eyebrow" style="margin-top:12px">Diversifying next move</h3>${ul(nextIdea)}`:''))}</div>`
+  +card(`Improve ${esc(worst.name)} first`,ul([worst.dscr<1.2?'Debt coverage is thin: raise rents to market, cut controllable expenses, or refinance to a longer amortization.':'Cash flow is weak relative to the equity tied up in it.',`Return on equity is ${pc(worst.roe,1)}. Compare that to what the same equity would earn in your next deal.`,'Options: raise rents to market, add fees (pet, parking, storage), appeal property taxes, re-shop insurance, or sell or exchange it.']));}});
+
+/* =================== 13. 1031 EXCHANGE =================== */
+tool({id:'x1031',group:'Execution',name:'1031 Exchange Analysis',blurb:'Estimate the tax you would owe on a straight sale, the tax a 1031 exchange defers, your 45- and 180-day deadlines, and whether the replacement property is a real upgrade.',
+ inputs:()=>G('Property to sell',N('sale','Sale price',650000,{pre:'$'}),N('orig','Original purchase price',420000,{pre:'$'}),N('imp','Capital improvements',35000,{pre:'$'}),N('dep','Depreciation taken',95000,{pre:'$'}),N('sc','Selling costs',6,{suf:'%'}),N('mort','Mortgage balance',280000,{pre:'$'}),N('cf','Current annual cash flow',18000,{pre:'$'}),T('date','Sale closing date','2026-11-15',{ph:'YYYY-MM-DD',w:false}))
+  +G('Tax rates',Sel('fed','Federal capital gains rate',[['0.15','15%'],['0.2','20%'],['0','0%']],'0.15'),N('state','State income tax',5,{suf:'%'}),N('ord','Your ordinary tax bracket',32,{suf:'%'}),C('niit','Net investment income tax (3.8%) applies',true))
+  +G('Replacement property',A('desc','Target or criteria','10–16 unit apartment building, value-add, within 2 hours of home (example)'),N('rp','Replacement price',1200000,{pre:'$'}),N('rdown','Equity you reinvest','',{pre:'$',ph:'blank = all net equity'}),N('rrate','Loan rate',6.75,{suf:'%'}),N('ram','Amortization',30,{suf:'yrs'}),N('rnoi','Replacement NOI',84000,{pre:'$',suf:'/yr'})),
+ calc(V,x){const sale=V.n('sale',0),sc=V.p('sc',.06),real=sale*(1-sc),basis=V.n('orig',0)+V.n('imp',0)-V.n('dep',0),gain=real-basis,dep=V.n('dep',0),mort=V.n('mort',0),ne=real-mort;
+  if(!(sale>0))return empty('Enter a sale price.');
+  const fed=parseFloat(V.s('fed'))||0,st=V.p('state',0),ord=V.p('ord',.32),ni=V.b('niit')?0.038:0;const taxOn=g=>{const rec=Math.min(dep,Math.max(0,g)),cg=Math.max(0,g-rec);return {rec,cg,recT:rec*Math.min(0.25,ord),cgT:cg*fed,niT:Math.max(0,g)*ni,stT:Math.max(0,g)*st,get tot(){return this.recT+this.cgT+this.niT+this.stT;}};};
+  const T0=taxOn(gain);const rp=V.n('rp',0),rd=V.n('rdown',ne),rl=Math.max(0,rp-rd);const cashBoot=Math.max(0,ne-rd),priceBoot=Math.max(0,real-rp);const boot=Math.min(Math.max(cashBoot,priceBoot),Math.max(0,gain));const T1=taxOn(boot);const deferred=T0.tot-T1.tot;
+  const rds=pmtM(V.p('rrate',.07),V.n('ram',30),rl)*12,rnoi=V.n('rnoi',0),rcf=rnoi-rds,rdscr=rds?rnoi/rds:NaN;const curCf=V.n('cf',0);const curRoe=curCf/ne,repCoc=rcf/rd;
+  const noX=ne-T0.tot;const altPrice=noX/(rd/rp||0.25);
+  let dl='';const d=V.s('date');if(/^\d{4}-\d{2}-\d{2}$/.test(d)){const dt=new Date(d+'T00:00'),d45=addDays(dt,45),d180=addDays(dt,180),due=new Date((dt.getFullYear()+1)+'-04-15T00:00');dl=kv('Sale closes',fdate(dt))+kv('Identify replacements by (day 45)',fdate(d45),'warn')+kv('Close on replacement by (day 180)',fdate(d180<due?d180:due),'warn')+(d180>due?`<p class="note" style="margin:6px 0 0">Day 180 falls after your tax return due date (${fdate(due)}). File an extension or the exchange period ends at the due date.</p>`:'');}else dl='<p class="note">Enter the sale closing date as YYYY-MM-DD to calculate deadlines.</p>';
+  const up=repCoc>curRoe&&rdscr>=1.2;
+  return verdict(deferred>0?'good':'mut',`Defers about ${fm(Math.round(deferred/100)*100)} of tax`,`A straight sale would owe roughly ${fm(Math.round(T0.tot/100)*100)} and leave ${fm(noX)} to reinvest. Exchanging keeps all ${fm(ne)} of equity working${boot>0?`, less ${fm(boot)} of taxable boot`:''}.`,'1031')
+  +`<div class="two">${card('Tax on a straight sale (estimate)',kv('Amount realized (after selling costs)',fm(real))+kv('Adjusted basis',fm(basis))+kv('Total gain',fm(gain))+kv('Depreciation recapture (up to 25%)',fm(T0.recT))+kv(`Capital gains (${pc(fed,0)})`,fm(T0.cgT))+kv('Net investment income tax',fm(T0.niT))+kv('State tax',fm(T0.stT))+kv('Total estimated tax',fm(T0.tot),'bad')+kv('After-tax cash from sale',fm(noX)))}
+   ${card('Exchange deadlines',dl+`<p class="note" style="margin:8px 0 0">Both clocks start the day the sale closes and run at the same time. Weekends and holidays do not extend them.</p>`)}</div>`
+  +`<div class="two">${card('Exchange structure',kv('Net equity to reinvest',fm(ne))+kv('Equity going into replacement',fm(rd))+kv('Replacement price',fm(rp),rp>=real?'good':'bad')+kv('New loan',fm(rl))+kv('Debt replaced?',rl>=mort?'Yes':`No, ${fm(mort-rl)} short`,rl+Math.max(0,rd-ne)>=mort?'good':'warn')+kv('Estimated taxable boot',fm(boot),boot>0?'bad':'good')+kv('Tax on boot',fm(T1.tot))+`<p class="note" style="margin:6px 0 0">To defer everything: buy at or above ${fm(real)} and reinvest all ${fm(ne)} of equity. Replacing less debt requires adding cash.</p>`)}
+   ${card('Cash flow: current vs replacement',kv('Current annual cash flow',fm(curCf))+kv('Current return on equity',pc(curRoe,1))+kv('Replacement NOI',fm(rnoi))+kv('Replacement debt service',fa(-rds))+kv('Replacement cash flow',fa(rcf),rcf>curCf?'good':'bad')+kv('Replacement cash-on-cash',pc(repCoc,1),repCoc>curRoe?'good':'bad')+kv('Replacement DSCR',nx(rdscr),lv(rdscr,1.25,1.1))+`<p class="note" style="margin:6px 0 0">${tag(up?'good':'warn',up?'Upgrade':'Check')} ${up?'The replacement earns more on the same equity and covers its debt, so trading up makes sense beyond the tax deferral.':'The replacement does not clearly beat what your equity earns today. The deferral alone is not a reason to buy a weaker property.'} Without an exchange, the after-tax proceeds would support roughly a ${fm(Math.round(altPrice/5000)*5000)} purchase at the same leverage.</p>`)}</div>`
+  +`<div class="two">${card('Replacement property requirements',ul(['Like-kind: any real property held for investment or business use qualifies for other such real property (a 4-unit for a retail strip is fine).','Not a primary residence or property held mainly for resale (flips).','Identify up to 3 properties, or more if their total value is under 200% of the sale price (or you acquire 95% of what you identify).','Same taxpayer must sell and buy (watch LLC and partnership structures).','Use a qualified intermediary; you cannot touch the sale proceeds.']))}${card('Risks and complications',ul(['Missing the 45-day identification window. Line up targets before listing.','Overpaying under deadline pressure.','Boot from cash taken out, debt not replaced or non-qualified closing costs.','Related-party purchases have a 2-year holding rule.','Intermediary failure: choose a bonded, insured QI with segregated accounts.','State clawback rules on out-of-state replacements in some states.','Recapture and deferred gain carry into the new property’s basis.']))}</div>`
+  +card('Questions for your CPA and attorney',ul(['What is my exact adjusted basis, including improvements and all depreciation taken or allowable?','Which closing costs can come from exchange funds without creating boot?','Should I consider a reverse or improvement exchange given my timeline?','How does vesting (personal name vs LLC) affect the exchange?','Does my state require withholding or tracking of the deferred gain?','Could a partial exchange (take some cash, pay some tax) serve my goals better?','How will the carryover basis affect depreciation on the replacement, and would a cost segregation study help?']))
+  +`<p class="note">Estimates only. Rates are simplified: recapture is taxed at your bracket up to 25%, NIIT depends on your income, and state rules vary. Confirm every figure with your CPA.</p>`;}});
+
+/* =================== 14. TAX DEDUCTIONS =================== */
+const TD=[
+ ['Operating expenses',[['Property management and leasing fees',0],['Repairs and maintenance (not improvements)',0],['De minimis safe harbor: items up to $2,500 per invoice expensed instead of depreciated',1],['Utilities, trash, pest control, landscaping, snow',0],['Insurance premiums (landlord, umbrella share, flood)',0],['Advertising, listing fees and tenant screening',0],['Legal, accounting, eviction and bookkeeping fees',0],['Property management software, bank fees, rent-collection fees',1],['Rental licenses, permits and registration fees',1],['Property taxes on rentals (Schedule E, not limited by the SALT cap)',1],['HOA dues and special assessments for operations',0],['Travel to properties, including long-distance trips for the rental',1]]],
+ ['Mortgage interest',[['Interest on acquisition and refinance loans (no $750K cap on rentals)',0],['Loan points and fees amortized over the loan term',1],['Unamortized points written off when you refinance or pay off',1],['Interest on a HELOC or other loan used for the rental (tracing rules)',1],['Interest on credit cards used for rental purchases',1]]],
+ ['Depreciation',[['Building over 27.5 years (residential) or 39 years (commercial), land excluded',0],['Improvements and capital projects depreciated separately',1],['Appliances, carpet and furniture over 5 years',1],['Land improvements (fencing, paving, landscaping) over 15 years',1],['Bonus depreciation on qualifying 5-, 7- and 15-year property',0],['Partial disposition: write off the remaining basis of replaced roofs, HVAC and similar',1],['Catch-up for missed depreciation using Form 3115',1],['Cost segregation study (see Cost Segregation tab)',0]]],
+ ['Passive activity losses',[['$25,000 special allowance for active participants, phasing out between $100K and $150K MAGI',0],['Suspended losses carry forward and are released when you sell',1],['Real estate professional status: 750+ hours and over half your working time in real property trades',0],['Election to aggregate all rentals for material participation',1],['Short-term rental exception: average stay of 7 days or less plus material participation',1]]],
+ ['Home office',[['Regular and exclusive space used to run the rental business',0],['Simplified method: $5 per sq ft up to 300 sq ft',0],['Actual method: share of rent/mortgage interest, utilities, insurance, repairs',1]]],
+ ['Vehicle expenses',[['Standard mileage rate or actual expenses for trips to properties, suppliers and the bank',0],['Contemporaneous mileage log (date, purpose, miles)',1],['Parking and tolls on rental trips',1]]],
+ ['Education & professional development',[['Courses, books and subscriptions that improve skills for your existing rental business',0],['Real estate investor association dues and conferences',1],['Travel to conferences related to your rental activity',1]]],
+ ['Often missed',[['Qualified business income deduction (20%) if the rental is a trade or business; 250-hour safe harbor',1],['Start-up costs before the first rental (up to $5,000 in year one)',1],['Casualty and theft losses not covered by insurance',1],['Tenant-damage write-offs and uncollectible rent (accrual basis only)',1]]]];
+tool({id:'taxded',group:'Portfolio & tax',name:'Tax Deduction Review',blurb:'Estimate depreciation and whether rental losses can offset your other income, then work through the deduction checklist so nothing gets missed.',
+ inputs:()=>G('Your situation',N('n','Rental properties',2),N('inc','Total rental income',62000,{pre:'$',suf:'/yr'}),N('exp','Expenses before depreciation',41000,{pre:'$',suf:'/yr',hint:'Include mortgage interest'}),N('basis','Depreciable building basis',520000,{pre:'$',hint:'Purchase price + costs − land, all rentals'}),Sel('ptype','Mostly',['Residential (27.5 yr)','Commercial (39 yr)'],'Residential (27.5 yr)'),Sel('fs','Filing status',['Single','Married filing jointly','Head of household','Married filing separately, lived apart all year','Married filing separately, lived together'],'Married filing jointly',{w:true}),N('magi','Other income (MAGI)',165000,{pre:'$'}),N('rate','Marginal tax rate',24,{suf:'%'}),Sel('reps','Real estate professional?',['No','Yes','Unsure'],'No',{w:true}),C('active','I actively participate (approve tenants, set rents, approve repairs)',true),C('str','A property has an average guest stay of 7 days or less',false)),
+ calc(V,x){const inc=V.n('inc',0),exp=V.n('exp',0),life=V.s('ptype').startsWith('Comm')?39:27.5,dep=V.n('basis',0)/life,net=inc-exp-dep,magi=V.n('magi',0),fs=V.s('fs'),rate=V.p('rate',.24);
+  const [allow,ph0]=fs.includes('lived together')?[0,0]:fs.includes('lived apart')?[12500,50000]:[25000,100000];const cap=Math.max(0,allow-Math.max(0,magi-ph0)*0.5);
+  let usable,why;if(net>=0){usable=0;why='Your rentals show taxable income, so no loss limits apply. Depreciation is reducing that income.';}
+  else if(V.s('reps')==='Yes'){usable=-net;why='As a real estate professional who materially participates, rental losses are nonpassive and can offset other income.';}
+  else if(V.b('str')){usable=-net;why='If you materially participate in the short-term rental, its losses may be nonpassive. Confirm the average-stay and participation tests with your CPA.';}
+  else if(V.b('active')){usable=Math.min(-net,cap);why=cap===0?`At ${fm(magi)} MAGI the $25,000 allowance has fully phased out, so losses are suspended until you have passive income or sell.`:`The special allowance lets you deduct up to ${fm(cap)} at your income level.`;}
+  else{usable=0;why='Without active participation, losses are passive and only offset passive income.';}
+  const susp=net<0?-net-usable:0;const sav=usable*rate+(net>=0?dep*rate:0);
+  const all=TD.flatMap((c,ci)=>c[1].map((it,ii)=>'t'+ci+'_'+ii));const done=all.filter(k=>x.ck(k)).length;
+  return verdict(net<0&&susp>0?'warn':'good',net>=0?`${fm(net)} taxable rental income after ${fm(dep)} depreciation`:`${fm(-net)} rental loss · ${fm(usable)} usable this year`,why,net<0&&susp>0?'SUSPENDED':'OK')
+  +`<div class="card"><div class="stats">${stat('Rental income',fm(inc))}${stat('Expenses',fa(-exp))}${stat('Depreciation',fa(-dep))}${stat('Net rental result',fa(net),net<0?'bad':'')}${stat('Deductible against other income',fm(usable))}${stat('Suspended (carried forward)',fm(susp),susp?'warn':'')}${stat('Est. tax value this year',fm(sav),'good')}</div></div>`
+  +card('Passive loss rules for you',kv('Filing status',fs)+kv('Special allowance before phase-out',fm(allow))+kv('Phase-out range (MAGI)',allow?`${fm(ph0)} – ${fm(ph0+allow*2)}`:'Not available')+kv('Allowance at your MAGI',fm(cap))+kv('Real estate professional',V.s('reps'))+(V.s('reps')==='Unsure'?`<p class="note" style="margin:6px 0 0">Real estate professional status needs more than 750 hours a year and more than half of all your working hours in real property trades or businesses. With a full-time W-2 job it is very hard to qualify; a spouse who works in real estate can qualify for a joint return.</p>`:''))
+  +card(`Deduction checklist · ${done}/${all.length} confirmed`,TD.map((c,ci)=>`<h3 class="eyebrow" style="margin-top:${ci?14:0}px">${ci+1}. ${c[0]}</h3><div class="cl">${c[1].map((it,ii)=>{const k='t'+ci+'_'+ii,on=x.ck(k);return `<label class="cli${on?' done':''}" style="padding:7px 0"><input type="checkbox" data-c="${k}"${on?' checked':''}><div class="nm" style="font-weight:500;font-size:13.5px"><span class="t1">${it[0]}</span>${it[1]?tag('warn','Often missed'):''}</div></label>`;}).join('')}</div>`).join(''))
+  +`<div class="two">${card('Current-law notes to confirm',ul(['Bonus depreciation: 2025 federal legislation restored 100% bonus depreciation for qualifying property acquired after January 19, 2025. Property acquired earlier in 2025 used 40%.','Standard mileage rate changes each year; the IRS publishes it in December.','The QBI deduction was made permanent in 2025; rentals qualify only when they rise to a trade or business.','Repairs vs improvements follow the tangible property regulations (betterment, restoration, adaptation).']))}${card('Talk to a CPA about',ul(['Whether your rentals meet trade-or-business status for QBI and the home office deduction.','Grouping elections for material participation.','Cost segregation and bonus depreciation, and how they interact with passive limits.','Catching up missed depreciation with Form 3115.','Entity structure (LLC, S-corp) and state filing requirements.']))}</div>`
+  +`<p class="note">Educational estimate, not tax advice. Depreciation assumes full years; the first year is prorated with the mid-month convention.</p>`;}});
+
+/* =================== 15. COST SEGREGATION =================== */
+const CS={'Multifamily':[15,10,27.5],'Single-family rental':[12,6,27.5],'Short-term rental (furnished)':[20,10,27.5],'Retail':[15,15,39],'Office':[12,8,39],'Industrial / warehouse':[8,7,39],'Self-storage':[10,20,39],'Hotel':[25,8,39],'Mixed-use':[14,10,39]};
+const BONUS={'2026':1,'2025, after Jan 19':1,'2025, Jan 1–19':0.4,'2024':0.6,'2023':0.8,'2018–2022':1};
+tool({id:'costseg',group:'Portfolio & tax',name:'Cost Segregation Check',blurb:'A rough cost-benefit test for a cost segregation study: how much might be reclassified, the first-year tax benefit, what the study costs, and the recapture you will face later.',
+ inputs:()=>G('Property',T('desc','Property','12-unit apartment building (example)'),Sel('type','Property type',Object.keys(CS),'Multifamily',{w:true}),N('price','Purchase price',1000000,{pre:'$'}),N('bldg','Building value','',{pre:'$',hint:'',sg:1}),Sel('yr','Placed in service',Object.keys(BONUS),'2026'),N('hold','Expected hold',7,{suf:'yrs'}))
+  +G('Your taxes',N('fed','Federal bracket',32,{suf:'%'}),N('st','State rate',5,{suf:'%'}),Sel('use','Can you use the losses?',['Yes: REPS, STR exception, or passive income to absorb','Partly: some passive income','No: losses will be suspended'],'Partly: some passive income',{w:true}))
+  +ADV('Study assumptions',false,N('p5','5/7-year property','',{suf:'% of bldg',hint:'',sg:1}),N('p15','15-year property','',{suf:'% of bldg',hint:'',sg:1}),N('fee','Study fee','',{pre:'$',hint:'',sg:1}),N('disc','Discount rate',7,{suf:'%'})),
+ calc(V,x){const [d5,d15,life]=CS[V.s('type')]||CS.Multifamily;const price=V.n('price',0),bldg=V.n('bldg',price*0.8);x.hint('bldg',V.blank('bldg')?`Using 80% of price: ${fm(price*0.8)}`:'');
+  const p5=V.p('p5',d5/100),p15=V.p('p15',d15/100);x.hint('p5',V.blank('p5')?`Typical ${d5}%`:'');x.hint('p15',V.blank('p15')?`Typical ${d15}%`:'');
+  const estFee=bldg<300000?3500:bldg<1e6?6000:bldg<3e6?9500:bldg<1e7?15000:25000;const fee=V.n('fee',estFee);x.hint('fee',V.blank('fee')?`Estimated ${fm(estFee)}`:'');
+  if(!(bldg>0))return empty('Enter a purchase price.');
+  const bonus=BONUS[V.s('yr')]??1,rate=V.p('fed',.32)+V.p('st',.05),R5=bldg*p5,R15=bldg*p15,Rt=R5+R15,rest=bldg-Rt;
+  const base1=bldg/life;const cs1=Rt*bonus+R5*(1-bonus)*0.2+R15*(1-bonus)*0.05+rest/life;const extra=cs1-base1;const benefit=extra*rate;
+  const useF=V.s('use').startsWith('Yes')?1:V.s('use').startsWith('Partly')?0.5:0;const usableB=benefit*useF;
+  const d=V.p('disc',.07),hold=clamp(Math.round(V.n('hold',7)),1,40),L=life;const pvLost=t=>sum(Array.from({length:Math.max(0,Math.min(Math.round(t),60))},(_,i)=>(Rt/L)*rate/Math.pow(1+d,i+1)));
+  const accel=Rt*(bonus+(1-bonus)*0.25);const recap=Rt*Math.min(0.37,V.p('fed',.32))-(hold/L)*Rt*0.25;const pvNet=accel*rate-pvLost(hold)-Math.max(0,recap)/Math.pow(1+d,hold);const pvHold=accel*rate-pvLost(Math.round(L))*(1);
+  const roi=usableB/fee;const lvl=bldg>=500000&&useF>0&&roi>=5?'good':bldg>=300000&&useF>0&&roi>=2?'warn':'bad';
+  return verdict(lvl,`About ${fm(Math.round(extra/1000)*1000)} of extra first-year depreciation`,`Worth roughly ${fm(Math.round(benefit/100)*100)} in tax at a ${pc(rate,0)} combined rate${useF<1?`, of which about ${fm(Math.round(usableB/100)*100)} is usable this year given your situation`:''}. The study costs about ${fm(fee)}: ${nm(roi,1)}× return.`,{good:'WORTH IT',warn:'MAYBE',bad:'SKIP FOR NOW'}[lvl])
+  +`<div class="two">${card('How it works',`<p class="note" style="margin:0">Standard depreciation writes off the whole building over ${life} years. A cost segregation study, done by engineers, splits out parts that the tax code lets you depreciate faster: carpet, appliances, cabinets and dedicated wiring (5 or 7 years), and paving, landscaping, fencing and site lighting (15 years). With bonus depreciation, those shorter-life parts can be written off in year one.</p>`)}
+   ${card('Reclassification estimate',kv('Building value',fm(bldg))+kv(`5/7-year property (${pc(p5,0)})`,fm(R5))+kv(`15-year property (${pc(p15,0)})`,fm(R15))+kv(`Remaining ${life}-year property`,fm(rest))+kv('Bonus depreciation rate',pc(bonus,0),bonus===1?'good':'warn'))}</div>`
+  +`<div class="two">${card('First-year comparison',kv('Without study',fm(base1))+kv('With study',fm(cs1))+kv('Extra deduction',fm(extra),'good')+kv('Tax value at '+pc(rate,0),fm(benefit),'good')+kv('Usable this year (your situation)',fm(usableB))+kv('Study fee (deductible)',fa(-fee))+kv('Return on study fee',nx(roi,1),lv(roi,5,2)))}
+   ${card('Recapture when you sell',kv(`Sale in ~${hold} years: §1245 recapture on reclassified parts`,fm(Math.max(0,recap)))+kv('Present value of the strategy (incl. recapture)',fa(pvNet),pvNet>0?'good':'bad')+kv('Present value if held long-term or exchanged',fa(pvHold),'good')+`<p class="note" style="margin:6px 0 0">Reclassified parts are recaptured at ordinary rates on a taxable sale, not the 25% cap for buildings. The benefit is mostly timing: tax saved now is worth more than tax paid later. A 1031 exchange or holding until death can defer or eliminate the recapture.</p>`)}</div>`
+  +`<div class="two">${card('Does it make sense for you?',ul([bldg<300000?'Building value is small; a full engineering study rarely pays. Ask about lower-cost modeled studies.':bldg<750000?'Building value is in the range where a study usually pays if you can use the losses.':'Building value is large enough that a study almost always pays for itself.',useF===0?'Your losses would be suspended under passive rules, so the benefit waits until you have passive income or sell.':useF<1?'Only part of the loss is likely usable now; the rest carries forward.':'You can use the losses now, which maximizes the value.',V.s('yr').startsWith('2018')||V.s('yr')==='2023'||V.s('yr')==='2024'?'You placed it in service in an earlier year: you can still catch up all missed depreciation this year with Form 3115, without amending returns.':'Order the study in the year you place the property in service.',hold<5?'A short hold means recapture comes back quickly; plan a 1031 exchange if you sell.':'A longer hold spreads out the recapture effect.']))}
+   ${card('Questions for cost segregation firms',ul(['Is this an engineering-based study with a site visit, and does it follow the IRS Cost Segregation Audit Techniques Guide?','What percentage do you typically reclassify for this property type and age, and will you give a free estimate first?','Will you defend the study in an audit at no extra cost?','Do you prepare Form 3115 for catch-up depreciation?','Do you identify components for partial disposition when I replace them later?','What is the fee, and is it fixed or contingent on results?','Can you share sample reports and references from CPAs?']))}</div>`
+  +`<p class="note">Rough framework only. Reclassification percentages are typical ranges; your study may differ. Bonus rates reflect federal law as of mid-2026; verify with your CPA before relying on them.</p>`;}});
+
+/* =================== 16. CREATIVE FINANCING =================== */
+tool({id:'creative',group:'Execution',name:'Creative Financing',blurb:'Compare eight ways to finance a purchase against your cash, credit and situation, with the numbers each needs to work, the risks, and who you need on your team.',
+ inputs:()=>G('Deal',T('desc','Property','12-unit apartment building (example)'),N('price','Price',1000000,{pre:'$'}),N('noi','NOI (as-is)',70000,{pre:'$',suf:'/yr'}),N('rehab','Rehab needed',50000,{pre:'$'}),N('arv','After-repair value',1150000,{pre:'$'}),N('snoi','Stabilized NOI',84000,{pre:'$',suf:'/yr'}))
+  +G('You',N('cash','Available cash',40000,{pre:'$'}),Sel('credit','Credit score',['Below 620','620–679','680–739','740+'],'680–739'),N('ov','Your other property value',300000,{pre:'$'}),N('ol','Loan on it',90000,{pre:'$'}))
+  +G('Situation',C('mot','Seller is motivated',true),C('fc','Seller owns it free and clear',false),C('low','Seller has a low-rate mortgage',false),C('work','Property needs significant work',false),C('bank','Bank financing is difficult',false),C('part','I have potential partners or investors',false),C('hold','I plan to hold long-term',true))
+  +ADV('Terms',false,N('sfd','Seller-finance down',10,{suf:'%'}),N('sfr','Seller-finance rate',6,{suf:'%'}),N('sfa','Seller amortization',25,{suf:'yrs'}),N('sfb','Balloon',7,{suf:'yrs'}),N('sbal','Seller’s mortgage balance',0,{pre:'$'}),N('srate','Seller’s mortgage rate',3.5,{suf:'%'}),N('hmr','Hard money rate',11.5,{suf:'%'}),N('hmp','Hard money points',2.5,{suf:'%'}),N('hml','Hard money LTC',85,{suf:'%'}),N('cltv','Cross-collateral max LTV',75,{suf:'%'}),N('crate','Commercial loan rate',7.25,{suf:'%'}),N('cam','Commercial amortization',25,{suf:'yrs'}),N('hcl','HELOC max CLTV',75,{suf:'%'}),N('hr','HELOC rate',8.5,{suf:'%'}),N('cc','Closing costs',3,{suf:'%'})),
+ calc(V){const price=V.n('price',0),noi=V.n('noi',0),snoi=V.n('snoi',noi),rehab=V.n('rehab',0),arv=V.n('arv',price),cash=V.n('cash',0),cc=price*V.p('cc',.03),ov=V.n('ov',0),ol=V.n('ol',0);
+  if(!(price>0))return empty('Enter a price.');const sit=k=>V.b(k);const cr=V.s('credit'),crN={'Below 620':0,'620–679':1,'680–739':2,'740+':3}[cr];const conv=price*0.25+cc+rehab;
+  const opts=[];const add=o=>{let f=50+o.fit.reduce((a,b)=>a+b,0);if(fin(o.dscr)&&o.dscr<1.1)f-=20;if(o.need>cash&&!sit('part'))f-=Math.min(30,(o.need-cash)/Math.max(cash,1)*10);o.score=clamp(Math.round(f),0,100);opts.push(o);};
+  {const d=price*V.p('sfd',.1),l=price-d,m=pmtM(V.p('sfr',.06),V.n('sfa',25),l),bal=balAfter(l,V.p('sfr',.06),V.n('sfa',25),V.n('sfb',7)*12);add({n:'Seller financing',need:d+cc*0.6+rehab,pay:m,dscr:noi/(m*12),rows:[['Down payment',fm(d)],['Seller note',fm(l)],['Payment',fm(m)+'/mo'],['Balloon due in '+V.n('sfb',7)+' yrs',fm(bal)]],fit:[sit('mot')?12:0,sit('fc')?22:-10,sit('bank')?10:0,crN<2?6:0],why:sit('fc')?'The seller owns it free and clear, which is the ideal setup for a seller note.':'Works best when the seller owns the property free and clear; otherwise their lender must be paid off or subordinated.',risks:['Balloon payment forces a refinance or sale','Seller may want a higher price in exchange for terms','Due-on-sale if the seller still has a mortgage'],pros:['Real estate attorney to draft the note, mortgage or deed of trust','Title company','CPA for installment-sale tax treatment (a selling point for the seller)'],nums:['Payment the NOI can cover at 1.20x+','A balloon date you can refinance by','Seller’s tax motivation (installment sale spreads their gain)']});}
+  {const sb=V.n('sbal',0),m=pmtM(V.p('srate',.035),25,sb),gap=Math.max(0,price-sb);add({n:'Subject-to (take over existing mortgage)',need:gap+cc*0.5+rehab,pay:m,dscr:sb?noi/(m*12):NaN,rows:[['Existing loan',sb?fm(sb):'Not entered'],['Seller equity to cover',fm(gap)],['Est. payment on existing loan',sb?fm(m)+'/mo':'—']],fit:[sit('low')?22:-15,sit('mot')?12:0,sb?0:-10,price>750000?-12:0],why:price>750000?'At this size the seller likely has a commercial loan with strict transfer terms; subject-to is rare above small residential deals.':'Fits when the seller has a low-rate loan and little equity, and needs out quickly.',risks:['Lender can call the loan due under the due-on-sale clause','Seller’s credit stays tied to your performance','Insurance and escrow must be restructured correctly'],pros:['Real estate attorney experienced in subject-to','Title company comfortable closing it','Insurance agent to structure coverage'],nums:['Existing balance, rate and payment','Seller equity you must cover in cash or a second note','Any arrears to bring current']});}
+  {const fee=price*0.03,ml=noi/12*0.8;add({n:'Master lease with option to buy',need:fee+rehab*0.3,pay:ml,dscr:NaN,rows:[['Option fee (≈3%)',fm(fee)],['Lease payment to seller (80% of NOI)',fm(ml)+'/mo'],['Your monthly spread',fm(noi/12-ml)+'/mo'],['Strike price',fm(price)]],fit:[sit('mot')?14:0,cash<conv?12:0,sit('work')?4:0,sit('bank')?8:0],why:'You control and operate the property for a small option fee, keep the spread, and buy later at a set price.',risks:['Seller default or liens during the lease','Improvements you make belong to the seller if you do not buy','Option fee is lost if you walk away'],pros:['Attorney to draft the lease and option and record a memorandum of option','Property manager if you operate it'],nums:['Lease payment that leaves a spread','Option term long enough to stabilize and refinance','Strike price below projected value']});}
+  {const tot=price+rehab,l=Math.min(tot*V.p('hml',.85),arv*0.70),pts=l*V.p('hmp',.025),m=l*V.p('hmr',.115)/12,need=tot+cc+pts-l+m*6;const refi=arv*0.75;add({n:'Hard money / bridge loan',need,pay:m,dscr:noi/(m*12),rows:[['Loan (capped at 70% ARV)',fm(l)],['Points',fm(pts)],['Interest-only payment',fm(m)+'/mo'],['Cash needed incl. 6 mo. interest',fm(need)],['Refi at 75% of ARV',fm(refi)+(refi>=l?' ✓ pays off':' ✗ short')]],fit:[sit('work')?18:-8,sit('bank')?12:0,refi>=l?8:-15,crN>=1?4:0],why:'Short-term money to buy and renovate when banks will not lend on the as-is condition. Only works with a clear refinance or sale exit.',risks:['High rate and points; delays are expensive','Renovation overruns can leave you short at refi','Refinance appraisal below ARV'],pros:['Hard money lender','Contractor with a firm bid','Long-term lender pre-qualified for the takeout refi'],nums:['ARV from real comps','Rehab budget plus 10–15% contingency','Takeout loan terms and DSCR after stabilization']});}
+  {const gap=Math.max(0,conv-cash),pref=gap*0.08;add({n:'Partnership / syndication',need:cash,pay:0,dscr:NaN,rows:[['Conventional cash needed',fm(conv)],['Partner equity to raise',fm(gap)],['8% preferred return to partners',fm(pref)+'/yr'],['Cash flow after pref (before split)',fa(snoi-pmtM(0.07,30,price*0.75)*12-pref)+'/yr']],fit:[sit('part')?25:-10,cash<conv?10:0,price>=750000?6:0],why:'Partners bring the cash; you bring the deal and the work, usually for a 20–40% share plus fees.',risks:['Securities laws apply when you raise from passive investors','Misaligned expectations; always put terms in an operating agreement','You may need to sign on the loan (key principal)'],pros:['Securities attorney (Reg D, 506(b) or 506(c)) for passive investors','Business attorney for the LLC operating agreement','CPA for K-1s'],nums:['Preferred return and split that still leave you paid','Waterfall at sale','Sponsor fees (acquisition, asset management)']});}
+  {const all=price+rehab+cc+price*0.75*0.07/12*6,refi=arv*0.75,left=all-refi,m=pmtM(0.07,30,refi);add({n:'BRRRR',need:price*0.2+rehab+cc,pay:m,dscr:snoi/(m*12),rows:[['All-in cost',fm(all)],['Refi at 75% of ARV',fm(refi)],['Cash left in after refi',fa(left),],['Post-refi payment',fm(m)+'/mo'],['Post-refi DSCR',nx(snoi/(m*12))]],fit:[sit('work')?16:-10,left<all*0.1?14:left<all*0.25?4:-12,sit('hold')?6:0],why:'Buy below value, renovate, rent, and refinance to pull most of your cash back out.',risks:['ARV and appraisal risk','Seasoning periods (often 6–12 months) before cash-out','Higher debt after refi squeezes cash flow'],pros:['Contractor','Appraiser-friendly comps from a broker','DSCR or portfolio lender for the refinance'],nums:['ARV at least ~(all-in ÷ 0.75)','Stabilized NOI that covers the refi at 1.20x+','Rehab timeline']});}
+  {const avail=Math.max(0,ov*V.p('hcl',.75)-ol),m=avail*V.p('hr',.085)/12,covers=avail>=conv;add({n:'HELOC on your existing property',need:Math.max(0,conv-avail),pay:m,dscr:NaN,rows:[['Available line',fm(avail)],['Down + closing + rehab needed',fm(conv)],['Covers it?',covers?'Yes':'No, short '+fm(conv-avail)],['Interest-only cost if fully drawn',fm(m)+'/mo']],fit:[avail>0?10:-20,covers?15:-5,crN>=2?6:-6],why:'Uses equity you already have for the down payment. Many lenders cap investment-property HELOCs at 70–75% combined LTV.',risks:['Variable rate','Both properties now carry debt; the new deal must cover its own loan plus the HELOC cost','Lender can freeze or reduce the line'],pros:['Bank or credit union offering investment-property HELOCs','CPA for interest tracing'],nums:['Combined LTV limits','Whether cash flow covers both payments','Rate and draw period']});}
+  {const tv=price+ov,maxNew=Math.max(0,tv*V.p('cltv',.75)-ol),loan=Math.min(price,maxNew),need=price+cc-loan+rehab,m=pmtM(V.p('crate',.0725),V.n('cam',25),loan),dscr=noi/(m*12),zero=(price+cc+ol)/tv;add({n:'Cross-collateral / blanket loan',need,pay:m,dscr,rows:[['Combined collateral value',fm(tv)],[`Max new loan at ${pc(V.p('cltv',.75),0)} combined LTV`,fm(maxNew)],['Loan (capped at price)',fm(loan)],['Cash still needed',fm(need)],['Payment',fm(m)+'/mo'],['DSCR on as-is NOI',nx(dscr)],['Combined LTV needed for zero cash in',pc(zero,0)]],fit:[ov-ol>0?14:-20,dscr>=1.25?10:dscr>=1.1?0:-15,sit('hold')?4:0,crN>=2?4:-4],why:`Pledges your other property as extra collateral instead of a cash down payment. Lenders still size the loan to the new property’s income, so DSCR usually limits it before collateral does. ${dscr<1.2?'At this NOI, the payment on a near-100% loan is more than the property can carry.':''}`,risks:['Default on one property puts both at risk','Selling or refinancing either property needs lender release','Higher loan amount means thinner cash flow'],pros:['Commercial or portfolio lender that offers blanket or cross-collateral loans','Attorney to review release provisions'],nums:['Combined LTV the lender allows (usually 70–80%)','DSCR on the new property alone (usually 1.20–1.25x)','Release price for the pledged property']});}
+  opts.sort((a,b)=>b.score-a.score);
+  return verdict(opts[0].score>=70?'good':'warn',`Best fit: ${opts[0].n}`,`Then ${opts[1].n} and ${opts[2].n}. Conventional financing would need about ${fm(conv)} in cash; you have ${fm(cash)}.`,'RANKED')
+  +opts.map(o=>card('',`<div class="opt"><div class="hd"><h3>${o.n}</h3><span style="display:flex;gap:8px;align-items:center">${fin(o.dscr)?tag(lv(o.dscr,1.25,1.1),'DSCR '+nx(o.dscr)):''}${tag(o.need<=cash?'good':'warn','Cash '+fk(o.need))}<span class="pill ${o.score>=70?'good':o.score>=45?'warn':'bad'}">FIT ${o.score}</span></span></div><div class="meter"><i style="width:${o.score}%"></i></div><p class="note" style="margin:0">${o.why}</p><div class="two"><div>${o.rows.map(r=>kv(r[0],r[1])).join('')}</div><div><h3 class="eyebrow">Numbers you need</h3>${ul(o.nums)}</div></div><div class="two"><div><h3 class="eyebrow">Risks</h3>${ul(o.risks)}</div><div><h3 class="eyebrow">Your team</h3>${ul(o.pros)}</div></div></div>`)).join('')
+  +`<p class="note">Fit scores weigh your situation, the cash each option needs against what you have, and whether the property's income covers the debt. They are a starting point for conversations with lenders and attorneys.</p>`;}});
+
+
+/* =================== LISTING IMPORT & DEAL LIBRARY =================== */
+const IF=[['address','Address','t'],['city','City','t'],['state','State','t'],['zip','ZIP','t'],['propertyType','Property type','t'],['price','Asking price','$'],['units','Units','n'],['sqft','Building SF','n'],['yearBuilt','Year built','n'],['grossRentMonthly','Gross rent / month','$'],['avgRentPerUnit','Avg rent / unit / month','$'],['occupancyPct','Occupancy %','%'],['noi','NOI / year','$'],['capRate','Cap rate %','%'],['taxesAnnual','Property taxes / year','$'],['insuranceAnnual','Insurance / year','$'],['expensesAnnual','Operating expenses / year','$'],['otherIncomeMonthly','Other income / month','$'],['hoaMonthly','HOA / month','$'],['beds','Beds (single unit)','n'],['baths','Baths (single unit)','n']];
+const PTYPES=['Multifamily','Single family','Retail','Office','Industrial','Mixed-use','Other'];
+const ABBR=['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'];
+function extractPrompt(url,text,nImg){return `You are a commercial real estate analyst. Extract the facts from a property listing so they can prefill underwriting calculators.
+
+MATERIAL
+${url?'Listing URL: '+url+'\n(URL paths often contain the street address, city, state, ZIP and sometimes beds, baths or a listing ID. Use what the URL states.)':'No URL given.'}
+${text?'Listing text:\n"""\n'+text+'\n"""':'No listing text given.'}
+${nImg?nImg+' screenshot(s) of the listing or offering memorandum are attached. Read every number in them.':'No screenshots attached.'}
+
+RULES
+- Use only facts in the material. Never invent or estimate a number that is not stated. Use null when unknown.
+- You may compute a value from stated values (avgRentPerUnit = grossRentMonthly / units; occupancyPct = 100 - vacancy; grossRentMonthly = annual gross / 12; noi = price x cap rate). List every computed field name in "derived".
+- Money as plain numbers (no $ or commas). Percentages as numbers (6.5 means 6.5%). Keep monthly vs annual exactly as the field names say.
+- propertyType must be one of: ${PTYPES.join(', ')}. state is the 2-letter code.
+- unitMix: one entry per unit type that is stated, e.g. {"label":"2BR/1BA","count":8,"rent":1150}; [] if none.
+
+Reply with only this JSON object:
+{"address":null,"city":null,"state":null,"zip":null,"propertyType":null,"price":null,"units":null,"sqft":null,"yearBuilt":null,"grossRentMonthly":null,"avgRentPerUnit":null,"occupancyPct":null,"noi":null,"capRate":null,"taxesAnnual":null,"insuranceAnnual":null,"expensesAnnual":null,"otherIncomeMonthly":null,"hoaMonthly":null,"beds":null,"baths":null,"unitMix":[],"derived":[],"notes":"1-2 sentences: notable facts (condition, value-add, seller financing, NNN) and anything inconsistent","sourceSummary":"what you could read: URL only, text, or screenshots"}`;}
+function normDeal(d,url){const o={};IF.forEach(([k,,t])=>{const v=d?d[k]:null;o[k]=t==='t'?(v==null?'':String(v).trim()):toN(v);});o.unitMix=Array.isArray(d&&d.unitMix)?d.unitMix.map(u=>({label:String(u.label||'Unit'),count:toN(u.count)||0,rent:toN(u.rent)})).filter(u=>u.count>0):[];
+  o.derived=Array.isArray(d&&d.derived)?d.derived.map(String):[];o.notes=String(d&&d.notes||'');o.sourceSummary=String(d&&d.sourceSummary||'');o.url=url||'';
+  const der=k=>{if(!o.derived.includes(k))o.derived.push(k);};
+  if(!fin(o.grossRentMonthly)&&o.unitMix.length&&o.unitMix.every(u=>fin(u.rent))){o.grossRentMonthly=sum(o.unitMix.map(u=>u.rent*u.count));der('grossRentMonthly');}
+  if(!fin(o.units)&&o.unitMix.length){o.units=sum(o.unitMix.map(u=>u.count));der('units');}
+  if(!fin(o.avgRentPerUnit)&&fin(o.grossRentMonthly)&&o.units>0){o.avgRentPerUnit=Math.round(o.grossRentMonthly/o.units);der('avgRentPerUnit');}
+  if(!fin(o.grossRentMonthly)&&fin(o.avgRentPerUnit)&&o.units>0){o.grossRentMonthly=o.avgRentPerUnit*o.units;der('grossRentMonthly');}
+  if(!fin(o.noi)&&fin(o.capRate)&&o.price>0){o.noi=Math.round(o.price*o.capRate/100);der('noi');}
+  if(!fin(o.capRate)&&fin(o.noi)&&o.price>0){o.capRate=+(o.noi/o.price*100).toFixed(2);der('capRate');}
+  if(o.state&&o.state.length>2){const i=STATES.findIndex(s=>s.toLowerCase()===o.state.toLowerCase());if(i>=0)o.state=ABBR[i];}
+  o.state=o.state.toUpperCase();if(!PTYPES.includes(o.propertyType))o.propertyType=o.units>1?'Multifamily':o.propertyType?'Other':'';return o;}
+function dealName(d){return d.address||[d.city,d.state].filter(Boolean).join(', ')||(d.units?d.units+'-unit '+(d.propertyType||'property').toLowerCase():'Imported listing');}
+
+/* write imported values into every tool's saved inputs */
+function applyDeal(d){const r=x=>fin(x)?String(Math.round(x*100)/100):'';const set=(tool,obj)=>{const cur=S.v[tool]||{};Object.entries(obj).forEach(([k,v])=>{if(v!==''&&v!=null)cur[k]=String(v);});S.v[tool]=cur;};
+  const pt=d.propertyType,units=d.units>0?d.units:(pt==='Single family'?1:NaN),name=dealName(d),loc=[d.city,d.state].filter(Boolean).join(', ');
+  const gross=fin(d.grossRentMonthly)?d.grossRentMonthly:(fin(d.avgRentPerUnit)&&units>0?d.avgRentPerUnit*units:NaN);const avg=fin(d.avgRentPerUnit)?d.avgRentPerUnit:(fin(gross)&&units>0?gross/units:NaN);
+  const occ=fin(d.occupancyPct)?d.occupancyPct:NaN,vac=fin(occ)?100-occ:NaN;const com=['Retail','Office','Industrial'].includes(pt);
+  const exp=d.expensesAnnual,other=fin(d.otherIncomeMonthly)?d.otherIncomeMonthly:NaN;
+  set('five',{ptype:({'Single family':'Multifamily','Other':'Multifamily'})[pt]||pt,price:r(d.price),units:r(units),year:r(d.yearBuilt),rent:r(avg),occ:r(occ),mkt:r(avg),oth:fin(other)&&units>0?r(other/units):'',offerPct:'100'});
+  set('screen',{mkt:[d.address,loc,d.zip].filter(Boolean).join(', '),type:pt==='Single family'?'Single family':com?'Commercial':pt==='Mixed-use'?'Mixed use':'Multifamily',price:r(d.price),units:r(units),sf:r(d.sqft),year:r(d.yearBuilt),rent:r(gross),vac:r(vac),tax:r(d.taxesAnnual),ins:r(d.insuranceAnnual),issues:''});
+  set('cashflow',{addr:name,price:r(d.price),year:r(d.yearBuilt),tax:fin(d.taxesAnnual)?r(d.taxesAnnual/12):'',ins:fin(d.insuranceAnnual)?r(d.insuranceAnnual/12):'',hoa:r(d.hoaMonthly),oth:r(other),vac:fin(vac)&&vac>0?r(vac):''});
+  if(fin(gross)&&units>0){let rows;if(d.unitMix.length&&d.unitMix.every(u=>fin(u.rent))){rows=sum(d.unitMix.map(u=>u.count))<=12?d.unitMix.flatMap(u=>Array.from({length:u.count},(_,i)=>({name:`${u.label} #${i+1}`,rent:r(u.rent)}))):d.unitMix.map(u=>({name:`${u.label} ×${u.count}`,rent:r(u.rent*u.count)}));}
+    else rows=units<=12?Array.from({length:units},(_,i)=>({name:'Unit '+(i+1),rent:r(avg)})):[{name:`All ${units} units`,rent:r(gross)}];S.r['cashflow.units']=rows;}
+  const capType=pt==='Multifamily'?(units>20?'Multifamily – Class B':'Small multifamily (5–20 units)'):pt==='Retail'?'Retail – strip / neighborhood':pt==='Office'?'Office – suburban':pt==='Industrial'?'Industrial / flex':pt==='Mixed-use'?'Mixed-use':'';
+  const cp={desc:name,mkt:loc,price:r(d.price),units:r(units)};if(capType)cp.type=capType;if(fin(d.noi)){cp.mode='Enter NOI';cp.noi=r(d.noi);}else if(fin(gross)&&fin(exp)){Object.assign(cp,{mode:'Build from income & expenses',gross:r(gross*12),vac:r(fin(vac)?vac:5),opex:r(exp)});}set('caprate',cp);
+  set('fiveyr',{addr:name,ptype:com?'Commercial (39 yr)':'Residential (27.5 yr)',price:r(d.price),units:r(units),egi:fin(gross)?r(gross*12*(fin(occ)?occ/100:0.95)+(fin(other)?other*12:0)):'',noi:r(d.noi),sv:''});
+  set('reno',{desc:name,val:r(d.price),units:r(units),rent:r(gross),noi:r(d.noi)});
+  const sl={desc:name,price:r(d.price),units:r(units),gross:fin(gross)?r(gross*12):'',vac:r(vac),oinc:fin(other)?r(other*12):'',rnoi:r(d.noi),rcap:r(d.capRate)};
+  if(fin(d.taxesAnnual)||fin(d.insuranceAnnual)||fin(exp)){['util','rep','mgmt','pay','adm','mkt','land','trash','turn','res'].forEach(k=>sl['x_'+k]='0');sl.x_tax=r(fin(d.taxesAnnual)?d.taxesAnnual:0);sl.x_ins=r(fin(d.insuranceAnnual)?d.insuranceAnnual:0);sl.x_oth=fin(exp)?r(Math.max(0,exp-(d.taxesAnnual||0)-(d.insuranceAnnual||0))):'0';}set('seller',sl);
+  set('rent',{type:pt==='Single family'?'Single-family home':pt==='Multifamily'?'Apartment unit':pt||'',loc:[d.address,loc].filter(Boolean).join(', '),beds:r(d.beds),baths:r(d.baths),sf:units===1?r(d.sqft):''});
+  const si=ABBR.indexOf(d.state);set('dd',{type:pt==='Single family'?'Single family':com?'Commercial / retail':pt==='Mixed-use'?'Mixed use':units>=5?'Multifamily (5+ units)':units>=2?'Small multifamily (2–4)':'',st:si>=0?STATES[si]:''});
+  set('hood',{area:d.zip,city:loc});
+  const csType={'Multifamily':'Multifamily','Single family':'Single-family rental','Retail':'Retail','Office':'Office','Industrial':'Industrial / warehouse','Mixed-use':'Mixed-use'}[pt];set('costseg',{desc:name,price:r(d.price),bldg:'',...(csType?{type:csType}:{})});
+  set('creative',{desc:name,price:r(d.price),noi:r(d.noi),snoi:r(d.noi),arv:''});set('x1031',{rp:r(d.price),rnoi:r(d.noi)});
+  S.active={name,url:d.url,at:Date.now()};save();TOOLS.forEach(t=>{if(document.getElementById('t-'+t.id))build(t.id);});renderActive();}
+function renderActive(){const el=document.getElementById('activeDeal');if(!el)return;el.innerHTML=S.active?`<span class="eyebrow" style="margin:0">Loaded deal</span><b>${esc(S.active.name)}</b>`:'';el.hidden=!S.active;}
+
+/* engines: Claude inside claude.ai (sample), or the app's own server */
+async function shrink(file,max=1600){try{const bmp=await createImageBitmap(file);const k=Math.min(1,max/Math.max(bmp.width,bmp.height));const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);const url=c.toDataURL('image/jpeg',0.82);return {type:'image/jpeg',data:url.split(',')[1]};}catch(e){return null;}}
+async function engineInfo(){if(window.UW_API)return {kind:'server'};if(!window.claude||!window.claude.use)return {kind:'none'};const s=await window.claude.use('sample');if(!s)return {kind:'none'};const lim=await s.limits().catch(()=>null);return {kind:'claude',s,lim};}
+async function runExtract(url,text,files,signal){const eng=await engineInfo();
+  if(eng.kind==='server'){const imgs=(await Promise.all([...files].slice(0,5).map(f=>shrink(f)))).filter(Boolean);let key='';try{key=localStorage.getItem('uwdesk.key')||'';}catch(e){}
+    const r=await fetch(window.UW_API,{method:'POST',signal,headers:{'content-type':'application/json','x-app-key':key},body:JSON.stringify({url,text,images:imgs})});let j={};try{j=await r.json();}catch(e){}
+    if(!r.ok)throw {code:r.status===401?'passcode':'server',message:j.error||('Server error '+r.status)};return j;}
+  if(eng.kind==='none')throw {code:'unavailable'};
+  const opts={modelTier:'default',signal};if(files.length){if(!eng.lim||!eng.lim.images)throw {code:'images_unavailable'};opts.images=[...files].slice(0,eng.lim.images.maxCount);}
+  let t=text||'';while(new TextEncoder().encode(extractPrompt(url,t,files.length)).length>60000)t=t.slice(0,Math.floor(t.length*0.8));
+  return await eng.s.json(extractPrompt(url,t,files.length),opts);}
+const ERRMSG={unavailable:'Listing import isn’t available in this view. Open the desk in the Claude app or claude.ai, or use the installed app.',not_granted:'Import needs permission to use Claude. Reload the page and choose Allow to try again.',sampling_disabled:'Claude isn’t available for this account, so import is off.',images_unavailable:'Screenshots can’t be sent from this view. Paste the listing text instead.',image_rejected:'One of the images couldn’t be read. Try a PNG or JPEG screenshot.',rate_limited:'You’ve hit a usage limit. Try again in a few minutes.',invalid_json:'Claude’s reply couldn’t be read as data. Try again, or add a screenshot so there’s more to read.',refused:'Claude declined this material. Try a different screenshot or text.',empty_completion:'Nothing came back. Add a screenshot or listing text and try again.',passcode:'The app passcode is missing or wrong. Enter it under App settings.',server:'The app server couldn’t read that listing.'};
+
+let IMP={files:[],result:null,ctl:null};
+function buildImport(){let sec=document.getElementById('t-import');if(sec)return;sec=document.createElement('section');sec.className='tool';sec.id='t-import';document.getElementById('panels').prepend(sec);
+  const params=new URLSearchParams(location.search);const shared=params.get('url')||((params.get('text')||'').match(/https?:\/\/\S+/)||[''])[0];
+  sec.innerHTML=`<header class="th"><div><div class="eyebrow">Start here</div><h1>Import a listing</h1><p>Paste a listing link from LoopNet, Crexi, Zillow, Redfin or a broker site. Add screenshots of the listing or offering memorandum for the most complete read. Claude pulls out the numbers, you review them, and every tool fills in.</p></div></header>
+  <div class="tool-grid"><form class="inputs" id="impForm" autocomplete="off" novalidate>
+   <fieldset class="g"><legend>Listing</legend><div class="fg">
+    <label class="f w"><span class="l">Listing link</span><span class="in"><input id="impUrl" type="url" inputmode="url" placeholder="https://www.loopnet.com/Listing/…" value="${esc(shared)}"></span><small id="impUrlHint">${window.UW_API?'The app fetches the page for you. Add screenshots if the site blocks it.':'Inside Claude, the link gives the address; screenshots or pasted text give the numbers.'}</small></label>
+    <label class="f w"><span class="l">Screenshots or OM pages</span><span class="in" style="padding:6px 9px"><input id="impFiles" type="file" accept="image/*" multiple style="font-size:13px"></span><small id="impFilesNote">On a phone: screenshot the listing, then add it here. Up to 5 images.</small></label>
+    <label class="f w"><span class="l">Listing text (optional)</span><span class="in"><textarea id="impText" rows="5" placeholder="Select all on the listing page, copy, and paste here">${esc(params.get('text')&&!shared?params.get('text'):'')}</textarea></span></label>
+   </div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button type="submit" class="btn primary" id="impGo">Read listing</button><button type="button" class="btn" id="impStop" hidden>Stop</button><button type="button" class="btn" id="impManual">Enter manually</button></div><p class="note" id="impStatus" style="margin:10px 0 0" aria-live="polite"></p></fieldset>
+   ${window.UW_API?`<details class="g"><summary>App settings</summary><div class="fg"><label class="f w"><span class="l">App passcode</span><span class="in"><input id="impKey" type="password" autocomplete="off" placeholder="Set in your server settings"></span><small>Only needed if you set APP_PASSCODE on the server.</small></label></div></details>`:''}
+   <fieldset class="g"><legend>Saved deals</legend><div id="dealList"></div></fieldset>
+  </form><div class="res"><div id="impOut"></div></div></div>`;
+  const $=s=>sec.querySelector(s),st=$('#impStatus');
+  if(window.UW_API){try{$('#impKey').value=localStorage.getItem('uwdesk.key')||'';}catch(e){}$('#impKey').addEventListener('input',e=>{try{localStorage.setItem('uwdesk.key',e.target.value);}catch(x){}});}
+  engineInfo().then(e=>{if(e.kind==='claude'&&!(e.lim&&e.lim.images)){$('#impFiles').closest('label').hidden=true;}if(e.kind==='none'){st.textContent=ERRMSG.unavailable;}});
+  $('#impFiles').addEventListener('change',e=>{IMP.files=[...e.target.files].slice(0,5);$('#impFilesNote').textContent=IMP.files.length?`${IMP.files.length} image${IMP.files.length>1?'s':''} ready.`:'Up to 5 images.';});
+  $('#impStop').addEventListener('click',()=>{if(IMP.ctl)IMP.ctl.abort();});
+  $('#impManual').addEventListener('click',()=>{IMP.result=normDeal({},$('#impUrl').value.trim());renderReview();});
+  $('#impForm').addEventListener('submit',async e=>{e.preventDefault();const url=$('#impUrl').value.trim(),text=$('#impText').value.trim();
+    if(!url&&!text&&!IMP.files.length){st.textContent='Add a link, a screenshot or some listing text first.';return;}
+    if(url&&!/^https?:\/\//i.test(url)){st.textContent='The link should start with http:// or https://.';return;}
+    IMP.ctl=new AbortController();$('#impGo').disabled=true;$('#impStop').hidden=false;st.textContent=window.UW_API?'Fetching the page and reading it… this can take 20–60 seconds.':'Claude is reading the listing… this can take 20–60 seconds.';
+    try{const d=await runExtract(url,text,IMP.files,IMP.ctl.signal);IMP.result=normDeal(d,url);st.textContent='';renderReview();}
+    catch(err){const c=err&&err.code;if(c==='cancelled'||(err&&err.name==='AbortError')){st.textContent='Stopped.';}else{st.textContent=(ERRMSG[c]||'Something went wrong reading the listing.')+(c==='server'&&err.message?' '+err.message:'');}}
+    finally{$('#impGo').disabled=false;$('#impStop').hidden=true;IMP.ctl=null;}});
+  sec.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.id==='impApply'){readReview();applyDeal(IMP.result);saveDeal(IMP.result);renderDeals();document.dispatchEvent(new CustomEvent('uw:go',{detail:'five'}));}
+    else if(b.dataset.load){const d=(S.deals||[]).find(x=>x.id===b.dataset.load);if(d){IMP.result=d.data;renderReview();applyDeal(d.data);document.dispatchEvent(new CustomEvent('uw:go',{detail:'five'}));}}
+    else if(b.dataset.del){if(b.dataset.armed){S.deals=(S.deals||[]).filter(x=>x.id!==b.dataset.del);save();renderDeals();}else{b.dataset.armed='1';b.textContent='Confirm';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent='Delete';}},3000);}}});
+  renderDeals();if(shared&&window.UW_API)setTimeout(()=>$('#impForm').requestSubmit(),300);}
+function renderReview(){const d=IMP.result,out=document.getElementById('impOut');if(!d){out.innerHTML='';return;}
+  const found=IF.filter(([k])=>d[k]!==''&&fin(d[k])||(typeof d[k]==='string'&&d[k])).length;
+  const row=([k,l,t])=>{const v=d[k];const isD=d.derived.includes(k);const val=t==='t'?v:(fin(v)?v:'');const ctrl=k==='propertyType'?`<select data-if="${k}">${['',...PTYPES].map(p=>`<option${p===v?' selected':''}>${p}</option>`).join('')}</select>`:`<input data-if="${k}" value="${esc(val)}"${t!=='t'?' inputmode="decimal"':''} placeholder="not found">`;return `<tr><td>${l}</td><td>${ctrl}</td><td>${val!==''&&val!=null?(isD?tag('warn','Calculated'):tag('good','Found')):tag('mut','Missing')}</td></tr>`;};
+  out.innerHTML=verdict(found>=8?'good':found>=4?'warn':'bad',`${found} of ${IF.length} fields found${d.address?' for '+esc(d.address):''}`,`${found<6?'<b>Add a screenshot of the listing (or paste its text) and tap Read listing again to fill price, rents and NOI.</b> ':''}${esc(d.notes||'')} ${d.sourceSummary?'<br><span class="mut">Read from: '+esc(d.sourceSummary)+'</span>':''}`,found>=8?'READY':found>=4?'PARTIAL':'THIN')
+  +card('Review before applying',`<p class="note" style="margin:0 0 8px">Correct anything that looks off and fill blanks you know. Missing fields keep each tool’s current assumption.</p><div class="tw"><table class="rt rv"><thead><tr><th>Field</th><th>Value</th><th>Status</th></tr></thead><tbody>${IF.map(row).join('')}</tbody></table></div>${d.unitMix.length?`<h3 class="eyebrow" style="margin-top:12px">Unit mix</h3>${tbl(['Type','Count','Rent'],d.unitMix.map(u=>[esc(u.label),u.count,fm(u.rent)]))}`:''}<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button type="button" class="btn primary" id="impApply">Apply to all tools</button></div>`)
+  +card('What gets filled',`<p class="note" style="margin:0">Price, units, rents, occupancy, NOI, taxes and insurance flow into the 5-Minute Analysis, Screening, Cash Flow, Cap Rate, Five-Year, Renovation, Seller Review, Creative Financing, 1031 (as the replacement) and Cost Segregation tabs. Address, ZIP and state set up Neighborhood, Rental Market and Due Diligence. Financing, growth and hurdle assumptions stay as you set them.</p>`);
+  out.scrollIntoView({behavior:'smooth',block:'start'});}
+function readReview(){document.querySelectorAll('#impOut [data-if]').forEach(el=>{const k=el.dataset.if,t=(IF.find(f=>f[0]===k)||[])[2];IMP.result[k]=t==='t'?el.value.trim():toN(el.value);});IMP.result=normDeal(IMP.result,IMP.result.url);}
+function saveDeal(d){S.deals=S.deals||[];const name=dealName(d);const ex=S.deals.find(x=>(d.url&&x.data.url===d.url)||x.name===name);const rec={id:ex?ex.id:'d'+Date.now().toString(36),name,at:Date.now(),data:JSON.parse(JSON.stringify(d))};if(ex)Object.assign(ex,rec);else S.deals.unshift(rec);S.deals=S.deals.slice(0,40);save();}
+function renderDeals(){const el=document.getElementById('dealList');if(!el)return;const L=S.deals||[];el.innerHTML=L.length?L.map(x=>`<div class="kv" style="align-items:center"><span><b style="color:var(--ink)">${esc(x.name)}</b><br><span class="mut" style="font-size:12px">${fin(x.data.price)?fk(x.data.price)+' · ':''}${fin(x.data.units)?x.data.units+' units · ':''}${new Date(x.at).toLocaleDateString()}</span></span><span style="display:flex;gap:6px"><button type="button" class="btn sm" style="margin:0" data-load="${x.id}">Load</button><button type="button" class="btn sm" style="margin:0" data-del="${x.id}">Delete</button></span></div>`).join(''):'<p class="note" style="margin:0">Deals you apply are saved here on this device, so you can switch between them.</p>';}
+
+/* =================== boot =================== */
+const ORDER=['five','screen','cashflow','caprate','fiveyr','reno','seller','hood','markets','rent','dd','creative','x1031','portfolio','taxded','costseg'];
+TOOLS.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));
+(function boot(){const nav=document.getElementById('navList'),sel=document.getElementById('toolSel');const groups=[...new Set(TOOLS.map(t=>t.group))];
+  nav.innerHTML=`<button type="button" class="nb imp" data-go="import"><span class="no">+</span><span>Import a listing</span></button><div id="activeDeal" class="active-deal" hidden></div>`+groups.map(g=>`<div class="ng"><h4>${g}</h4>${TOOLS.filter(t=>t.group===g).map(t=>`<button type="button" class="nb" data-go="${t.id}"><span class="no">${String(TOOLS.indexOf(t)+1).padStart(2,'0')}</span><span>${t.name}</span></button>`).join('')}</div>`).join('');
+  sel.innerHTML=`<option value="import">+ Import a listing</option>`+groups.map(g=>`<optgroup label="${g}">${TOOLS.filter(t=>t.group===g).map(t=>`<option value="${t.id}">${String(TOOLS.indexOf(t)+1).padStart(2,'0')} · ${t.name}</option>`).join('')}</optgroup>`).join('');
+  function show(id){if(id!=='import'&&!TOOLS.some(t=>t.id===id))id='five';if(id==='import')buildImport();else if(!document.getElementById('t-'+id))build(id);document.querySelectorAll('.tool').forEach(s=>s.hidden=s.id!=='t-'+id);nav.querySelectorAll('.nb').forEach(b=>b.setAttribute('aria-current',b.dataset.go===id?'true':'false'));sel.value=id;try{localStorage.setItem('uwdesk.tab2',id);}catch(e){}try{history.replaceState(null,'',location.pathname+'#'+id);}catch(e){}}
+  nav.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){show(b.dataset.go);window.scrollTo({top:0});}});sel.addEventListener('change',()=>{show(sel.value);window.scrollTo({top:0});});
+  const mi=document.getElementById('mImport');if(mi)mi.addEventListener('click',()=>{show('import');window.scrollTo({top:0});});
+  const qb=document.getElementById('qbar');if(qb)qb.addEventListener('submit',e=>{e.preventDefault();const u=document.getElementById('qUrl').value.trim();show('import');window.scrollTo({top:0});const iu=document.getElementById('impUrl');if(iu&&u){iu.value=u;document.getElementById('impText').value='';const f=document.getElementById('impForm');setTimeout(()=>f.requestSubmit(),50);}});
+  document.addEventListener('uw:go',e=>{show(e.detail);window.scrollTo({top:0});});
+  const q=new URLSearchParams(location.search);let start=(q.get('url')||q.get('text'))?'import':(location.hash||'').slice(1);if(!start){try{start=localStorage.getItem('uwdesk.tab2')||'';}catch(e){}}show(start||'import');renderActive();
+  window.addEventListener('hashchange',()=>show(location.hash.slice(1)));})();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}
+</script></body></html>

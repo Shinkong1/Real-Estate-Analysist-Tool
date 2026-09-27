@@ -1,0 +1,8 @@
+# Cloudflare Pages config (used by Git deploys and `wrangler pages deploy`)
+name = "uw-desk"
+pages_build_output_dir = "public"
+compatibility_date = "2026-09-01"
+
+# Free Workers AI model for reading listings (no API key needed)
+[ai]
+binding = "AI"
