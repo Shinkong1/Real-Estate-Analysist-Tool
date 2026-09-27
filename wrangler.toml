@@ -1,8 +1,18 @@
-# Cloudflare Pages config (used by Git deploys and `wrangler pages deploy`)
-name = "uw-desk"
-pages_build_output_dir = "public"
+# Cloudflare Worker config (Workers Builds runs `npx wrangler deploy` on every push)
+name = "real-estate-analysist-tool"
+main = "worker.js"
 compatibility_date = "2026-09-01"
+keep_vars = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
 
 # Free Workers AI model for reading listings (no API key needed)
 [ai]
 binding = "AI"
+
+[observability]
+enabled = true
