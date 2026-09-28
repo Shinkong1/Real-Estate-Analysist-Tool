@@ -2,7 +2,7 @@
   "name": "Underwriting Desk",
   "short_name": "UW Desk",
   "description": "Paste a real estate listing link and underwrite the deal: cash flow, cap rate, 5-year returns, due diligence and financing.",
-  "start_url": "/#import",
+  "start_url": "/app/#import",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
@@ -14,7 +14,7 @@
     { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "share_target": {
-    "action": "/",
+    "action": "/app/",
     "method": "GET",
     "params": { "title": "title", "text": "text", "url": "url" }
   }

@@ -1,0 +1,4 @@
+.dev.vars
+wrangler.dev.toml
+.wrangler/
+node_modules/

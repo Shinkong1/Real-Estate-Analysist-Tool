@@ -7,35 +7,53 @@ work offline; importing a listing needs a connection.
 ## What's in this folder
 | File | What it does |
 |---|---|
-| `public/` | The app itself: `index.html` (all 16 tools + Import), manifest, service worker, icons |
+| `public/` | Home page (`index.html`), `login.html`, `account.html`, the app in `app/index.html`, manifest, service worker, icons |
+| `worker.js`, `lib/auth.js` | Cloudflare Worker: routing, accounts, sessions, Stripe billing |
 | `api/extract.js` | Vercel adapter for the link reader |
 | `lib/extract-core.js` | The link reader (shared by every host) |
 | `functions/api/extract.js` | Cloudflare Pages adapter |
 | `server.js` | Optional: run it on your own computer or any Node host |
-| `wrangler.toml` | Cloudflare Pages settings (output folder, free AI binding) |
+| `wrangler.toml` | Cloudflare Worker settings (assets, `USERS` KV, free AI binding) |
 | `vercel.json`, `public/_headers` | Security and caching headers |
 
-## Put it online for free (GitHub → Cloudflare Pages)
+## Site layout
+| Address | What it is |
+|---|---|
+| `/` | Public home page with features and pricing |
+| `/login` | Sign in and create an account (`/login?mode=signup&plan=week` or `plan=month`) |
+| `/app/` | The Underwriting Desk — only for the owner, a live test login, or a paying member |
+| `/account` | Plan, billing and sign-out; the owner also gets test-login controls and the account list |
 
-Everything below runs on Cloudflare's free plan: hosting, a real headless browser for pages
-that block simple readers, and a free AI model that reads the listing. No card needed.
+## Accounts and payments (Cloudflare Worker)
+The site runs as the Cloudflare Worker `reat`; every `git push` to `main` redeploys it.
+Accounts live in a Workers KV namespace bound as `USERS`, which Wrangler creates on the first deploy.
 
-1. **Put this folder in a GitHub repo** (e.g. `underwriting-desk`, private is fine).
-2. **Create the Pages project:** Cloudflare dashboard → Workers & Pages → Create → Pages →
-   Connect to Git → pick the repo. Framework preset: **None**. Build command: *(leave empty)*.
-   Build output directory: **public**. Deploy. `wrangler.toml` already switches on the free
-   Workers AI model (`AI` binding).
-3. **Create an API token** (My Profile → API Tokens → Create Token → Custom) with:
-   - Account → **Browser Rendering → Edit**  (headless browser, a.k.a. Browser Run)
-   - Account → **Workers AI → Read**
-4. **Add variables:** Pages project → Settings → Variables and Secrets (Production), as *Secret*:
-   | Name | Value |
-   |---|---|
-   | `APP_PASSCODE` | any passphrase (keeps strangers from using your quota) |
-   | `CF_ACCOUNT_ID` | your account ID (right sidebar of the dashboard home) |
-   | `CF_API_TOKEN` | the token from step 3 |
-   Then Deployments → Retry deployment so they take effect.
-5. Open `https://<project>.pages.dev`. Every `git push` redeploys automatically.
+**Who can sign in**
+- **Owner** — username `owner` (or the email in `OWNER_EMAIL`) with the password in `OWNER_PASSWORD`.
+  If `OWNER_PASSWORD` isn't set, the existing `APP_PASSCODE` is the owner password.
+- **Test logins** — the owner creates these from **Account → Create a 3-day test login**. Each one
+  gets a random username and password (shown once) and stops working after 72 hours
+  (`TEST_LOGIN_HOURS` changes that). The owner can remove one early.
+- **Members** — sign up at `/login`, pay $25/week or $100/month through Stripe Checkout, and can
+  manage or cancel from **Account → Manage billing**. Access continues while Stripe reports the
+  subscription as active, trialing or past due.
+
+**Turn on payments (Stripe)**
+1. In Stripe → Developers → API keys, copy the **Secret key**.
+2. Stripe → Developers → Webhooks → **Add endpoint**: `https://<your worker address>/api/stripe-webhook`,
+   events `checkout.session.completed`, `customer.subscription.created`,
+   `customer.subscription.updated`, `customer.subscription.deleted`. Copy the **Signing secret**.
+3. Cloudflare → Workers & Pages → `reat` → Settings → Variables and Secrets → add as *Secret*:
+   `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`.
+4. Stripe → Settings → Billing → **Customer portal**: turn it on so members can cancel or change cards.
+
+Prices are created inline at checkout. To use prices you've made in Stripe instead, add
+`STRIPE_PRICE_WEEKLY` and `STRIPE_PRICE_MONTHLY` (price IDs). Use test-mode keys first to try it
+with Stripe's test card `4242 4242 4242 4242`.
+
+**Listing reader secrets** (unchanged): `CF_ACCOUNT_ID` and `CF_API_TOKEN` (Browser Rendering → Edit,
+Workers AI → Read) turn on the headless browser. Imports now require a signed-in account with
+access instead of the passcode.
 
 **Free-plan limits:** headless browser 10 minutes/day (a listing takes ~5–15 s, so roughly
 40–100 rendered pages a day) and one browser request every 10 seconds; Workers AI 10,000
@@ -66,7 +84,7 @@ blocks both readers. A few cents per listing.
   UW Desk, paste it on the Import screen.
 - **Android (Chrome):** open the address → menu → **Install app**. You can then use
   **Share → UW Desk** straight from a listing and it starts reading automatically.
-- The first time, open **App settings** on the Import screen and enter your passcode.
+- Sign in once on each device; sessions last 30 days.
 
 ## Settings (environment variables)
 | Name | Required | Purpose |
@@ -77,7 +95,10 @@ blocks both readers. A few cents per listing.
 | `CF_ACCOUNT_ID`, `CF_API_TOKEN` | For Cloudflare features | Headless browser, and Workers AI outside Pages |
 | `CF_AI_MODEL` | No | Defaults to `@cf/meta/llama-4-scout-17b-16e-instruct` |
 | `USE_BROWSER` | No | Set to `0` to skip the headless browser |
-| `APP_PASSCODE` | Recommended | Requires the passcode for every import |
+| `OWNER_PASSWORD` / `APP_PASSCODE` | Yes | Owner password (the passcode is used if no owner password is set) |
+| `OWNER_EMAIL` | No | Lets the owner sign in with an email instead of `owner` |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | For sign-ups | Stripe Checkout and subscription updates |
+| `TEST_LOGIN_HOURS` | No | Test login lifetime, default 72 |
 | `ANTHROPIC_MODEL` | No | Defaults to `claude-sonnet-5` |
 | `SCRAPER_URL` | No | A scraping service for sites that block bots, e.g. `https://api.example.com/?key=KEY&url={url}` |
 | `USE_WEB_TOOLS` | No | Set to `0` to stop Claude from using web fetch/search |

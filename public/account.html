@@ -1,0 +1,148 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Account — Underwriting Desk</title>
+<meta name="theme-color" content="#1C2230"><meta name="robots" content="noindex">
+<link rel="icon" href="/icons/icon-192.png">
+<script>try{var t=localStorage.getItem("uwdesk.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/site.css">
+<style>
+.page{max-width:880px;margin:0 auto;padding:clamp(24px,5vw,48px) clamp(16px,4vw,32px) 64px;display:flex;flex-direction:column;gap:18px}
+h1{font-size:clamp(26px,3.4vw,34px)}
+.card h2{font-size:19px;margin-bottom:4px}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:8px 20px;margin:14px 0 0;font-size:15px}
+dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.badge{display:inline-block;font:600 12px "Public Sans",sans-serif;padding:3px 9px;border-radius:6px;background:var(--surface-2);color:var(--ink-2)}
+.badge.g{background:var(--good-bg);color:var(--good)}.badge.b{background:var(--bad-bg);color:var(--bad)}.badge.w{background:var(--warn-bg);color:var(--warn)}.badge.a{background:var(--accent-soft);color:var(--accent-ink)}
+.cred{background:var(--surface-2);border:1px dashed var(--accent);border-radius:10px;padding:14px 16px;margin-top:14px}
+.cred code{font:600 15px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;margin-top:14px}
+.tbl th{text-align:left;font:600 11px "Archivo",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:8px 8px 8px 0;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px 8px 10px 0;border-bottom:1px solid var(--line-2);vertical-align:middle;overflow-wrap:anywhere}
+.tblwrap{overflow-x:auto}
+.linkbtn{background:none;border:0;color:var(--bad);font:600 13px "Public Sans",sans-serif;cursor:pointer;padding:4px 0}
+@media (max-width:560px){.tbl .hide-sm{display:none}}
+</style>
+</head><body>
+<header class="top"><div class="wrap"><a class="mk" href="/">UNDERWRITING<span>/</span>DESK</a>
+  <nav><a class="l" href="/app/" id="deskLink">Open the desk</a><button class="tbtn" type="button" data-theme-btn></button></nav></div></header>
+<main class="page">
+  <div><p class="eyebrow" id="eyebrow">Account</p><h1 id="hello">Your account</h1></div>
+  <div id="note"></div>
+
+  <section class="card" id="planCard" aria-labelledby="planH">
+    <h2 id="planH">Your plan</h2>
+    <dl id="planDl"></dl>
+    <div id="pickPlan" hidden>
+      <p class="muted" style="margin:16px 0 12px" id="pickWhy">Choose a plan to open the desk.</p>
+      <div class="plans">
+        <label class="plan"><input type="radio" name="plan" value="week"><b>$25</b><span>per week</span></label>
+        <label class="plan"><input type="radio" name="plan" value="month" checked><b>$100</b><span>per month · best value</span></label>
+      </div>
+      <div id="ePick"></div>
+      <button class="btn primary" type="button" id="payGo">Continue to payment</button>
+    </div>
+    <div class="row">
+      <a class="btn primary" href="/app/" id="openDesk" hidden>Open the desk</a>
+      <button class="btn" type="button" id="billing" hidden>Manage billing or cancel</button>
+      <button class="btn" type="button" id="logout">Sign out</button>
+    </div>
+  </section>
+
+  <section class="card" id="ownerCard" aria-labelledby="ownH" hidden>
+    <h2 id="ownH">Test logins</h2>
+    <p class="muted" style="margin:0">Create a login someone can use to try the desk for 3 days. It stops working automatically when the time is up. The password is shown once, so copy it before you leave this page.</p>
+    <div class="row"><button class="btn primary" type="button" id="mkTest">Create a 3-day test login</button></div>
+    <div id="eOwner"></div>
+    <div id="credBox"></div>
+  </section>
+
+  <section class="card" id="usersCard" aria-labelledby="usrH" hidden>
+    <h2 id="usrH">Accounts</h2>
+    <p class="muted" style="margin:0" id="usrSum">Loading…</p>
+    <div class="tblwrap"><table class="tbl" id="usrTbl" hidden><thead><tr><th scope="col">Login</th><th scope="col">Type</th><th scope="col">Status</th><th scope="col" class="hide-sm">Renews / expires</th><th scope="col"><span class="sr" style="position:absolute;left:-9999px">Actions</span></th></tr></thead><tbody></tbody></table></div>
+  </section>
+</main>
+<script src="/site.js"></script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)},q=new URLSearchParams(location.search);
+  function msg(el,kind,text){$(el).innerHTML=text?'<p class="msg '+kind+'" role="'+(kind==='err'?'alert':'status')+'" style="margin:14px 0 0">'+UW.esc(text)+'</p>':'';}
+  var PLAN={week:'Weekly · $25/week',month:'Monthly · $100/month',test:'Test login'};
+  function statusBadge(u){
+    if(u.role==='owner')return '<span class="badge a">Owner</span>';
+    if(u.role==='test')return (u.expiresAt>Date.now())?'<span class="badge g">Active</span>':'<span class="badge b">Expired</span>';
+    var s=u.status||'pending',map={active:'g',trialing:'g',past_due:'w',pending:'',canceled:'b',unpaid:'b',incomplete:'w',incomplete_expired:'b'};
+    var label={past_due:'Payment due',pending:'Not paid yet',incomplete:'Payment pending',incomplete_expired:'Expired'}[s]||s.charAt(0).toUpperCase()+s.slice(1);
+    return '<span class="badge '+(map[s]||'')+'">'+UW.esc(label)+'</span>';
+  }
+  UW.api('/api/me').then(function(m){
+    if(!m.signedIn){location.href='/login?next=/account';return;}
+    if(q.get('pending'))msg('note','info','Your payment is still being confirmed by Stripe. Refresh this page in a moment.');
+    $('hello').textContent=m.role==='owner'?'Owner console':'Your account';
+    $('eyebrow').textContent=m.role==='owner'?'Signed in as owner':'Account';
+    var rows=[['Login',UW.esc(m.email)],['Status',statusBadge(m)]];
+    if(m.role==='member'){
+      rows.push(['Plan',UW.esc(PLAN[m.plan]||'—')]);
+      if(m.periodEnd)rows.push([m.cancelAtPeriodEnd?'Access ends':'Renews',UW.date(m.periodEnd)]);
+    }
+    if(m.role==='test')rows.push(['Expires',UW.date(m.expiresAt)]);
+    if(m.role==='owner')rows.push(['Plan','Full access, no billing']);
+    $('planDl').innerHTML=rows.map(function(r){return '<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>'}).join('');
+    $('openDesk').hidden=!m.access;$('deskLink').hidden=!m.access;
+    $('billing').hidden=!(m.role==='member'&&m.hasBilling);
+    if(m.role==='member'&&!m.access){
+      $('pickPlan').hidden=false;
+      $('pickWhy').textContent=m.why==='unpaid'?'Finish checkout to open the desk.':'Your plan has ended. Choose a plan to pick up where you left off.';
+      if(m.plan==='week'||m.plan==='month')document.querySelector('input[name=plan][value='+m.plan+']').checked=true;
+      if(!m.stripeReady){msg('ePick','info','Payments aren’t switched on yet.');$('payGo').disabled=true;}
+    }
+    if(m.role==='test'&&!m.access)msg('note','err','This test login has expired.');
+    if(m.role==='owner'){$('ownerCard').hidden=false;$('usersCard').hidden=false;loadUsers();}
+  });
+  $('payGo').onclick=function(){
+    var b=this,plan=(document.querySelector('input[name=plan]:checked')||{}).value;b.disabled=true;b.textContent='Opening secure checkout…';
+    UW.api('/api/checkout',{plan:plan}).then(function(r){if(r.to){location.href=r.to;return;}b.disabled=false;b.textContent='Continue to payment';msg('ePick','err',r.error||'Couldn’t start checkout.');});
+  };
+  $('billing').onclick=function(){var b=this;b.disabled=true;UW.api('/api/portal',{}).then(function(r){if(r.to){location.href=r.to;return;}b.disabled=false;msg('note','err',r.error||'Couldn’t open billing.');});};
+  $('logout').onclick=function(){UW.logout();};
+
+  function loadUsers(){
+    UW.api('/api/admin/users').then(function(r){
+      var us=r.users||[];
+      var paying=us.filter(function(u){return u.role==='member'&&['active','trialing','past_due'].indexOf(u.status)>=0}).length;
+      var tests=us.filter(function(u){return u.role==='test'&&u.expiresAt>Date.now()}).length;
+      $('usrSum').textContent=paying+' paying member'+(paying===1?'':'s')+' · '+tests+' active test login'+(tests===1?'':'s')+' · '+us.length+' account'+(us.length===1?'':'s')+' total';
+      var tb=$('usrTbl').querySelector('tbody');
+      tb.innerHTML=us.map(function(u){
+        var when=u.role==='test'?UW.date(u.expiresAt):(u.periodEnd?UW.date(u.periodEnd):'—');
+        var type=u.role==='test'?'Test':(PLAN[u.plan]||'Member').split(' · ')[0];
+        return '<tr><td>'+UW.esc(u.email)+'</td><td>'+UW.esc(type)+'</td><td>'+statusBadge(u)+'</td><td class="hide-sm">'+when+'</td><td>'+(u.role==='test'?'<button class="linkbtn" type="button" data-revoke="'+UW.esc(u.email)+'">Remove</button>':'')+'</td></tr>';
+      }).join('');
+      $('usrTbl').hidden=!us.length;
+    });
+  }
+  $('usrTbl').addEventListener('click',function(e){
+    var b=e.target.closest('[data-revoke]');if(!b)return;
+    if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='Tap again to remove';setTimeout(function(){b.dataset.armed='';b.textContent='Remove';},4000);return;}
+    b.disabled=true;UW.api('/api/admin/revoke',{email:b.dataset.revoke}).then(function(r){if(!r.ok)msg('eOwner','err',r.error||'Couldn’t remove it.');loadUsers();});
+  });
+  $('mkTest').onclick=function(){
+    var b=this;b.disabled=true;msg('eOwner');
+    UW.api('/api/admin/test-login',{}).then(function(r){
+      b.disabled=false;
+      if(!r.ok){msg('eOwner','err',r.error||'Couldn’t create a test login.');return;}
+      $('credBox').innerHTML='<div class="cred"><p style="margin:0 0 8px;font-weight:600">New test login — expires '+UW.date(r.expiresAt)+'</p>'+
+        '<p style="margin:0">Sign-in page: <code>'+UW.esc(location.origin)+'/login</code></p>'+
+        '<p style="margin:4px 0 0">Username: <code>'+UW.esc(r.email)+'</code></p>'+
+        '<p style="margin:4px 0 0">Password: <code>'+UW.esc(r.password)+'</code></p>'+
+        '<div class="row" style="margin-top:12px"><button class="btn sm" type="button" id="copyCred">Copy login details</button></div></div>';
+      var text='Underwriting Desk test login\n'+location.origin+'/login\nUsername: '+r.email+'\nPassword: '+r.password+'\nExpires: '+UW.date(r.expiresAt);
+      $('copyCred').onclick=function(){var c=this;(navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(function(){c.textContent='Copied';},function(){c.textContent='Select and copy the details above';});};
+      loadUsers();
+    });
+  };
+})();
+</script>
+</body></html>

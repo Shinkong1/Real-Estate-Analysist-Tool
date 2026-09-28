@@ -1,0 +1,99 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sign in — Underwriting Desk</title>
+<meta name="theme-color" content="#1C2230"><meta name="robots" content="noindex">
+<link rel="icon" href="/icons/icon-192.png"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<script>try{var t=localStorage.getItem("uwdesk.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/site.css">
+<style>
+.box{max-width:480px;margin:clamp(24px,6vw,64px) auto;padding-inline:16px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;margin-bottom:20px}
+.tabs button{border:0;background:none;padding:10px;border-radius:7px;font:600 15px "Public Sans",sans-serif;color:var(--ink-3);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 0 var(--line)}
+h1{font-size:26px;margin-bottom:6px}
+.box > p{margin:0 0 18px}
+.pw{position:relative}
+.pw input{width:100%;padding-right:64px}
+.pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--accent-ink);font:600 13px "Public Sans",sans-serif;cursor:pointer;padding:6px}
+</style>
+</head><body>
+<header class="top"><div class="wrap"><a class="mk" href="/">UNDERWRITING<span>/</span>DESK</a><nav><button class="tbtn" type="button" data-theme-btn></button></nav></div></header>
+<main class="box">
+  <div class="tabs" role="tablist" aria-label="Sign in or create an account">
+    <button type="button" role="tab" id="tIn" aria-selected="true" aria-controls="fIn">Sign in</button>
+    <button type="button" role="tab" id="tUp" aria-selected="false" aria-controls="fUp">Create account</button>
+  </div>
+  <div id="note"></div>
+
+  <form class="card" id="fIn" role="tabpanel" aria-labelledby="tIn" novalidate>
+    <h1>Welcome back</h1>
+    <p class="muted" style="margin:0 0 18px">Sign in to open your underwriting desk.</p>
+    <div id="eIn"></div>
+    <div class="field"><label for="inEmail">Email or username</label><input id="inEmail" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
+    <div class="field"><label for="inPw">Password</label><div class="pw"><input id="inPw" type="password" name="password" autocomplete="current-password" required><button type="button" data-peek="inPw">Show</button></div></div>
+    <button class="btn primary block" type="submit">Sign in</button>
+  </form>
+
+  <form class="card" id="fUp" role="tabpanel" aria-labelledby="tUp" novalidate hidden>
+    <h1>Create your account</h1>
+    <p class="muted" style="margin:0 0 18px">Pick a plan, then pay securely with Stripe. You'll land in the desk as soon as payment goes through.</p>
+    <div id="eUp"></div>
+    <fieldset style="border:0;padding:0;margin:0">
+      <legend class="field" style="font-weight:600;font-size:14px;margin-bottom:8px">Plan</legend>
+      <div class="plans">
+        <label class="plan"><input type="radio" name="plan" value="week"><b>$25</b><span>per week · cancel anytime</span></label>
+        <label class="plan"><input type="radio" name="plan" value="month" checked><b>$100</b><span>per month · best value</span></label>
+      </div>
+    </fieldset>
+    <div class="field"><label for="upEmail">Email</label><input id="upEmail" type="email" name="email" autocomplete="email" autocapitalize="none" spellcheck="false" required></div>
+    <div class="field"><label for="upPw">Password</label><div class="pw"><input id="upPw" type="password" name="new-password" autocomplete="new-password" minlength="8" required><button type="button" data-peek="upPw">Show</button></div><small>At least 8 characters.</small></div>
+    <button class="btn primary block" type="submit" id="upGo">Continue to payment</button>
+    <p class="small" style="margin:12px 0 0">Payments are handled by Stripe. We never see your card number.</p>
+  </form>
+</main>
+<script src="/site.js"></script>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search),$=function(id){return document.getElementById(id)};
+  function show(which){var up=which==='up';$('fIn').hidden=up;$('fUp').hidden=!up;$('tIn').setAttribute('aria-selected',String(!up));$('tUp').setAttribute('aria-selected',String(up));document.title=(up?'Create account':'Sign in')+' — Underwriting Desk';}
+  $('tIn').onclick=function(){show('in')};$('tUp').onclick=function(){show('up')};
+  function msg(el,kind,text){$(el).innerHTML=text?'<p class="msg '+kind+'" role="'+(kind==='err'?'alert':'status')+'">'+UW.esc(text)+'</p>':'';}
+  document.querySelectorAll('[data-peek]').forEach(function(b){b.onclick=function(){var i=$(b.dataset.peek);var s=i.type==='password';i.type=s?'text':'password';b.textContent=s?'Hide':'Show';};});
+  if(q.get('mode')==='signup')show('up');
+  if(q.get('plan')==='week'||q.get('plan')==='month')document.querySelector('input[name=plan][value='+q.get('plan')+']').checked=true;
+  if(q.get('canceled'))msg('note','info','Checkout was canceled. Your account is saved — pick a plan whenever you’re ready.');
+  var next=q.get('next');if(!next||!/^\/(app\/|account)/.test(next))next='';
+
+  UW.api('/api/me').then(function(m){
+    if(m.stripeReady===false){msg('eUp','info','Sign-ups open soon. Payments aren’t switched on yet.');$('upGo').disabled=true;}
+  });
+
+  $('fIn').addEventListener('submit',function(e){
+    e.preventDefault();msg('eIn');
+    var email=$('inEmail').value.trim(),pw=$('inPw').value;
+    if(!email){msg('eIn','err','Enter your email or username.');$('inEmail').focus();return;}
+    if(!pw){msg('eIn','err','Enter your password.');$('inPw').focus();return;}
+    var b=e.submitter||this.querySelector('button[type=submit]');b.disabled=true;b.textContent='Signing in…';
+    UW.api('/api/login',{email:email,password:pw}).then(function(r){
+      b.disabled=false;b.textContent='Sign in';
+      if(!r.ok){msg('eIn','err',r.error||'Couldn’t sign in.');return;}
+      location.href=(r.to==='/app/'&&next)?next:r.to;
+    });
+  });
+  $('fUp').addEventListener('submit',function(e){
+    e.preventDefault();msg('eUp');
+    var email=$('upEmail').value.trim(),pw=$('upPw').value,plan=(document.querySelector('input[name=plan]:checked')||{}).value;
+    if(!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)){msg('eUp','err','Enter a valid email address.');$('upEmail').focus();return;}
+    if(pw.length<8){msg('eUp','err','Use a password of at least 8 characters.');$('upPw').focus();return;}
+    var b=$('upGo');b.disabled=true;b.textContent='Opening secure checkout…';
+    UW.api('/api/signup',{email:email,password:pw,plan:plan}).then(function(r){
+      if(!r.ok){b.disabled=false;b.textContent='Continue to payment';msg('eUp','err',r.error||'Couldn’t create your account.');return;}
+      location.href=r.to;
+    });
+  });
+  ['inEmail','inPw'].forEach(function(id){$(id).addEventListener('input',function(){msg('eIn')})});
+  ['upEmail','upPw'].forEach(function(id){$(id).addEventListener('input',function(){msg('eUp')})});
+})();
+</script>
+</body></html>
