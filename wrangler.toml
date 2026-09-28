@@ -1,5 +1,5 @@
 # Cloudflare Worker config (Workers Builds runs `npx wrangler deploy` on every push)
-name = "real-estate-analysist-tool"
+name = "reat"
 main = "worker.js"
 compatibility_date = "2026-09-01"
 keep_vars = true
