@@ -265,16 +265,16 @@ UW.api('/api/me').then(function(m){
 (function(){
   var $=function(id){return document.getElementById(id)};
   var SCENES=[
-    {t:'Found a deal you like? Don’t spend your evening in spreadsheets.',min:3800},
-    {t:'Paste the listing link into Underwriting Desk and tap Analyze.',min:4200},
-    {t:'In minutes you get the numbers that matter: cap rate, cash flow, cash-on-cash and debt coverage.',min:5200},
-    {t:'Sixteen underwriting tools fill in at once, from five-year returns to due diligence.',min:4400},
-    {t:'Try it free, view-only, or start today for thirty dollars a week.',min:4000}
+    {t:'Found a deal you like? Skip the late night in spreadsheets.',min:3800},
+    {t:'Just paste the listing link into Underwriting Desk, and tap Analyze.',min:4200},
+    {t:'In a couple of minutes, you’ve got the numbers that matter: cap rate, cash flow, cash-on-cash, and debt coverage.',min:5600},
+    {t:'Sixteen underwriting tools fill in at once, from five-year returns all the way to due diligence.',min:4600},
+    {t:'Try it free, or get started today for thirty dollars a week.',min:3800}
   ];
-  var CAP=['Found a deal you like? Don’t spend your evening in spreadsheets.','Paste the listing link and tap Analyze.','In minutes: cap rate, cash flow, cash-on-cash and debt coverage.','16 underwriting tools fill in at once — five-year returns to due diligence.','Try it free (view-only), or start at $30 a week.'];
+  var CAP=['Found a deal you like? Skip the late night in spreadsheets.','Paste the listing link and tap Analyze.','In minutes: cap rate, cash flow, cash-on-cash and debt coverage.','16 underwriting tools fill in at once — five-year returns to due diligence.','Try it free, or get started today for $30 a week.'];
   var run=0,muted=false,ac=null,music=null,voice=null,startT=0,TOTAL=SCENES.reduce(function(a,s){return a+s.min},0),raf=0;
   var synth=window.speechSynthesis;
-  function pickVoice(){if(!synth)return;var vs=synth.getVoices().filter(function(v){return /^en[-_]US/i.test(v.lang)});var pref=['Samantha','Ava','Allison','Google US English','Microsoft Aria','Microsoft Jenny','Microsoft Guy','Alex'];
+  function pickVoice(){if(!synth)return;var vs=synth.getVoices().filter(function(v){return /^en[-_]US/i.test(v.lang)});var q=vs.find(function(v){return /natural|neural|premium|enhanced/i.test(v.name)});if(q){voice=q;return;}var pref=['Ava','Samantha','Allison','Microsoft Aria','Microsoft Jenny','Google US English','Microsoft Guy','Alex'];
     for(var i=0;i<pref.length;i++){var m=vs.find(function(v){return v.name.indexOf(pref[i])>=0});if(m){voice=m;return;}}voice=vs.find(function(v){return v.localService})||vs[0]||null;}
   if(synth){pickVoice();if(synth.addEventListener)synth.addEventListener('voiceschanged',pickVoice);}
   function show(i){document.querySelectorAll('#ad .sc').forEach(function(el){el.classList.toggle('on',+el.dataset.s===i)});$('adCap').textContent=CAP[i];
@@ -282,10 +282,14 @@ UW.api('/api/me').then(function(m){
   function typeUrl(r){var s='loopnet.com/Listing/412-Maple-Ave-8-units',el=$('adType'),n=0;el.textContent='';(function step(){if(r!==run)return;el.textContent=s.slice(0,++n);if(n<s.length)setTimeout(step,45);})();}
   function countUp(r){document.querySelectorAll('#ad .ad-kpis b').forEach(function(b){var to=+b.dataset.to,f=b.dataset.f,t0=performance.now();(function tick(t){if(r!==run)return;var p=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-p,3),v=to*e;
     b.textContent=f==='$'?'+$'+Math.round(v).toLocaleString():f==='%'?v.toFixed(1)+'%':v.toFixed(2);if(p<1)requestAnimationFrame(tick);})(t0);});}
-  function say(text,r,done){var finished=false,fin=function(){if(finished||r!==run)return;finished=true;done();};
-    if(!synth||muted){setTimeout(fin,0);return;}
-    var u=new SpeechSynthesisUtterance(text);if(voice)u.voice=voice;u.lang='en-US';u.rate=1.02;u.pitch=1;u.onend=fin;u.onerror=fin;
-    synth.speak(u);setTimeout(fin,text.length*95+2500);}
+  var au=null,useFile=true;
+  function speakDevice(text,fin){if(!synth){setTimeout(fin,0);return;}var u=new SpeechSynthesisUtterance(text);if(voice)u.voice=voice;u.lang='en-US';u.rate=.98;u.pitch=1;u.onend=fin;u.onerror=fin;synth.speak(u);setTimeout(fin,text.length*95+2500);}
+  function say(text,r,done,i){var finished=false,fin=function(){if(finished||r!==run)return;finished=true;done();};
+    if(muted){setTimeout(fin,0);return;}
+    if(useFile&&au){var bail=function(){if(finished||r!==run)return;useFile=false;speakDevice(text,fin);};
+      au.onended=fin;au.onerror=bail;au.src='/api/ad-voice/'+i;var pr=au.play();if(pr&&pr.catch)pr.catch(bail);
+      setTimeout(function(){if(!finished&&r===run&&au.currentTime===0)bail();},6000);setTimeout(fin,20000);return;}
+    speakDevice(text,fin);}
   function startMusic(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();
     var g=ac.createGain();g.gain.value=0;g.connect(ac.destination);var lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;lp.connect(g);
     var chords=[[220,277.18,329.63],[196,246.94,293.66],[174.61,220,261.63],[196,246.94,329.63]],oscs=[],t=ac.currentTime;
@@ -293,15 +297,15 @@ UW.api('/api/me').then(function(m){
     g.gain.linearRampToValueAtTime(muted?0:.09,t+1.2);music={g:g,oscs:oscs};}catch(e){music=null;}}
   function stopMusic(){if(music&&ac){var t=ac.currentTime;try{music.g.gain.cancelScheduledValues(t);music.g.gain.setValueAtTime(music.g.gain.value,t);music.g.gain.linearRampToValueAtTime(0,t+.6);music.oscs.forEach(function(o){try{o.stop(t+.7)}catch(e){}});}catch(e){}}music=null;}
   function prog(){var p=Math.min(1,(performance.now()-startT)/TOTAL);$('adProg').style.width=(p*100)+'%';if(p<1&&raf)raf=requestAnimationFrame(prog);}
-  function play(){var r=++run;if(synth)synth.cancel();stopMusic();$('adCover').hidden=true;$('ad').classList.remove('idle');$('adStop').hidden=false;startT=performance.now();raf=requestAnimationFrame(prog);startMusic();
+  function play(){var r=++run;if(synth)synth.cancel();if(au){au.pause();}else{au=new Audio();au.preload='auto';}try{au.muted=false;au.src='/api/ad-voice/0';au.load();}catch(e){}for(var k=1;k<5;k++)fetch('/api/ad-voice/'+k).catch(function(){});stopMusic();$('adCover').hidden=true;$('ad').classList.remove('idle');$('adStop').hidden=false;startT=performance.now();raf=requestAnimationFrame(prog);startMusic();
     var i=0;(function next(){if(r!==run)return;if(i>=SCENES.length){end(true);return;}show(i);var t0=performance.now(),sc=SCENES[i];
-      say(sc.t,r,function(){var wait=Math.max(400,sc.min-(performance.now()-t0));setTimeout(function(){i++;next();},wait);});})();}
-  function end(finished){run++;if(synth)synth.cancel();stopMusic();cancelAnimationFrame(raf);raf=0;$('adStop').hidden=true;$('adCover').hidden=false;$('ad').classList.add('idle');
+      say(sc.t,r,function(){var wait=Math.max(400,sc.min-(performance.now()-t0));setTimeout(function(){i++;next();},wait);},i);})();}
+  function end(finished){run++;if(synth)synth.cancel();if(au){au.pause();au.onended=au.onerror=null;}stopMusic();cancelAnimationFrame(raf);raf=0;$('adStop').hidden=true;$('adCover').hidden=false;$('ad').classList.add('idle');
     $('adCover').querySelector('span').textContent=finished?'Replay · 0:20':'Play with sound · 0:20';if(!finished){show(0);$('adProg').style.width='0';}$('adCap').textContent=finished?'Try it free with the tester login above, or pick a plan below.':'Tap play for a quick tour of Underwriting Desk.';}
   $('adPlay').onclick=play;$('adStop').onclick=function(){end(false)};
   $('adMute').onclick=function(){muted=!muted;this.setAttribute('aria-pressed',String(muted));this.setAttribute('aria-label',muted?'Unmute':'Mute');
     this.querySelector('.w').style.display=muted?'none':'';this.querySelector('.x').style.display=muted?'':'none';
-    if(muted&&synth)synth.cancel();if(music&&ac)music.g.gain.setTargetAtTime(muted?0:.09,ac.currentTime,.1);};
+    if(muted&&synth)synth.cancel();if(au)au.muted=muted;if(music&&ac)music.g.gain.setTargetAtTime(muted?0:.09,ac.currentTime,.1);};
   document.addEventListener('visibilitychange',function(){if(document.hidden&&raf)end(false);});
 })();
 </script>

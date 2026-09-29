@@ -28,6 +28,9 @@ export default {
       const out = await extract({ body, headers: request.headers, env: { ...env, APP_PASSCODE: '' } }); // session replaces the passcode
       return json(out.body, out.status);
     }
+    // Voiceover for the home-page ad: a neural voice (Workers AI, Deepgram Aura 2), generated once and kept in KV.
+    const av = path.match(/^\/api\/ad-voice\/([0-4])$/);
+    if (av && request.method === 'GET') return adVoice(env, +av[1]);
     if (path.startsWith('/api/')) {
       try {
         const res = await handleAuthApi(request, env, url);
@@ -69,3 +72,30 @@ export default {
     return env.ASSETS.fetch(request);
   },
 };
+
+// ----- ad voiceover -----
+export const AD_LINES = [
+  'Found a deal you like? Skip the late night in spreadsheets.',
+  'Just paste the listing link into Underwriting Desk, and tap Analyze.',
+  'In a couple of minutes, you’ve got the numbers that matter: cap rate, cash flow, cash-on-cash, and debt coverage.',
+  'Sixteen underwriting tools fill in at once, from five-year returns all the way to due diligence.',
+  'Try it free, or get started today for thirty dollars a week.',
+];
+const AD_VER = 'v1';
+async function adVoice(env, n) {
+  const speaker = (env.AD_VOICE || 'thalia').toLowerCase().replace(/[^a-z]/g, '');
+  const key = `adv:${AD_VER}:${speaker}:${n}`;
+  const headers = { 'content-type': 'audio/mpeg', 'cache-control': 'public, max-age=86400', 'x-content-type-options': 'nosniff' };
+  try {
+    if (env.USERS) { const hit = await env.USERS.get(key, 'arrayBuffer'); if (hit && hit.byteLength > 1000) return new Response(hit, { headers }); }
+    if (!env.AI) return json({ error: 'No AI binding.' }, 503);
+    const out = await env.AI.run('@cf/deepgram/aura-2-en', { text: AD_LINES[n], speaker, encoding: 'mp3' });
+    let buf;
+    if (out instanceof ReadableStream || out instanceof Response) buf = await new Response(out.body || out).arrayBuffer();
+    else if (out instanceof ArrayBuffer) buf = out;
+    else if (out && out.audio) buf = Uint8Array.from(atob(out.audio), c => c.charCodeAt(0)).buffer;
+    if (!buf || buf.byteLength < 1000) return json({ error: 'No audio returned.' }, 502);
+    if (env.USERS) await env.USERS.put(key, buf);
+    return new Response(buf, { headers });
+  } catch (e) { return json({ error: 'Voice unavailable.' }, 502); }
+}
