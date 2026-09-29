@@ -29,7 +29,7 @@ The site runs as the Cloudflare Worker `reat`; every `git push` to `main` redepl
 Accounts live in a Workers KV namespace bound as `USERS`, which Wrangler creates on the first deploy.
 
 **Who can sign in**
-- **Owner** — username `owner` (or the email in `OWNER_EMAIL`) with the password in `OWNER_PASSWORD`.
+- **Owner** — username `OwnerNamastay` (not case-sensitive; or the email in `OWNER_EMAIL` if set) with the password in `OWNER_PASSWORD`.
   If `OWNER_PASSWORD` isn't set, the existing `APP_PASSCODE` is the owner password.
 - **Test logins** — the owner creates these from **Account → Create a 3-day test login**. Each one
   gets a random username and password (shown once) and stops working after 72 hours
@@ -96,7 +96,7 @@ blocks both readers. A few cents per listing.
 | `CF_AI_MODEL` | No | Defaults to `@cf/meta/llama-4-scout-17b-16e-instruct` |
 | `USE_BROWSER` | No | Set to `0` to skip the headless browser |
 | `OWNER_PASSWORD` / `APP_PASSCODE` | Yes | Owner password (the passcode is used if no owner password is set) |
-| `OWNER_EMAIL` | No | Lets the owner sign in with an email instead of `owner` |
+| `OWNER_EMAIL` | No | Lets the owner sign in with an email instead of `OwnerNamastay` |
 | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | For sign-ups | Stripe Checkout and subscription updates |
 | `TEST_LOGIN_HOURS` | No | Test login lifetime, default 72 |
 | `ANTHROPIC_MODEL` | No | Defaults to `claude-sonnet-5` |
