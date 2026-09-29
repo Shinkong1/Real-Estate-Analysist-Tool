@@ -4,11 +4,11 @@
 //   /api/*       accounts + billing (lib/auth.js) and the listing reader /api/extract (lib/extract-core.js)
 import { extract } from './lib/extract-core.js';
 import { handleAuthApi, currentUser, access, json, redirect, limited } from './lib/auth.js';
-import { handleDataApi, sharePage } from './lib/data.js';
+import { handleDataApi, sharePage, handleTranslate } from './lib/data.js';
 
 const PRIVATE = { 'cache-control': 'private, no-cache', 'x-content-type-options': 'nosniff', 'referrer-policy': 'no-referrer', 'x-frame-options': 'DENY' };
 const VIEWER_BOOT = `<script nonce="__NONCE__">window.UW_VIEWER=1;(function(){try{var S=Storage.prototype,g=S.getItem,s=S.setItem,r=S.removeItem,m={},L=window.localStorage;
-function own(t,k){return t===L&&typeof k==='string'&&k.indexOf('uwdesk.')===0&&k!=='uwdesk.theme';}
+function own(t,k){return t===L&&typeof k==='string'&&k.indexOf('uwdesk.')===0&&!/^uwdesk\\.(theme|lang|cur|tr\\.)/.test(k);}
 S.getItem=function(k){return own(this,k)?(Object.prototype.hasOwnProperty.call(m,k)?m[k]:null):g.call(this,k);};
 S.setItem=function(k,v){if(own(this,k)){m[k]=String(v);return;}return s.call(this,k,v);};
 S.removeItem=function(k){if(own(this,k)){delete m[k];return;}return r.call(this,k);};}catch(e){}})();</script>`;
@@ -48,6 +48,8 @@ async function route(request, env, url) {
     if (av && request.method === 'GET') return adVoice(env, +av[1]);
     const shareM = path.match(/^\/s\/([a-z2-9]{9})$/);
     if (shareM && request.method === 'GET') return sharePage(env, shareM[1], url.origin);
+    const tr = await handleTranslate(request, env, url, limited);
+    if (tr) return tr;
     const data = await handleDataApi(request, env, url);
     if (data) return data;
     if (path.startsWith('/api/')) {

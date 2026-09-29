@@ -121,3 +121,39 @@ Open http://localhost:3000. To use it from your phone on the same Wi-Fi, open
 - Deals, inputs and checklists are saved on each device (browser storage), not on the server.
 - Listing sites' terms of use vary; this reads one page when you ask it to, for your own analysis.
 - Screening estimates only; verify tax, legal and lending items with your CPA, attorney and lender.
+
+
+## Finding and managing deals
+| Tool | What it does |
+|---|---|
+| Buy Box | Your markets, property types, price range and minimum cap rate, cash-on-cash, DSCR and cash flow. Every saved deal is checked against it. |
+| Deal Inbox | Paste many listing links or a whole LoopNet/Crexi/Zillow alert email; up to 10 listings are read per run and saved to the pipeline. |
+| Off-Market Leads | Import a CSV owner list (county records, PropStream, DealMachine, BatchLeads). Owners are scored on motivation signals; track status and notes; export CSV. |
+| Market Heat Map | Up to 8 ZIP codes compared on U.S. Census ACS data (rents, values, vacancy, income, 5-year growth), ranked by strategy. |
+| Max Offer | Highest price that meets every buy-box target, and which target sets the ceiling. |
+| Red-Flag Scanner | Rule-based checks for overstated income, missing expenses, tax reassessment, old systems, condition and lease risks. |
+| Rent Check | Listing rent vs Census median rent for the ZIP by bedroom count; live estimate + rental comps when `RENTCAST_API_KEY` is set. |
+| Compare / Pipeline | Up to six deals side by side; stages from Found to Closed with notes and next-step dates. |
+| Letter of Intent / Lender Summary / Partner Split | Printable offer letter and lender one-pager; preferred-return and profit-split waterfall. |
+| Share | Read-only link to one deal at `/s/<id>` (180 days). |
+| Free calculators | Public, no sign-up: `/calculators/` (cap rate, cash-on-cash, DSCR, rental cash flow). |
+
+Saved deals, pipeline, leads and settings sync to the member's account (`/api/state`), so they follow them across devices.
+
+**Optional data keys** (Cloudflare → Variables and Secrets): `RENTCAST_API_KEY` for live rent estimates, `CENSUS_API_KEY`
+for higher Census API limits (it works without one). `AD_VOICE` picks the home-page ad voice.
+
+## Languages and currency
+A globe button on every page switches between 17 languages and 18 currencies. Interface text is translated with
+Workers AI and cached (in the browser and in KV), so each phrase is translated once. Deal names, addresses, owner names,
+logins and anything members type are never translated. Money is entered and shown in the chosen currency; plans are
+billed in U.S. dollars, and the tax tools follow U.S. rules.
+
+## Security
+- Every page carries a Content-Security-Policy with a per-request script nonce, plus HSTS, `X-Frame-Options: DENY`,
+  a strict Permissions-Policy and `Cross-Origin-Opener-Policy`.
+- Cross-site POSTs are rejected; APIs accept JSON only. Session cookie is `__Host-`, `HttpOnly`, `Secure`, `SameSite=Lax`.
+- Passwords are hashed with PBKDF2-SHA256 (100,000 rounds). Changing `OWNER_PASSWORD` signs out every owner session.
+- Rate limits on sign-in, sign-up, listing import (150/day per member), test-login creation, translation and AI voice.
+- The listing reader refuses private, local and disguised IP addresses, including after redirects.
+- No secrets live in this repository. Keep them in Cloudflare secrets only, and keep this GitHub repository **private**.

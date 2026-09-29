@@ -9,6 +9,7 @@ S.deals = S.deals || []; S.leads = S.leads || []; S.mk = S.mk || {}; S.inbox = S
 const STAGES = ['Found', 'Analyzing', 'Offer sent', 'Under contract', 'Closed', 'Passed'];
 const TYPES = [['t_mf', 'Multifamily'], ['t_sf', 'Single family'], ['t_rt', 'Retail'], ['t_of', 'Office'], ['t_in', 'Industrial'], ['t_mx', 'Mixed-use'], ['t_ot', 'Other']];
 const n = (x, d) => { const v = toN(x); return fin(v) ? v : d; };
+const nt = t => `<span data-noi18n>${esc(t)}</span>`; // names and addresses: never translated
 
 /* ---------- buy box + quick model ---------- */
 function BOX() {
@@ -65,7 +66,7 @@ const _saveDeal = saveDeal;
 saveDeal = function (d) { _saveDeal(d); S.deals = S.deals.slice(0, 300); const rec = S.deals.find(x => x.data === d || x.name === dealName(d)); if (rec && !rec.stage) rec.stage = 'Found'; setTimeout(dealsChanged, 0); };
 renderDeals = function () {
   const el = document.getElementById('dealList'); if (!el) return; const b = BOX();
-  el.innerHTML = S.deals.length ? S.deals.slice(0, 60).map(x => `<div class="kv" style="align-items:center;gap:8px"><span style="min-width:0"><b style="color:var(--ink)">${esc(x.name)}</b> ${badge(screen(x.data, b))}<br><span class="mut" style="font-size:12px">${fin(x.data.price) ? fk(x.data.price) + ' · ' : ''}${fin(x.data.units) ? x.data.units + ' units · ' : ''}${esc(x.stage || 'Found')} · ${new Date(x.at).toLocaleDateString()}</span></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="btn sm" style="margin:0" data-load="${esc(x.id)}">Load</button><button type="button" class="btn sm" style="margin:0" data-df-share="${esc(x.id)}">Share</button><button type="button" class="btn sm" style="margin:0" data-del="${esc(x.id)}">Delete</button></span></div>`).join('')
+  el.innerHTML = S.deals.length ? S.deals.slice(0, 60).map(x => `<div class="kv" style="align-items:center;gap:8px"><span style="min-width:0"><b style="color:var(--ink)">${nt(x.name)}</b> ${badge(screen(x.data, b))}<br><span class="mut" style="font-size:12px">${fin(x.data.price) ? fk(x.data.price) + ' · ' : ''}${fin(x.data.units) ? x.data.units + ' units · ' : ''}${esc(x.stage || 'Found')} · ${new Date(x.at).toLocaleDateString()}</span></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="btn sm" style="margin:0" data-load="${esc(x.id)}">Load</button><button type="button" class="btn sm" style="margin:0" data-df-share="${esc(x.id)}">Share</button><button type="button" class="btn sm" style="margin:0" data-del="${esc(x.id)}">Delete</button></span></div>`).join('')
     : '<p class="note" style="margin:0">Deals you apply are saved here and in your account, so they follow you to every device.</p>';
 };
 
@@ -101,7 +102,7 @@ tool({ id: 'box', group: 'Find deals', name: 'Buy Box', blurb: 'Set the deals yo
     const fit = L.filter(o => o.r.pass).length;
     const crit = `${b.mkts.length ? esc(b.mkts.join(', ')) : 'Any market'} · ${esc(b.types.length === TYPES.length ? 'all property types' : b.types.join(', ') || 'no types selected')} · cap ≥ ${pc(b.cap, 1)} · cash-on-cash ≥ ${pc(b.coc, 1)} · DSCR ≥ ${nx(b.dscr)} · ${fm(b.cfu)}/unit/mo`;
     return verdict(L.length ? (fit ? 'good' : 'warn') : 'mut', L.length ? `${fit} of ${L.length} saved deals fit your buy box` : 'Your buy box is saved', crit, L.length ? (fit ? 'MATCHES' : 'NO FITS') : 'READY')
-      + (L.length ? card('Saved deals against your box', tbl(['Deal', 'Price', 'Cap', 'CoC', 'DSCR', 'Result'], L.map(({ x, r }) => [esc(x.name), fk(x.data.price), pc(r.q.cap, 1), pc(r.q.coc, 1), nx(r.q.dscr), badge(r) + (r.fails.length && r.known ? `<br><span class="mut" style="font-size:12px">${r.fails.map(f => esc(f.label)).join(', ')}</span>` : '')])))
+      + (L.length ? card('Saved deals against your box', tbl(['Deal', 'Price', 'Cap', 'CoC', 'DSCR', 'Result'], L.map(({ x, r }) => [nt(x.name), fk(x.data.price), pc(r.q.cap, 1), pc(r.q.coc, 1), nx(r.q.dscr), badge(r) + (r.fails.length && r.known ? `<br><span class="mut" style="font-size:12px">${r.fails.map(f => esc(f.label)).join(', ')}</span>` : '')])))
         : card('Next', `<p class="note" style="margin:0">Paste listing links into the ${btn('Deal Inbox', 'data-df-go="inbox"', 'btn sm')} to screen many at once against these targets.</p>`))
       + card('How estimates work', `<p class="note" style="margin:0">When a listing doesn't state NOI or expenses, NOI is estimated as rent × occupancy × (1 − ${pc(b.expR, 0)}). Financing: ${pc(b.ltv, 0)} loan-to-value, ${pc(b.rate, 2)}, ${b.amort}-year amortization, ${pc(b.close, 1)} closing costs.</p>`);
   } });
@@ -123,7 +124,7 @@ tool({ id: 'inbox', group: 'Find deals', name: 'Deal Inbox', blurb: 'Paste a bat
     const todo = V.b('skip') ? links.filter(u => !known.has(u)) : links;
     const b = BOX();
     const res = S.inbox.slice(0, 50).map(r => { const rec = dealById(r.id); const s = rec ? screen(rec.data, b) : null;
-      return [rec ? esc(rec.name) : `<span class="mut">${esc(r.url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 60))}</span>`, r.err ? tag('bad', 'Could not read') : s ? badge(s) : tag('mut', 'Queued'), rec ? fk(rec.data.price) : '—', s ? pc(s.q.cap, 1) : '—', s ? fm(s.q.cf / 12) : '—', rec ? btn('Open', `data-load-deal="${esc(rec.id)}"`) : (r.err ? `<span class="mut" style="font-size:12px">${esc(r.err).slice(0, 80)}</span>` : '')]; });
+      return [rec ? nt(rec.name) : `<span class="mut">${esc(r.url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 60))}</span>`, r.err ? tag('bad', 'Could not read') : s ? badge(s) : tag('mut', 'Queued'), rec ? fk(rec.data.price) : '—', s ? pc(s.q.cap, 1) : '—', s ? fm(s.q.cf / 12) : '—', rec ? btn('Open', `data-load-deal="${esc(rec.id)}"`) : (r.err ? `<span class="mut" style="font-size:12px">${esc(r.err).slice(0, 80)}</span>` : '')]; });
     return verdict(todo.length ? 'good' : 'mut', todo.length ? `${todo.length} listing link${todo.length > 1 ? 's' : ''} ready to screen` : 'Paste listing links or an alert email', todo.length ? `Up to 10 are read per run (about 20–60 seconds each). ${links.length - todo.length ? (links.length - todo.length) + ' already saved and skipped.' : ''}` : 'Tip: set up saved-search email alerts on LoopNet, Crexi or Zillow, then paste each alert here. That turns their alerts into screened deals in your pipeline.', todo.length ? 'READY' : 'EMPTY')
       + (todo.length ? card('Links found', ul(todo.slice(0, 10).map(u => `<span style="word-break:break-all">${esc(u)}</span>`)) + (todo.length > 10 ? `<p class="note">+ ${todo.length - 10} more (run again after this batch)</p>` : '')) : '')
       + (res.length ? card('Latest results', tbl(['Listing', 'Buy box', 'Price', 'Cap', 'Cash flow / mo', ''], res)) : '');
@@ -200,10 +201,10 @@ tool({ id: 'leads', group: 'Find deals', name: 'Off-Market Leads', blurb: 'Impor
     const hot = all.filter(o => o.sc.s >= 40).length, talking = all.filter(o => ['Talking', 'Appointment', 'Offer made'].includes(o.l.status)).length;
     return `<div class="cards" style="margin-bottom:14px">${card('', stat('Leads', nm(all.length)))}${card('', stat('Hot (score 40+)', nm(hot), hot ? 'good' : ''))}${card('', stat('In conversation', nm(talking)))}</div>`
       + card(`Showing ${Math.min(L.length, 150)} of ${L.length}`, tbl(['Score', 'Owner', 'Property', 'Why', 'Status', 'Note', ''], L.slice(0, 150).map(({ l, i, sc }) => [
-        `<b class="${sc.s >= 40 ? 'good' : sc.s >= 20 ? 'warn' : 'mut'}">${sc.s}</b>`, esc(l.owner || '—') + (l.phone ? `<br><span class="mut" style="font-size:12px">${esc(l.phone)}</span>` : ''),
-        esc([l.address, l.city, l.state, l.zip].filter(Boolean).join(', ')) + (l.mail ? `<br><span class="mut" style="font-size:12px">Mail: ${esc(l.mail)}</span>` : ''),
+        `<b class="${sc.s >= 40 ? 'good' : sc.s >= 20 ? 'warn' : 'mut'}">${sc.s}</b>`, nt(l.owner || '—') + (l.phone ? `<br><span class="mut" style="font-size:12px">${esc(l.phone)}</span>` : ''),
+        nt([l.address, l.city, l.state, l.zip].filter(Boolean).join(', ')) + (l.mail ? `<br><span class="mut" style="font-size:12px">Mail: ${nt(l.mail)}</span>` : ''),
         `<span style="font-size:12px">${esc(sc.why.join(' · ') || '—')}</span>`,
-        `<select data-df-lead="${i}" data-f="status" aria-label="Status">${LEAD_STATUS.map(s => `<option${s === l.status ? ' selected' : ''}>${s}</option>`).join('')}</select>`,
+        `<select data-df-lead="${i}" data-f="status" aria-label="Status">${LEAD_STATUS.map(s => `<option value="${s}"${s === l.status ? ' selected' : ''}>${s}</option>`).join('')}</select>`,
         `<input data-df-lead="${i}" data-f="note" value="${esc(l.note)}" aria-label="Note" class="wtxt" style="min-width:120px">`,
         btn('Analyze', `data-df-lead-deal="${i}"`)])));
   } });
@@ -312,7 +313,7 @@ tool({ id: 'flags', group: 'Deal analysis', name: 'Red-Flag Scanner', blurb: 'Sc
   calc(V) {
     const rec = pickDeal(V); if (!rec) return needDeal();
     const F = redFlags(rec.data), bad = F.filter(f => f[0] === 'bad').length, warn = F.filter(f => f[0] === 'warn').length;
-    return verdict(bad ? 'bad' : warn ? 'warn' : 'good', bad ? `${bad} serious issue${bad > 1 ? 's' : ''} to resolve` : warn ? `${warn} thing${warn > 1 ? 's' : ''} to check` : 'Nothing alarming found', esc(rec.name), bad ? 'RED FLAGS' : warn ? 'CHECK' : 'CLEAN')
+    return verdict(bad ? 'bad' : warn ? 'warn' : 'good', bad ? `${bad} serious issue${bad > 1 ? 's' : ''} to resolve` : warn ? `${warn} thing${warn > 1 ? 's' : ''} to check` : 'Nothing alarming found', nt(rec.name), bad ? 'RED FLAGS' : warn ? 'CHECK' : 'CLEAN')
       + card('What we found', flags(F))
       + card('Ask the broker for', ul(['Rent roll with lease start and end dates', 'Trailing 12-month (T-12) operating statement and last 2 years of P&Ls', 'Current tax bill and insurance declarations page', 'Utility bills and who pays each utility', 'List of capital improvements with dates (roof, HVAC, water heaters)', 'Any service contracts, laundry or parking agreements']));
   } });
@@ -340,7 +341,7 @@ tool({ id: 'rentcheck', group: 'Market research', name: 'Rent Check', blurb: 'Is
 
 /* =================== MANAGE DEALS =================== */
 tool({ id: 'compare', group: 'Manage deals', name: 'Compare Deals', blurb: 'Line up to six saved deals side by side on the numbers that matter, with the best in each row highlighted and an overall ranking.', wide: true,
-  inputs: () => G('Deals to compare', S.deals.length ? `<div class="f w" style="display:flex;flex-direction:column;gap:6px">${S.deals.slice(0, 60).map(x => `<label class="chk"><input type="checkbox" data-df-cmp="${esc(x.id)}"${S.cmp.includes(x.id) ? ' checked' : ''}><span>${esc(x.name)}${fin(x.data.price) ? ' · ' + fk(x.data.price) : ''}</span></label>`).join('')}</div>` : '<p class="note">No saved deals yet.</p>', Sel('rank', 'Rank by', ['Cash-on-cash', 'Cap rate', 'Cash flow', 'DSCR', 'Price per unit'], 'Cash-on-cash', { w: true })),
+  inputs: () => G('Deals to compare', S.deals.length ? `<div class="f w" style="display:flex;flex-direction:column;gap:6px">${S.deals.slice(0, 60).map(x => `<label class="chk"><input type="checkbox" data-df-cmp="${esc(x.id)}"${S.cmp.includes(x.id) ? ' checked' : ''}><span>${nt(x.name)}${fin(x.data.price) ? ' · ' + fk(x.data.price) : ''}</span></label>`).join('')}</div>` : '<p class="note">No saved deals yet.</p>', Sel('rank', 'Rank by', ['Cash-on-cash', 'Cap rate', 'Cash flow', 'DSCR', 'Price per unit'], 'Cash-on-cash', { w: true })),
   calc(V) {
     const L = S.cmp.map(dealById).filter(Boolean).slice(0, 6); if (L.length < 2) return empty(S.deals.length < 2 ? 'Save at least two deals to compare them.' : 'Tick two or more deals on the left.');
     const b = BOX(), R = L.map(x => ({ x, r: screen(x.data, b) }));
@@ -348,8 +349,8 @@ tool({ id: 'compare', group: 'Manage deals', name: 'Compare Deals', blurb: 'Line
     R.sort((a, c) => (fin(rk(c)) ? rk(c) : -1e12) - (fin(rk(a)) ? rk(a) : -1e12));
     const rows = [['Asking price', o => o.x.data.price, fm, 0], ['Units', o => o.x.data.units, v => nm(v), 0], ['Price / unit', o => o.r.q.ppu, fm, -1], ['NOI / year', o => o.r.q.noi, fm, 1], ['Cap rate', o => o.r.q.cap, v => pc(v, 2), 1], ['Cash flow / month', o => o.r.q.cf / 12, fm, 1], ['Cash-on-cash', o => o.r.q.coc, v => pc(v, 1), 1], ['DSCR', o => o.r.q.dscr, nx, 1], ['Gross rent multiplier', o => o.r.q.grm, v => fin(v) ? v.toFixed(1) : '—', -1], ['Cash needed', o => o.r.q.equity, fm, -1], ['Year built', o => o.x.data.yearBuilt, v => fin(v) ? v : '—', 0]];
     const best = (f, dir) => { if (!dir) return null; const v = R.map(f).filter(fin); return v.length ? (dir > 0 ? Math.max(...v) : Math.min(...v)) : null; };
-    return verdict('good', `#1 by ${esc(V.s('rank') || 'cash-on-cash').toLowerCase()}: ${esc(R[0].x.name)}`, R.some(o => o.r.q.est) ? 'Some NOI figures are estimated because expenses weren’t disclosed.' : '', 'RANKED')
-      + card('Side by side', `<div class="tw" tabindex="0"><table class="t"><thead><tr><th></th>${R.map((o, i) => `<th>#${i + 1} ${esc(o.x.name)}</th>`).join('')}</tr></thead><tbody>`
+    return verdict('good', `#1 by ${esc(V.s('rank') || 'cash-on-cash').toLowerCase()}: ${nt(R[0].x.name)}`, R.some(o => o.r.q.est) ? 'Some NOI figures are estimated because expenses weren’t disclosed.' : '', 'RANKED')
+      + card('Side by side', `<div class="tw" tabindex="0"><table class="t"><thead><tr><th></th>${R.map((o, i) => `<th>#${i + 1} ${nt(o.x.name)}</th>`).join('')}</tr></thead><tbody>`
         + rows.map(([l, f, fmt, dir]) => { const bv = best(f, dir); return `<tr><td>${l}</td>${R.map(o => { const v = f(o); return `<td${bv != null && v === bv ? ' style="background:var(--good-bg);font-weight:700"' : ''}>${fmt(v)}</td>`; }).join('')}</tr>`; }).join('')
         + `<tr><td>Buy box</td>${R.map(o => `<td>${badge(o.r)}</td>`).join('')}</tr><tr><td>Stage</td>${R.map(o => `<td>${esc(o.x.stage || 'Found')}</td>`).join('')}</tr><tr><td></td>${R.map(o => `<td>${btn('Open', `data-load-deal="${esc(o.x.id)}"`)} ${btn('Share', `data-df-share="${esc(o.x.id)}"`)}</td>`).join('')}</tr></tbody></table></div>`);
   } });
@@ -364,12 +365,12 @@ tool({ id: 'pipeline', group: 'Manage deals', name: 'Deal Pipeline', blurb: 'Tra
     const cols = all ? STAGES : STAGES.filter(s => !['Closed', 'Passed'].includes(s));
     const due = L.filter(x => x.next && x.next <= today && !['Closed', 'Passed'].includes(x.stage || 'Found'));
     const cardH = x => { const r = screen(x.data, b), i = STAGES.indexOf(x.stage || 'Found');
-      return `<div class="pcard"><div style="display:flex;justify-content:space-between;gap:6px;align-items:flex-start"><b>${esc(x.name)}</b>${badge(r)}</div>
+      return `<div class="pcard"><div style="display:flex;justify-content:space-between;gap:6px;align-items:flex-start"><b>${nt(x.name)}</b>${badge(r)}</div>
         <div class="mut" style="font-size:12px;margin:3px 0 6px">${fin(x.data.price) ? fk(x.data.price) : 'No price'}${fin(r.q.cap) ? ' · cap ' + pc(r.q.cap, 1) : ''}${fin(r.q.cf) ? ' · ' + fm(r.q.cf / 12) + '/mo' : ''}${x.source ? ' · ' + esc(x.source) : ''}</div>
         <label class="pl">Next step <input type="date" data-df-deal="${esc(x.id)}" data-f="next" value="${esc(x.next || '')}"${x.next && x.next <= today ? ' style="border-color:var(--bad)"' : ''}></label>
         <textarea data-df-deal="${esc(x.id)}" data-f="notes" rows="2" placeholder="Notes" aria-label="Notes for ${esc(x.name)}">${esc(x.notes || '')}</textarea>
-        <div class="pbtns">${i > 0 ? btn('◀', `data-df-move="${esc(x.id)}" data-d="-1" aria-label="Move back"`) : ''}<select data-df-deal="${esc(x.id)}" data-f="stage" aria-label="Stage">${STAGES.map(s => `<option${s === (x.stage || 'Found') ? ' selected' : ''}>${s}</option>`).join('')}</select>${i < STAGES.length - 1 ? btn('▶', `data-df-move="${esc(x.id)}" data-d="1" aria-label="Move forward"`) : ''}${btn('Open', `data-load-deal="${esc(x.id)}"`)}${btn('Share', `data-df-share="${esc(x.id)}"`)}</div></div>`; };
-    return (due.length ? verdict('warn', `${due.length} deal${due.length > 1 ? 's' : ''} need${due.length > 1 ? '' : 's'} a next step today`, due.map(x => esc(x.name)).join(', '), 'DUE') : '')
+        <div class="pbtns">${i > 0 ? btn('◀', `data-df-move="${esc(x.id)}" data-d="-1" aria-label="Move back"`) : ''}<select data-df-deal="${esc(x.id)}" data-f="stage" aria-label="Stage">${STAGES.map(s => `<option value="${s}"${s === (x.stage || 'Found') ? ' selected' : ''}>${s}</option>`).join('')}</select>${i < STAGES.length - 1 ? btn('▶', `data-df-move="${esc(x.id)}" data-d="1" aria-label="Move forward"`) : ''}${btn('Open', `data-load-deal="${esc(x.id)}"`)}${btn('Share', `data-df-share="${esc(x.id)}"`)}</div></div>`; };
+    return (due.length ? verdict('warn', `${due.length} deal${due.length > 1 ? 's' : ''} need${due.length > 1 ? '' : 's'} a next step today`, due.map(x => nt(x.name)).join(', '), 'DUE') : '')
       + `<div class="pboard">${cols.map(s => { const C = L.filter(x => (x.stage || 'Found') === s); return `<div class="pcol"><h3 class="eyebrow">${s} <span class="mut">${C.length}</span></h3>${C.map(cardH).join('') || '<p class="note">—</p>'}</div>`; }).join('')}</div>`;
   } });
 
@@ -445,7 +446,7 @@ document.addEventListener('click', async e => {
   if (b.dataset.dfGo) { go(b.dataset.dfGo); return; }
   if (b.dataset.loadDeal) { const x = dealById(b.dataset.loadDeal); if (x) { applyDeal(x.data); go('five'); } return; }
   if (b.dataset.dfShare) { const x = dealById(b.dataset.dfShare); if (!x) return; b.disabled = true;
-    try { const q = qm(x.data); const j = await api('/api/share', { name: x.name, deal: x.data, note: x.notes || '', metrics: { noi: q.noi, cap: q.cap, cf: q.cf, coc: q.coc, dscr: q.dscr, grm: q.grm, ppu: q.ppu, ltv: q.ltv, rate: q.rate, est: q.est } });
+    try { const q = qm(x.data); const j = await api('/api/share', { name: x.name, deal: x.data, note: x.notes || '', cur: (window.UWC || {}).code, metrics: { noi: q.noi, cap: q.cap, cf: q.cf, coc: q.coc, dscr: q.dscr, grm: q.grm, ppu: q.ppu, ltv: q.ltv, rate: q.rate, est: q.est } });
       try { await navigator.clipboard.writeText(j.url); } catch (er) {}
       toast(`Share link copied. Anyone with it can view this deal for ${j.days} days:<br><a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.url)}</a>`, 12000); }
     catch (er) { toast('Could not create a link: ' + esc(er.message)); } finally { b.disabled = false; } return; }

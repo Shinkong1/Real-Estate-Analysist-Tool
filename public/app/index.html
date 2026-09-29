@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Public+Sans:wght@400;500;600;700&display=swap">
-<script>try{var t=localStorage.getItem("uwdesk.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script>try{var t=localStorage.getItem("uwdesk.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script><script src="/i18n.js?v=1"></script>
 <style>
 :root{
   --bg:#F2F4F8; --surface:#FFFFFF; --surface-2:#F6F7FA; --ink:#161B26; --ink-2:#4B5263; --ink-3:#5F6778;
@@ -239,9 +239,11 @@ let saveT;function save(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localSto
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function sv(k,d){const t=S.v[CUR];return t&&k in t?t[k]:d;}
 const fin=x=>typeof x==='number'&&isFinite(x);
-const fm=(n,d=0)=>fin(n)?(n<0?'−$':'$')+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const CURSYM=()=>(window.UWC&&window.UWC.sym)||'$';
+const CUR_FMT=(a,d)=>{const c=window.UWC;if(!c||c.code==='USD')return '$'+a.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});try{return new Intl.NumberFormat(c.locale,{style:'currency',currency:c.code,minimumFractionDigits:c.code==='JPY'||c.code==='KRW'?0:d,maximumFractionDigits:c.code==='JPY'||c.code==='KRW'?0:d}).format(a);}catch(e){return c.sym+a.toLocaleString();}};
+const fm=(n,d=0)=>fin(n)?(n<0?'−':'')+CUR_FMT(Math.abs(n),d):'—';
 const fa=(n)=>fin(n)?(n<0?'('+fm(-n)+')':fm(n)):'—';
-const fk=n=>{if(!fin(n))return '—';const a=Math.abs(n),s=n<0?'−$':'$';if(a>=1e6)return s+(a/1e6).toFixed(a>=1e7?1:2)+'M';if(a>=1e4)return s+Math.round(a/1e3)+'K';if(a>=1e3)return s+(a/1e3).toFixed(1)+'K';return s+Math.round(a);};
+const fk=n=>{if(!fin(n))return '—';const a=Math.abs(n),s=(n<0?'−':'')+CURSYM();if(a>=1e6)return s+(a/1e6).toFixed(a>=1e7?1:2)+'M';if(a>=1e4)return s+Math.round(a/1e3)+'K';if(a>=1e3)return s+(a/1e3).toFixed(1)+'K';return s+Math.round(a);};
 const pc=(x,d=2)=>fin(x)?(x*100).toFixed(d)+'%':'—';
 const nx=(x,d=2)=>fin(x)?x.toFixed(d)+'x':'—';
 const nm=(x,d=0)=>fin(x)?x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
@@ -257,7 +259,7 @@ const addDays=(d,n)=>{const x=new Date(d.getTime());x.setDate(x.getDate()+n);ret
 const fdate=d=>d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 
 /* ---------- input builders (use CUR) ---------- */
-function N(k,label,d,o={}){const val=sv(k,d);return `<label class="f${o.w?' w':''}"><span class="l">${label}</span><span class="in">${o.pre?`<i>${o.pre}</i>`:''}<input id="${CUR}-${k}" data-k="${k}" inputmode="decimal" autocomplete="off" value="${esc(val)}"${o.ph!=null?` placeholder="${esc(o.ph)}"`:''}>${o.suf?`<i>${o.suf}</i>`:''}</span>${o.hint!=null?`<small id="${CUR}-${k}-h"${o.sg?' class="sg"':''}>${o.hint}</small>`:''}</label>`;}
+function N(k,label,d,o={}){const val=sv(k,d);return `<label class="f${o.w?' w':''}"><span class="l">${label}</span><span class="in">${o.pre?`<i>${o.pre==='$'?esc(CURSYM().trim()):o.pre}</i>`:''}<input id="${CUR}-${k}" data-k="${k}" inputmode="decimal" autocomplete="off" value="${esc(val)}"${o.ph!=null?` placeholder="${esc(o.ph)}"`:''}>${o.suf?`<i>${o.suf}</i>`:''}</span>${o.hint!=null?`<small id="${CUR}-${k}-h"${o.sg?' class="sg"':''}>${o.hint}</small>`:''}</label>`;}
 function T(k,label,d,o={}){const val=sv(k,d);return `<label class="f${o.w!==false?' w':''}"><span class="l">${label}</span><span class="in"><input id="${CUR}-${k}" data-k="${k}" autocomplete="off" value="${esc(val)}"${o.ph?` placeholder="${esc(o.ph)}"`:''}></span>${o.hint?`<small>${o.hint}</small>`:''}</label>`;}
 function A(k,label,d,o={}){const val=sv(k,d);return `<label class="f w"><span class="l">${label}</span><span class="in"><textarea id="${CUR}-${k}" data-k="${k}" rows="${o.rows||2}"${o.ph?` placeholder="${esc(o.ph)}"`:''}>${esc(val)}</textarea></span></label>`;}
 function Sel(k,label,opts,d,o={}){const val=sv(k,d);return `<label class="f${o.w?' w':''}"><span class="l">${label}</span><span class="in"><select id="${CUR}-${k}" data-k="${k}">${opts.map(op=>{const [v,l]=Array.isArray(op)?op:[op,op];return `<option value="${esc(v)}"${String(v)===String(val)?' selected':''}>${esc(l)}</option>`;}).join('')}</select></span>${o.hint?`<small>${o.hint}</small>`:''}</label>`;}
@@ -873,7 +875,7 @@ function applyDeal(d){const r=x=>fin(x)?String(Math.round(x*100)/100):'';const s
   const csType={'Multifamily':'Multifamily','Single family':'Single-family rental','Retail':'Retail','Office':'Office','Industrial':'Industrial / warehouse','Mixed-use':'Mixed-use'}[pt];set('costseg',{desc:name,price:r(d.price),bldg:'',...(csType?{type:csType}:{})});
   set('creative',{desc:name,price:r(d.price),noi:r(d.noi),snoi:r(d.noi),arv:''});set('x1031',{rp:r(d.price),rnoi:r(d.noi)});
   S.active={name,url:d.url,at:Date.now()};save();TOOLS.forEach(t=>{if(document.getElementById('t-'+t.id))build(t.id);});renderActive();}
-function renderActive(){const el=document.getElementById('activeDeal');if(!el)return;el.innerHTML=S.active?`<span class="eyebrow" style="margin:0">Loaded deal</span><b>${esc(S.active.name)}</b>`:'';el.hidden=!S.active;}
+function renderActive(){const el=document.getElementById('activeDeal');if(!el)return;el.innerHTML=S.active?`<span class="eyebrow" style="margin:0">Loaded deal</span><b data-noi18n>${esc(S.active.name)}</b>`:'';el.hidden=!S.active;}
 
 /* engines: Claude inside claude.ai (sample), or the app's own server */
 async function shrink(file,max=1600){try{const bmp=await createImageBitmap(file);const k=Math.min(1,max/Math.max(bmp.width,bmp.height));const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);const url=c.toDataURL('image/jpeg',0.82);return {type:'image/jpeg',data:url.split(',')[1]};}catch(e){return null;}}
@@ -948,7 +950,7 @@ function boot(){TOOLS.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));const
   window.addEventListener('hashchange',()=>show(location.hash.slice(1)));if(window.NM_SYNC_START)window.NM_SYNC_START();}
 document.addEventListener('DOMContentLoaded',boot);
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}
-</script><script src="/app/dealflow.js?v=1"></script><script>
+</script><script src="/app/dealflow.js?v=2"></script><script>
 (function(){
   var K='uwdesk.theme',root=document.documentElement,meta=document.querySelector('meta[name="theme-color"]');
   var I={auto:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg>',
