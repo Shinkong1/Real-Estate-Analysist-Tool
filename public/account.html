@@ -37,7 +37,7 @@ dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
     <div id="pickPlan" hidden>
       <p class="muted" style="margin:16px 0 12px" id="pickWhy">Choose a plan to open the desk.</p>
       <div class="plans">
-        <label class="plan"><input type="radio" name="plan" value="week"><b>$25</b><span>per week</span></label>
+        <label class="plan"><input type="radio" name="plan" value="week"><b>$30</b><span>per week</span></label>
         <label class="plan"><input type="radio" name="plan" value="month" checked><b>$100</b><span>per month · best value</span></label>
       </div>
       <div id="ePick"></div>
@@ -69,7 +69,7 @@ dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 (function(){
   var $=function(id){return document.getElementById(id)},q=new URLSearchParams(location.search);
   function msg(el,kind,text){$(el).innerHTML=text?'<p class="msg '+kind+'" role="'+(kind==='err'?'alert':'status')+'" style="margin:14px 0 0">'+UW.esc(text)+'</p>':'';}
-  var PLAN={week:'Weekly · $25/week',month:'Monthly · $100/month',test:'Test login'};
+  var PLAN={week:'Weekly · $30/week',month:'Monthly · $100/month',test:'Test login'};
   function statusBadge(u){
     if(u.role==='owner')return '<span class="badge a">Owner</span>';
     if(u.role==='test')return (u.expiresAt>Date.now())?'<span class="badge g">Active</span>':'<span class="badge b">Expired</span>';

@@ -38,7 +38,7 @@ Accounts live in a Workers KV namespace bound as `USERS`, which Wrangler creates
 - **Public demo** — username `AssignedTester5`, password `subscribeforaccess5`, shown on the home page.
   View-only like test logins; each sign-in lasts 3 days. Every tester visit starts fresh from the
   example numbers — deals saved in that browser by other accounts are hidden from testers and left untouched. Set `DEMO_LOGIN=off` in Cloudflare to switch it off.
-- **Members** — sign up at `/login`, pay $25/week or $100/month through Stripe Checkout, and can
+- **Members** — sign up at `/login`, pay $30/week or $100/month through Stripe Checkout, and can
   manage or cancel from **Account → Manage billing**. Access continues while Stripe reports the
   subscription as active, trialing or past due.
 
