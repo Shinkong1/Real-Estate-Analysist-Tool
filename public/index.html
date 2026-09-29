@@ -65,6 +65,55 @@ section .intro{color:var(--ink-2);max-width:62ch;margin:12px 0 0}
 .demo dt{color:var(--nav-ink-2)}.demo dd{margin:0}.demo code{font:600 14px ui-monospace,SFMono-Regular,Menlo,monospace;color:#fff;user-select:all}
 .demo .btn{grid-column:1/-1;justify-self:start}
 @media (min-width:560px){.demo dl{grid-column:1}.demo .btn{grid-column:2;grid-row:1/3;justify-self:end}}
+.adsec{padding-bottom:0}
+.adsec h2{margin-bottom:18px}
+.ad{max-width:760px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--surface);position:relative}
+.ad-stage{position:relative;aspect-ratio:16/9;background:var(--nav);color:var(--nav-ink);overflow:hidden}
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:6%;text-align:center;opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s}
+.sc.on{opacity:1;transform:none}
+.ad-big{font:800 clamp(24px,5vw,44px)/1.1 "Archivo",sans-serif;color:#fff}
+.ad-sub{font-size:clamp(14px,2.2vw,18px);color:var(--nav-ink)}
+.ad-url{display:flex;align-items:center;gap:10px;width:min(560px,92%);background:var(--surface);color:var(--ink-3);border-radius:10px;padding:10px 10px 10px 14px;font-size:clamp(13px,2vw,16px);text-align:left}
+.ad-type{flex:1;min-width:0;overflow:hidden;white-space:nowrap}
+.ad-type::after{content:"";display:inline-block;width:2px;height:1em;background:var(--accent);margin-left:1px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.ad-url b{background:var(--accent);color:var(--on-accent);padding:7px 12px;border-radius:7px;font-size:14px;flex:none}
+.sc.on .ad-url b{animation:tap .5s 2.4s 2}
+@keyframes tap{50%{transform:scale(.92)}}
+.ad-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:min(520px,92%)}
+.ad-kpis div{background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 14px;text-align:left}
+.ad-kpis span{display:block;font-size:12.5px;color:var(--ink-3)}
+.ad-kpis b{font:800 clamp(20px,3.6vw,30px) "Archivo",sans-serif}
+.ad-kpis b.g{color:var(--good)}
+.ad-tools{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:600px}
+.ad-tools span{background:var(--nav-2);color:#fff;border-radius:999px;padding:7px 13px;font-size:clamp(12px,1.9vw,15px);opacity:0;transform:scale(.9);transition:opacity .3s,transform .3s}
+.sc.on .ad-tools span{opacity:1;transform:none}
+.ad-mk{font:800 clamp(24px,5vw,42px) "Archivo",sans-serif;font-stretch:125%;color:#fff;letter-spacing:.02em}
+.ad-mk span{color:var(--accent)}
+:root:not([data-theme="dark"]) .ad-mk span{color:#7EA2F5}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ad-mk span{color:var(--accent)}}
+.ad-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.12)}
+.ad-bar i{display:block;height:100%;width:0;background:var(--accent)}
+.ad-cover{position:absolute;left:0;right:0;top:0;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;padding-bottom:7%;background:linear-gradient(transparent 40%,rgba(0,0,0,.45));color:#fff;font-weight:600;font-size:14px}
+.ad-play{width:68px;height:68px;border-radius:50%;border:0;background:var(--accent);color:var(--on-accent);cursor:pointer;display:grid;place-items:center;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.ad-play:hover{filter:brightness(1.08)}
+.ad-play svg{width:30px;height:30px;margin-left:3px}
+.ad-ctl{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.ad-cap{flex:1;margin:0;font-size:14.5px;color:var(--ink-2);min-height:1.5em}
+.ad-btns{display:flex;gap:4px}
+.tbtn2{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:8px;width:38px;height:38px;display:grid;place-items:center;cursor:pointer}
+.tbtn2:hover{color:var(--ink);border-color:var(--ink-3)}
+.tbtn2 svg{width:18px;height:18px}
+@media (max-width:560px){
+  .ad-cover{justify-content:center;padding-bottom:0;background:none}
+  .ad.idle .sc{opacity:0}
+  .ad-play{width:58px;height:58px}
+  .sc{gap:8px;padding:4%}
+  .ad-kpis{gap:6px}.ad-kpis div{padding:5px 10px}.ad-kpis span{font-size:11px}.ad-kpis b{font-size:18px}
+  .ad-tools{gap:5px}.ad-tools span{padding:4px 9px;font-size:11.5px}
+  .ad-sub{font-size:13px}.ad-cap{font-size:13.5px}
+}
+@media (prefers-reduced-motion:reduce){.sc,.ad-tools span{transition:none}.ad-type::after{animation:none}}
 .cta{background:var(--nav);color:var(--nav-ink);text-align:center}
 .cta h2{color:#fff;margin:0 auto}
 .cta p{color:var(--nav-ink-2);margin:12px auto 24px;max-width:52ch}
@@ -113,6 +162,36 @@ section .intro{color:var(--ink-2);max-width:62ch;margin:12px 0 0}
     <p class="ex">Example figures for illustration.</p>
   </div>
 </div></div>
+
+<section class="adsec" aria-labelledby="adH"><div class="wrap">
+  <p class="eyebrow">20-second tour</p>
+  <h2 id="adH">See it work — with sound</h2>
+  <div class="ad idle" id="ad">
+    <div class="ad-stage" aria-hidden="true">
+      <div class="sc on" data-s="0"><div class="ad-big">Found a deal you like?</div><div class="ad-sub">LoopNet · Crexi · Zillow · Redfin · broker sites</div></div>
+      <div class="sc" data-s="1"><div class="ad-url"><span class="ad-type" id="adType"></span><b>Analyze</b></div><div class="ad-sub">Paste the link. Tap Analyze.</div></div>
+      <div class="sc" data-s="2"><div class="ad-kpis">
+        <div><span>Cap rate</span><b data-to="7.9" data-f="%">0%</b></div><div><span>Cash flow / mo</span><b class="g" data-to="1780" data-f="$">$0</b></div>
+        <div><span>Cash-on-cash</span><b data-to="7.4" data-f="%">0%</b></div><div><span>DSCR</span><b data-to="1.31" data-f="x">0</b></div></div>
+        <div class="ad-sub">The numbers, in minutes.</div></div>
+      <div class="sc" data-s="3"><div class="ad-tools"><span>Cash flow</span><span>Valuation</span><span>5-year projection</span><span>Renovation ROI</span><span>Due diligence</span><span>Creative financing</span><span>1031 exchange</span><span>Cost segregation</span></div><div class="ad-sub">16 underwriting tools, one set of numbers.</div></div>
+      <div class="sc" data-s="4"><div class="ad-mk">UNDERWRITING<span>/</span>DESK</div><div class="ad-sub">Try it free, view-only — or start at $30 a week.</div></div>
+      <div class="ad-bar"><i id="adProg"></i></div>
+    </div>
+    <div class="ad-cover" id="adCover">
+      <button type="button" class="ad-play" id="adPlay" aria-label="Play the 20-second tour with sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></button>
+      <span>Play with sound · 0:20</span>
+    </div>
+    <div class="ad-ctl">
+      <p class="ad-cap" id="adCap" aria-live="polite">Tap play for a quick tour of Underwriting Desk.</p>
+      <div class="ad-btns">
+        <button type="button" class="tbtn2" id="adMute" aria-pressed="false" aria-label="Mute">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="w" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="x" d="m16 9 6 6m0-6-6 6" style="display:none"/></svg></button>
+        <button type="button" class="tbtn2" id="adStop" aria-label="Stop" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div></section>
 
 <section id="how"><div class="wrap">
   <p class="eyebrow">How it works</p>
@@ -181,5 +260,49 @@ UW.api('/api/me').then(function(m){
   document.querySelectorAll('[data-signin]').forEach(function(a){a.textContent=m.access?'Open the desk':'Account';a.href=m.access?'/app/':'/account';});
   document.querySelectorAll('[data-start]').forEach(function(a){if(m.access){a.textContent='Open the desk';a.href='/app/';}});
 });
+</script>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var SCENES=[
+    {t:'Found a deal you like? Don’t spend your evening in spreadsheets.',min:3800},
+    {t:'Paste the listing link into Underwriting Desk and tap Analyze.',min:4200},
+    {t:'In minutes you get the numbers that matter: cap rate, cash flow, cash-on-cash and debt coverage.',min:5200},
+    {t:'Sixteen underwriting tools fill in at once, from five-year returns to due diligence.',min:4400},
+    {t:'Try it free, view-only, or start today for thirty dollars a week.',min:4000}
+  ];
+  var CAP=['Found a deal you like? Don’t spend your evening in spreadsheets.','Paste the listing link and tap Analyze.','In minutes: cap rate, cash flow, cash-on-cash and debt coverage.','16 underwriting tools fill in at once — five-year returns to due diligence.','Try it free (view-only), or start at $30 a week.'];
+  var run=0,muted=false,ac=null,music=null,voice=null,startT=0,TOTAL=SCENES.reduce(function(a,s){return a+s.min},0),raf=0;
+  var synth=window.speechSynthesis;
+  function pickVoice(){if(!synth)return;var vs=synth.getVoices().filter(function(v){return /^en[-_]US/i.test(v.lang)});var pref=['Samantha','Ava','Allison','Google US English','Microsoft Aria','Microsoft Jenny','Microsoft Guy','Alex'];
+    for(var i=0;i<pref.length;i++){var m=vs.find(function(v){return v.name.indexOf(pref[i])>=0});if(m){voice=m;return;}}voice=vs.find(function(v){return v.localService})||vs[0]||null;}
+  if(synth){pickVoice();if(synth.addEventListener)synth.addEventListener('voiceschanged',pickVoice);}
+  function show(i){document.querySelectorAll('#ad .sc').forEach(function(el){el.classList.toggle('on',+el.dataset.s===i)});$('adCap').textContent=CAP[i];
+    if(i===1)typeUrl(run);if(i===2)countUp(run);}
+  function typeUrl(r){var s='loopnet.com/Listing/412-Maple-Ave-8-units',el=$('adType'),n=0;el.textContent='';(function step(){if(r!==run)return;el.textContent=s.slice(0,++n);if(n<s.length)setTimeout(step,45);})();}
+  function countUp(r){document.querySelectorAll('#ad .ad-kpis b').forEach(function(b){var to=+b.dataset.to,f=b.dataset.f,t0=performance.now();(function tick(t){if(r!==run)return;var p=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-p,3),v=to*e;
+    b.textContent=f==='$'?'+$'+Math.round(v).toLocaleString():f==='%'?v.toFixed(1)+'%':v.toFixed(2);if(p<1)requestAnimationFrame(tick);})(t0);});}
+  function say(text,r,done){var finished=false,fin=function(){if(finished||r!==run)return;finished=true;done();};
+    if(!synth||muted){setTimeout(fin,0);return;}
+    var u=new SpeechSynthesisUtterance(text);if(voice)u.voice=voice;u.lang='en-US';u.rate=1.02;u.pitch=1;u.onend=fin;u.onerror=fin;
+    synth.speak(u);setTimeout(fin,text.length*95+2500);}
+  function startMusic(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();
+    var g=ac.createGain();g.gain.value=0;g.connect(ac.destination);var lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;lp.connect(g);
+    var chords=[[220,277.18,329.63],[196,246.94,293.66],[174.61,220,261.63],[196,246.94,329.63]],oscs=[],t=ac.currentTime;
+    for(var c=0;c<6;c++){var ch=chords[c%4];ch.forEach(function(f,k){var o=ac.createOscillator(),og=ac.createGain();o.type=k?'sine':'triangle';o.frequency.value=f;og.gain.setValueAtTime(0,t+c*4);og.gain.linearRampToValueAtTime(.18,t+c*4+.8);og.gain.linearRampToValueAtTime(0,t+c*4+4.2);o.connect(og);og.connect(lp);o.start(t+c*4);o.stop(t+c*4+4.4);oscs.push(o);});}
+    g.gain.linearRampToValueAtTime(muted?0:.09,t+1.2);music={g:g,oscs:oscs};}catch(e){music=null;}}
+  function stopMusic(){if(music&&ac){var t=ac.currentTime;try{music.g.gain.cancelScheduledValues(t);music.g.gain.setValueAtTime(music.g.gain.value,t);music.g.gain.linearRampToValueAtTime(0,t+.6);music.oscs.forEach(function(o){try{o.stop(t+.7)}catch(e){}});}catch(e){}}music=null;}
+  function prog(){var p=Math.min(1,(performance.now()-startT)/TOTAL);$('adProg').style.width=(p*100)+'%';if(p<1&&raf)raf=requestAnimationFrame(prog);}
+  function play(){var r=++run;if(synth)synth.cancel();stopMusic();$('adCover').hidden=true;$('ad').classList.remove('idle');$('adStop').hidden=false;startT=performance.now();raf=requestAnimationFrame(prog);startMusic();
+    var i=0;(function next(){if(r!==run)return;if(i>=SCENES.length){end(true);return;}show(i);var t0=performance.now(),sc=SCENES[i];
+      say(sc.t,r,function(){var wait=Math.max(400,sc.min-(performance.now()-t0));setTimeout(function(){i++;next();},wait);});})();}
+  function end(finished){run++;if(synth)synth.cancel();stopMusic();cancelAnimationFrame(raf);raf=0;$('adStop').hidden=true;$('adCover').hidden=false;$('ad').classList.add('idle');
+    $('adCover').querySelector('span').textContent=finished?'Replay · 0:20':'Play with sound · 0:20';if(!finished){show(0);$('adProg').style.width='0';}$('adCap').textContent=finished?'Try it free with the tester login above, or pick a plan below.':'Tap play for a quick tour of Underwriting Desk.';}
+  $('adPlay').onclick=play;$('adStop').onclick=function(){end(false)};
+  $('adMute').onclick=function(){muted=!muted;this.setAttribute('aria-pressed',String(muted));this.setAttribute('aria-label',muted?'Unmute':'Mute');
+    this.querySelector('.w').style.display=muted?'none':'';this.querySelector('.x').style.display=muted?'':'none';
+    if(muted&&synth)synth.cancel();if(music&&ac)music.g.gain.setTargetAtTime(muted?0:.09,ac.currentTime,.1);};
+  document.addEventListener('visibilitychange',function(){if(document.hidden&&raf)end(false);});
+})();
 </script>
 </body></html>
