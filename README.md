@@ -1,4 +1,4 @@
-# Underwriting Desk — installable app
+# Napkin Math — installable app
 
 Paste (or share) a listing link from your phone, the app reads the listing, and all 16
 underwriting tools fill in. Works on iPhone, Android and desktop. The calculators also
@@ -21,7 +21,7 @@ work offline; importing a listing needs a connection.
 |---|---|
 | `/` | Public home page with features and pricing |
 | `/login` | Sign in and create an account (`/login?mode=signup&plan=week` or `plan=month`) |
-| `/app/` | The Underwriting Desk — only for the owner, a live test login, or a paying member |
+| `/app/` | The Napkin Math app — only for the owner, a live test login, or a paying member |
 | `/account` | Plan, billing and sign-out; the owner also gets test-login controls and the account list |
 
 ## Accounts and payments (Cloudflare Worker)
@@ -85,9 +85,9 @@ blocks both readers. A few cents per listing.
 ## Install on your phone
 - **iPhone (Safari):** open your app address → Share → **Add to Home Screen**.
   To import: copy the listing link in the Zillow/LoopNet/Crexi app or browser, open
-  UW Desk, paste it on the Import screen.
+  Napkin Math, paste it on the Import screen.
 - **Android (Chrome):** open the address → menu → **Install app**. You can then use
-  **Share → UW Desk** straight from a listing and it starts reading automatically.
+  **Share → Napkin Math** straight from a listing and it starts reading automatically.
 - Sign in once on each device; sessions last 30 days.
 
 ## Settings (environment variables)

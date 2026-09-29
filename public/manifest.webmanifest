@@ -1,6 +1,6 @@
 {
-  "name": "Underwriting Desk",
-  "short_name": "UW Desk",
+  "name": "Napkin Math",
+  "short_name": "Napkin Math",
   "description": "Paste a real estate listing link and underwrite the deal: cash flow, cap rate, 5-year returns, due diligence and financing.",
   "start_url": "/app/#import",
   "scope": "/",

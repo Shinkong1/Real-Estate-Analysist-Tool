@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Sign in — Underwriting Desk</title>
+<title>Sign in — Napkin Math</title>
 <meta name="theme-color" content="#1C2230"><meta name="robots" content="noindex">
 <link rel="icon" href="/icons/icon-192.png"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <script>try{var t=localStorage.getItem("uwdesk.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -18,7 +18,7 @@ h1{font-size:26px;margin-bottom:6px}
 .pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--accent-ink);font:600 13px "Public Sans",sans-serif;cursor:pointer;padding:6px}
 </style>
 </head><body>
-<header class="top"><div class="wrap"><a class="mk" href="/">UNDERWRITING<span>/</span>DESK</a><nav><button class="tbtn" type="button" data-theme-btn></button></nav></div></header>
+<header class="top"><div class="wrap"><a class="mk" href="/">NAPKIN <span>MATH</span></a><nav><button class="tbtn" type="button" data-theme-btn></button></nav></div></header>
 <main class="box">
   <div class="tabs" role="tablist" aria-label="Sign in or create an account">
     <button type="button" role="tab" id="tIn" aria-selected="true" aria-controls="fIn">Sign in</button>
@@ -28,7 +28,7 @@ h1{font-size:26px;margin-bottom:6px}
 
   <form class="card" id="fIn" role="tabpanel" aria-labelledby="tIn" novalidate>
     <h1>Welcome back</h1>
-    <p class="muted" style="margin:0 0 18px">Sign in to open your underwriting desk.</p>
+    <p class="muted" style="margin:0 0 18px">Sign in to open Napkin Math.</p>
     <div id="eIn"></div>
     <div class="field"><label for="inEmail">Email or username</label><input id="inEmail" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
     <div class="field"><label for="inPw">Password</label><div class="pw"><input id="inPw" type="password" name="password" autocomplete="current-password" required><button type="button" data-peek="inPw">Show</button></div></div>
@@ -37,7 +37,7 @@ h1{font-size:26px;margin-bottom:6px}
 
   <form class="card" id="fUp" role="tabpanel" aria-labelledby="tUp" novalidate hidden>
     <h1>Create your account</h1>
-    <p class="muted" style="margin:0 0 18px">Pick a plan, then pay securely with Stripe. You'll land in the desk as soon as payment goes through.</p>
+    <p class="muted" style="margin:0 0 18px">Pick a plan, then pay securely with Stripe. You'll land in Napkin Math as soon as payment goes through.</p>
     <div id="eUp"></div>
     <fieldset style="border:0;padding:0;margin:0">
       <legend class="field" style="font-weight:600;font-size:14px;margin-bottom:8px">Plan</legend>
@@ -56,7 +56,7 @@ h1{font-size:26px;margin-bottom:6px}
 <script>
 (function(){
   var q=new URLSearchParams(location.search),$=function(id){return document.getElementById(id)};
-  function show(which){var up=which==='up';$('fIn').hidden=up;$('fUp').hidden=!up;$('tIn').setAttribute('aria-selected',String(!up));$('tUp').setAttribute('aria-selected',String(up));document.title=(up?'Create account':'Sign in')+' — Underwriting Desk';}
+  function show(which){var up=which==='up';$('fIn').hidden=up;$('fUp').hidden=!up;$('tIn').setAttribute('aria-selected',String(!up));$('tUp').setAttribute('aria-selected',String(up));document.title=(up?'Create account':'Sign in')+' — Napkin Math';}
   $('tIn').onclick=function(){show('in')};$('tUp').onclick=function(){show('up')};
   function msg(el,kind,text){$(el).innerHTML=text?'<p class="msg '+kind+'" role="'+(kind==='err'?'alert':'status')+'">'+UW.esc(text)+'</p>':'';}
   document.querySelectorAll('[data-peek]').forEach(function(b){b.onclick=function(){var i=$(b.dataset.peek);var s=i.type==='password';i.type=s?'text':'password';b.textContent=s?'Hide':'Show';};});

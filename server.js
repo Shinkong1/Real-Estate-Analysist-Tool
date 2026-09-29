@@ -23,4 +23,4 @@ http.createServer(async (req, res) => {
   if (!PUBLIC.has(p)) p = '/index.html';
   try { const b = await readFile(join(root, p)); res.setHeader('content-type', TYPES[extname(p)] || 'application/octet-stream'); if (p === '/sw.js' || p === '/index.html') res.setHeader('cache-control', 'no-cache'); res.end(b); }
   catch { res.statusCode = 404; res.end('Not found'); }
-}).listen(process.env.PORT || 3000, () => console.log('Underwriting Desk on http://localhost:' + (process.env.PORT || 3000)));
+}).listen(process.env.PORT || 3000, () => console.log('Napkin Math on http://localhost:' + (process.env.PORT || 3000)));

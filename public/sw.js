@@ -1,6 +1,6 @@
-// Offline shell: once you've opened the desk signed in, the calculators work without a connection.
+// Offline shell: once you've opened Napkin Math signed in, the calculators work without a connection.
 // Pages are network-first (so sign-in checks always run when online); static files are cache-first.
-const CACHE = 'uwdesk-v3';
+const CACHE = 'napkinmath-v4';
 const STATIC = ['/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png', '/site.css', '/site.js'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)).catch(() => {}).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

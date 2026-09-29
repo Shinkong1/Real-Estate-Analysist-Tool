@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Underwriting Desk — underwrite any listing in minutes</title>
+<title>Napkin Math — run the numbers on any listing in minutes</title>
 <meta name="description" content="Paste a listing link from LoopNet, Crexi, Zillow or Redfin and get cash flow, cap rate, DSCR, five-year returns and a due-diligence checklist in minutes.">
 <meta name="theme-color" content="#1C2230">
 <link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"><link rel="icon" href="/icons/icon-192.png">
@@ -121,7 +121,7 @@ section .intro{color:var(--ink-2);max-width:62ch;margin:12px 0 0}
 </style>
 </head><body>
 <header class="top"><div class="wrap">
-  <a class="mk" href="/">UNDERWRITING<span>/</span>DESK</a>
+  <a class="mk" href="/">NAPKIN <span>MATH</span></a>
   <nav>
     <a class="l hide-sm" href="#how">How it works</a>
     <a class="l hide-sm" href="#pricing">Pricing</a>
@@ -136,7 +136,7 @@ section .intro{color:var(--ink-2);max-width:62ch;margin:12px 0 0}
   <div>
     <p class="eyebrow">Real estate underwriting, on your phone</p>
     <h1>Paste a listing. <em>Get the numbers</em> in minutes.</h1>
-    <p class="lead">Drop in a link from LoopNet, Crexi, Zillow, Redfin or a broker site. Underwriting Desk reads the listing, fills in 16 underwriting tools, and shows you cash flow, cap rate, debt coverage and five-year returns before you call the broker.</p>
+    <p class="lead">Drop in a link from LoopNet, Crexi, Zillow, Redfin or a broker site. Napkin Math reads the listing, fills in 16 underwriting tools, and shows you cash flow, cap rate, debt coverage and five-year returns before you call the broker.</p>
     <div class="ctas">
       <a class="btn primary" href="/login?mode=signup&amp;plan=month" data-start>Start for $100/month</a>
       <a class="btn onnav" href="/login?mode=signup&amp;plan=week">Or try a week for $30</a>
@@ -175,7 +175,7 @@ section .intro{color:var(--ink-2);max-width:62ch;margin:12px 0 0}
         <div><span>Cash-on-cash</span><b data-to="7.4" data-f="%">0%</b></div><div><span>DSCR</span><b data-to="1.31" data-f="x">0</b></div></div>
         <div class="ad-sub">The numbers, in minutes.</div></div>
       <div class="sc" data-s="3"><div class="ad-tools"><span>Cash flow</span><span>Valuation</span><span>5-year projection</span><span>Renovation ROI</span><span>Due diligence</span><span>Creative financing</span><span>1031 exchange</span><span>Cost segregation</span></div><div class="ad-sub">16 underwriting tools, one set of numbers.</div></div>
-      <div class="sc" data-s="4"><div class="ad-mk">UNDERWRITING<span>/</span>DESK</div><div class="ad-sub">Try it free, view-only — or start at $30 a week.</div></div>
+      <div class="sc" data-s="4"><div class="ad-mk">NAPKIN <span>MATH</span></div><div class="ad-sub">Try it free, view-only — or start at $30 a week.</div></div>
       <div class="ad-bar"><i id="adProg"></i></div>
     </div>
     <div class="ad-cover" id="adCover">
@@ -183,7 +183,7 @@ section .intro{color:var(--ink-2);max-width:62ch;margin:12px 0 0}
       <span>Play with sound · 0:20</span>
     </div>
     <div class="ad-ctl">
-      <p class="ad-cap" id="adCap" aria-live="polite">Tap play for a quick tour of Underwriting Desk.</p>
+      <p class="ad-cap" id="adCap" aria-live="polite">Tap play for a quick tour of Napkin Math.</p>
       <div class="ad-btns">
         <button type="button" class="tbtn2" id="adMute" aria-pressed="false" aria-label="Mute">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="w" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/><path class="x" d="m16 9 6 6m0-6-6 6" style="display:none"/></svg></button>
@@ -249,7 +249,7 @@ section .intro{color:var(--ink-2);max-width:62ch;margin:12px 0 0}
 </main>
 
 <footer class="foot"><div class="wrap">
-  <span>© <span id="yr"></span> Underwriting Desk</span>
+  <span>© <span id="yr"></span> Napkin Math</span>
   <span>Screening estimates only — verify tax, legal and lending items with your CPA, attorney and lender.</span>
 </div></footer>
 <script src="/site.js"></script>
@@ -257,8 +257,8 @@ section .intro{color:var(--ink-2);max-width:62ch;margin:12px 0 0}
 document.getElementById('yr').textContent=new Date().getFullYear();
 UW.api('/api/me').then(function(m){
   if(!m.signedIn)return;
-  document.querySelectorAll('[data-signin]').forEach(function(a){a.textContent=m.access?'Open the desk':'Account';a.href=m.access?'/app/':'/account';});
-  document.querySelectorAll('[data-start]').forEach(function(a){if(m.access){a.textContent='Open the desk';a.href='/app/';}});
+  document.querySelectorAll('[data-signin]').forEach(function(a){a.textContent=m.access?'Open Napkin Math':'Account';a.href=m.access?'/app/':'/account';});
+  document.querySelectorAll('[data-start]').forEach(function(a){if(m.access){a.textContent='Open Napkin Math';a.href='/app/';}});
 });
 </script>
 <script>
@@ -266,7 +266,7 @@ UW.api('/api/me').then(function(m){
   var $=function(id){return document.getElementById(id)};
   var SCENES=[
     {t:'Found a deal you like? Skip the late night in spreadsheets.',min:3800},
-    {t:'Just paste the listing link into Underwriting Desk, and tap Analyze.',min:4200},
+    {t:'Just paste the listing link into Napkin Math, and tap Analyze.',min:4200},
     {t:'In a couple of minutes, you’ve got the numbers that matter: cap rate, cash flow, cash-on-cash, and debt coverage.',min:5600},
     {t:'Sixteen underwriting tools fill in at once, from five-year returns all the way to due diligence.',min:4600},
     {t:'Try it free, or get started today for thirty dollars a week.',min:3800}
@@ -301,7 +301,7 @@ UW.api('/api/me').then(function(m){
     var i=0;(function next(){if(r!==run)return;if(i>=SCENES.length){end(true);return;}show(i);var t0=performance.now(),sc=SCENES[i];
       say(sc.t,r,function(){var wait=Math.max(400,sc.min-(performance.now()-t0));setTimeout(function(){i++;next();},wait);},i);})();}
   function end(finished){run++;if(synth)synth.cancel();if(au){au.pause();au.onended=au.onerror=null;}stopMusic();cancelAnimationFrame(raf);raf=0;$('adStop').hidden=true;$('adCover').hidden=false;$('ad').classList.add('idle');
-    $('adCover').querySelector('span').textContent=finished?'Replay · 0:20':'Play with sound · 0:20';if(!finished){show(0);$('adProg').style.width='0';}$('adCap').textContent=finished?'Try it free with the tester login above, or pick a plan below.':'Tap play for a quick tour of Underwriting Desk.';}
+    $('adCover').querySelector('span').textContent=finished?'Replay · 0:20':'Play with sound · 0:20';if(!finished){show(0);$('adProg').style.width='0';}$('adCap').textContent=finished?'Try it free with the tester login above, or pick a plan below.':'Tap play for a quick tour of Napkin Math.';}
   $('adPlay').onclick=play;$('adStop').onclick=function(){end(false)};
   $('adMute').onclick=function(){muted=!muted;this.setAttribute('aria-pressed',String(muted));this.setAttribute('aria-label',muted?'Unmute':'Mute');
     this.querySelector('.w').style.display=muted?'none':'';this.querySelector('.x').style.display=muted?'':'none';

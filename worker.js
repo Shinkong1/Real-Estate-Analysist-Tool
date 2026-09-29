@@ -1,6 +1,6 @@
 // Cloudflare Worker entry.
 //   /            public landing page        /login  sign in + sign up        /account  plan, billing, owner tools
-//   /app/        the Underwriting Desk (signed-in users with an active plan, the owner, or a live test login)
+//   /app/        Napkin Math (signed-in users with an active plan, the owner, or a live test login)
 //   /api/*       accounts + billing (lib/auth.js) and the listing reader /api/extract (lib/extract-core.js)
 import { extract } from './lib/extract-core.js';
 import { handleAuthApi, currentUser, access, json, redirect } from './lib/auth.js';
@@ -76,12 +76,12 @@ export default {
 // ----- ad voiceover -----
 export const AD_LINES = [
   'Found a deal you like? Skip the late night in spreadsheets.',
-  'Just paste the listing link into Underwriting Desk, and tap Analyze.',
+  'Just paste the listing link into Napkin Math, and tap Analyze.',
   'In a couple of minutes, you’ve got the numbers that matter: cap rate, cash flow, cash-on-cash, and debt coverage.',
   'Sixteen underwriting tools fill in at once, from five-year returns all the way to due diligence.',
   'Try it free, or get started today for thirty dollars a week.',
 ];
-const AD_VER = 'v1';
+const AD_VER = 'v2';
 async function adVoice(env, n) {
   const speaker = (env.AD_VOICE || 'thalia').toLowerCase().replace(/[^a-z]/g, '');
   const key = `adv:${AD_VER}:${speaker}:${n}`;

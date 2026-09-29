@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Account — Underwriting Desk</title>
+<title>Account — Napkin Math</title>
 <meta name="theme-color" content="#1C2230"><meta name="robots" content="noindex">
 <link rel="icon" href="/icons/icon-192.png">
 <script>try{var t=localStorage.getItem("uwdesk.theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
@@ -25,8 +25,8 @@ dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 @media (max-width:560px){.tbl .hide-sm{display:none}}
 </style>
 </head><body>
-<header class="top"><div class="wrap"><a class="mk" href="/">UNDERWRITING<span>/</span>DESK</a>
-  <nav><a class="l" href="/app/" id="deskLink">Open the desk</a><button class="tbtn" type="button" data-theme-btn></button></nav></div></header>
+<header class="top"><div class="wrap"><a class="mk" href="/">NAPKIN <span>MATH</span></a>
+  <nav><a class="l" href="/app/" id="deskLink">Open Napkin Math</a><button class="tbtn" type="button" data-theme-btn></button></nav></div></header>
 <main class="page">
   <div><p class="eyebrow" id="eyebrow">Account</p><h1 id="hello">Your account</h1></div>
   <div id="note"></div>
@@ -35,7 +35,7 @@ dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
     <h2 id="planH">Your plan</h2>
     <dl id="planDl"></dl>
     <div id="pickPlan" hidden>
-      <p class="muted" style="margin:16px 0 12px" id="pickWhy">Choose a plan to open the desk.</p>
+      <p class="muted" style="margin:16px 0 12px" id="pickWhy">Choose a plan to open Napkin Math.</p>
       <div class="plans">
         <label class="plan"><input type="radio" name="plan" value="week"><b>$30</b><span>per week</span></label>
         <label class="plan"><input type="radio" name="plan" value="month" checked><b>$100</b><span>per month · best value</span></label>
@@ -44,7 +44,7 @@ dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
       <button class="btn primary" type="button" id="payGo">Continue to payment</button>
     </div>
     <div class="row">
-      <a class="btn primary" href="/app/" id="openDesk" hidden>Open the desk</a>
+      <a class="btn primary" href="/app/" id="openDesk" hidden>Open Napkin Math</a>
       <button class="btn" type="button" id="billing" hidden>Manage billing or cancel</button>
       <button class="btn" type="button" id="logout">Sign out</button>
     </div>
@@ -52,7 +52,7 @@ dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
 
   <section class="card" id="ownerCard" aria-labelledby="ownH" hidden>
     <h2 id="ownH">Test logins</h2>
-    <p class="muted" style="margin:0">Create a view-only login someone can use to look around the desk for 3 days. They can open every tool and see the example numbers, but can’t edit inputs, save deals or import listings. It stops working automatically when the time is up. The password is shown once, so copy it before you leave this page.</p>
+    <p class="muted" style="margin:0">Create a view-only login someone can use to look around Napkin Math for 3 days. They can open every tool and see the example numbers, but can’t edit inputs, save deals or import listings. It stops working automatically when the time is up. The password is shown once, so copy it before you leave this page.</p>
     <div class="row"><button class="btn primary" type="button" id="mkTest">Create a 3-day test login</button></div>
     <div id="eOwner"></div>
     <div id="credBox"></div>
@@ -94,7 +94,7 @@ dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
     $('billing').hidden=!(m.role==='member'&&m.hasBilling);
     if(m.role==='member'&&!m.access){
       $('pickPlan').hidden=false;
-      $('pickWhy').textContent=m.why==='unpaid'?'Finish checkout to open the desk.':'Your plan has ended. Choose a plan to pick up where you left off.';
+      $('pickWhy').textContent=m.why==='unpaid'?'Finish checkout to open Napkin Math.':'Your plan has ended. Choose a plan to pick up where you left off.';
       if(m.plan==='week'||m.plan==='month')document.querySelector('input[name=plan][value='+m.plan+']').checked=true;
       if(!m.stripeReady){msg('ePick','info','Payments aren’t switched on yet.');$('payGo').disabled=true;}
     }
@@ -138,7 +138,7 @@ dt{color:var(--ink-3)}dd{margin:0;font-weight:600;overflow-wrap:anywhere}
         '<p style="margin:4px 0 0">Username: <code>'+UW.esc(r.email)+'</code></p>'+
         '<p style="margin:4px 0 0">Password: <code>'+UW.esc(r.password)+'</code></p>'+
         '<div class="row" style="margin-top:12px"><button class="btn sm" type="button" id="copyCred">Copy login details</button></div></div>';
-      var text='Underwriting Desk test login\n'+location.origin+'/login\nUsername: '+r.email+'\nPassword: '+r.password+'\nExpires: '+UW.date(r.expiresAt);
+      var text='Napkin Math test login\n'+location.origin+'/login\nUsername: '+r.email+'\nPassword: '+r.password+'\nExpires: '+UW.date(r.expiresAt);
       $('copyCred').onclick=function(){var c=this;(navigator.clipboard?navigator.clipboard.writeText(text):Promise.reject()).then(function(){c.textContent='Copied';},function(){c.textContent='Select and copy the details above';});};
       loadUsers();
     });
