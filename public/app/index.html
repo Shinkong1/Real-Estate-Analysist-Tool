@@ -227,7 +227,7 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
     <div class="mnav"><div class="macct"><a href="/account">Account</a><button type="button" data-logout>Sign out</button></div><label for="toolSel">Tool</label><div class="row"><select id="toolSel"></select><button type="button" class="btn primary" id="mImport">+ Import</button></div><div class="thm" role="group" aria-label="Appearance" data-thm></div></div>
     <form class="qbar" id="qbar" autocomplete="off" novalidate><label for="qUrl">Analyze a listing</label><div class="qrow"><span class="in"><input id="qUrl" type="url" inputmode="url" placeholder="Paste a listing link — LoopNet, Crexi, Zillow, Redfin…"></span><button type="submit" class="btn primary">Analyze</button></div><small id="qHint">Paste the link, tap Analyze, then add a screenshot of the listing if prices or rents come back missing.</small></form>
     <div id="panels"></div>
-    <footer class="foot">Screening estimates only. Figures shown on load are example inputs, not market data; replace them with your deal and verify tax, legal and lending items with your CPA, attorney and lender. Your entries are saved in this browser only.</footer>
+    <footer class="foot">Screening estimates only. Figures shown on load are example inputs, not market data; replace them with your deal and verify tax, legal and lending items with your CPA, attorney and lender. Your entries are saved to your account and follow you to every device.</footer>
   </main>
 </div>
 <script>
@@ -931,13 +931,12 @@ function renderReview(){const d=IMP.result,out=document.getElementById('impOut')
   +card('What gets filled',`<p class="note" style="margin:0">Price, units, rents, occupancy, NOI, taxes and insurance flow into the 5-Minute Analysis, Screening, Cash Flow, Cap Rate, Five-Year, Renovation, Seller Review, Creative Financing, 1031 (as the replacement) and Cost Segregation tabs. Address, ZIP and state set up Neighborhood, Rental Market and Due Diligence. Financing, growth and hurdle assumptions stay as you set them.</p>`);
   out.scrollIntoView({behavior:'smooth',block:'start'});}
 function readReview(){document.querySelectorAll('#impOut [data-if]').forEach(el=>{const k=el.dataset.if,t=(IF.find(f=>f[0]===k)||[])[2];IMP.result[k]=t==='t'?el.value.trim():toN(el.value);});IMP.result=normDeal(IMP.result,IMP.result.url);}
-function saveDeal(d){S.deals=S.deals||[];const name=dealName(d);const ex=S.deals.find(x=>(d.url&&x.data.url===d.url)||x.name===name);const rec={id:ex?ex.id:'d'+Date.now().toString(36),name,at:Date.now(),data:JSON.parse(JSON.stringify(d))};if(ex)Object.assign(ex,rec);else S.deals.unshift(rec);S.deals=S.deals.slice(0,40);save();}
+function saveDeal(d){S.deals=S.deals||[];const name=dealName(d);const ex=S.deals.find(x=>(d.url&&x.data.url===d.url)||x.name===name);const rec={id:ex?ex.id:'d'+Date.now().toString(36),name,at:Date.now(),data:JSON.parse(JSON.stringify(d))};if(ex)Object.assign(ex,rec);else S.deals.unshift(rec);S.deals=S.deals.slice(0,300);save();}
 function renderDeals(){const el=document.getElementById('dealList');if(!el)return;const L=S.deals||[];el.innerHTML=L.length?L.map(x=>`<div class="kv" style="align-items:center"><span><b style="color:var(--ink)">${esc(x.name)}</b><br><span class="mut" style="font-size:12px">${fin(x.data.price)?fk(x.data.price)+' · ':''}${fin(x.data.units)?x.data.units+' units · ':''}${new Date(x.at).toLocaleDateString()}</span></span><span style="display:flex;gap:6px"><button type="button" class="btn sm" style="margin:0" data-load="${x.id}">Load</button><button type="button" class="btn sm" style="margin:0" data-del="${x.id}">Delete</button></span></div>`).join(''):'<p class="note" style="margin:0">Deals you apply are saved here on this device, so you can switch between them.</p>';}
 
 /* =================== boot =================== */
 const ORDER=['five','screen','cashflow','caprate','fiveyr','reno','seller','hood','markets','rent','dd','creative','x1031','portfolio','taxded','costseg'];
-TOOLS.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));
-(function boot(){const nav=document.getElementById('navList'),sel=document.getElementById('toolSel');const groups=[...new Set(TOOLS.map(t=>t.group))];
+function boot(){TOOLS.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));const nav=document.getElementById('navList'),sel=document.getElementById('toolSel');const groups=[...new Set(TOOLS.map(t=>t.group))];
   nav.innerHTML=`<button type="button" class="nb imp" data-go="import"><span class="no">+</span><span>Import a listing</span></button><div id="activeDeal" class="active-deal" hidden></div>`+groups.map(g=>`<div class="ng"><h4>${g}</h4>${TOOLS.filter(t=>t.group===g).map(t=>`<button type="button" class="nb" data-go="${t.id}"><span class="no">${String(TOOLS.indexOf(t)+1).padStart(2,'0')}</span><span>${t.name}</span></button>`).join('')}</div>`).join('');
   sel.innerHTML=`<option value="import">+ Import a listing</option>`+groups.map(g=>`<optgroup label="${g}">${TOOLS.filter(t=>t.group===g).map(t=>`<option value="${t.id}">${String(TOOLS.indexOf(t)+1).padStart(2,'0')} · ${t.name}</option>`).join('')}</optgroup>`).join('');
   function show(id){if(id!=='import'&&!TOOLS.some(t=>t.id===id))id='five';if(id==='import')buildImport();else if(!document.getElementById('t-'+id))build(id);document.querySelectorAll('.tool').forEach(s=>s.hidden=s.id!=='t-'+id);nav.querySelectorAll('.nb').forEach(b=>b.setAttribute('aria-current',b.dataset.go===id?'true':'false'));sel.value=id;try{localStorage.setItem('uwdesk.tab2',id);}catch(e){}try{history.replaceState(null,'',location.pathname+'#'+id);}catch(e){}}
@@ -946,9 +945,10 @@ TOOLS.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));
   const qb=document.getElementById('qbar');if(qb)qb.addEventListener('submit',e=>{e.preventDefault();const u=document.getElementById('qUrl').value.trim();show('import');window.scrollTo({top:0});const iu=document.getElementById('impUrl');if(iu&&u){iu.value=u;document.getElementById('impText').value='';const f=document.getElementById('impForm');setTimeout(()=>f.requestSubmit(),50);}});
   document.addEventListener('uw:go',e=>{show(e.detail);window.scrollTo({top:0});});
   const q=new URLSearchParams(location.search);let start=(q.get('url')||q.get('text')||/^#share=/.test(location.hash))?'import':(location.hash||'').slice(1);if(!start){try{start=localStorage.getItem('uwdesk.tab2')||'';}catch(e){}}show(start||'import');renderActive();
-  window.addEventListener('hashchange',()=>show(location.hash.slice(1)));})();
+  window.addEventListener('hashchange',()=>show(location.hash.slice(1)));if(window.NM_SYNC_START)window.NM_SYNC_START();}
+document.addEventListener('DOMContentLoaded',boot);
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}
-</script><script>
+</script><script src="/app/dealflow.js?v=1"></script><script>
 (function(){
   var K='uwdesk.theme',root=document.documentElement,meta=document.querySelector('meta[name="theme-color"]');
   var I={auto:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg>',
