@@ -61,6 +61,7 @@ h1{font-size:26px;margin-bottom:6px}
   function msg(el,kind,text){$(el).innerHTML=text?'<p class="msg '+kind+'" role="'+(kind==='err'?'alert':'status')+'">'+UW.esc(text)+'</p>':'';}
   document.querySelectorAll('[data-peek]').forEach(function(b){b.onclick=function(){var i=$(b.dataset.peek);var s=i.type==='password';i.type=s?'text':'password';b.textContent=s?'Hide':'Show';};});
   if(q.get('mode')==='signup')show('up');
+  if(q.get('demo')){show('in');$('inEmail').value='AssignedTester5';$('inPw').value='subscribeforaccess5';msg('note','info','Demo login filled in. It’s view-only: you can browse every tool, but editing and listing import are off.');}
   if(q.get('plan')==='week'||q.get('plan')==='month')document.querySelector('input[name=plan][value='+q.get('plan')+']').checked=true;
   if(q.get('canceled'))msg('note','info','Checkout was canceled. Your account is saved — pick a plan whenever you’re ready.');
   var next=q.get('next');if(!next||!/^\/(app\/|account)/.test(next))next='';
