@@ -17,6 +17,7 @@ export default {
       if (request.method !== 'POST') return json({ error: 'Use POST.' }, 405);
       const me = await currentUser(request, env);
       if (!access(me).ok) return json({ error: me ? 'Your plan isn’t active. Open Account to renew.' : 'Your session ended. Sign in again.' }, 401);
+      if (me.role === 'test') return json({ error: 'Test logins are view-only, so listing import is turned off.' }, 403);
       let body = null; try { body = await request.json(); } catch {}
       const out = await extract({ body, headers: request.headers, env: { ...env, APP_PASSCODE: '' } }); // session replaces the passcode
       return json(out.body, out.status);

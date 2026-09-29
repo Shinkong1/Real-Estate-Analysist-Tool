@@ -198,6 +198,9 @@ input[type=range]{width:100%;accent-color:var(--accent);height:22px;cursor:point
 .qbar small{font-size:12px;color:var(--ink-3)}
 @media (max-width:480px){.fg{grid-template-columns:minmax(0,1fr)}.f.w{grid-column:auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.vbanner{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:14px}
+.vbanner b{font-weight:700}.vbanner span{color:var(--ink-2)}.vbanner a{margin-left:auto;font-weight:600;color:var(--accent-ink)}
+.viewer #panels [data-vlock],.viewer #qbar [data-vlock]{cursor:not-allowed}
 .acct{display:flex;gap:14px;align-items:center;margin-top:10px;font-size:12.5px}
 .acct a,.acct button{color:var(--nav-ink-2);background:none;border:0;padding:0;font:600 12.5px "Public Sans",sans-serif;cursor:pointer;text-decoration:none}
 .acct a:hover,.acct button:hover{color:#fff}
@@ -970,6 +973,17 @@ if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.se
 </script>
 <script>
 document.querySelectorAll('[data-logout]').forEach(b=>b.addEventListener('click',async()=>{try{await fetch('/api/logout',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});}catch(e){}location.href='/login';}));
-fetch('/api/me').then(r=>r.json()).then(m=>{if(m&&m.role==='owner'){const a=document.getElementById('acctLink');if(a)a.textContent='Owner';}}).catch(()=>{});
+fetch('/api/me').then(r=>r.json()).then(m=>{if(!m)return;if(m.role==='owner'){const a=document.getElementById('acctLink');if(a)a.textContent='Owner';}if(m.role==='test')viewerMode(m);}).catch(()=>{});
+// Test logins are view-only: tools and example figures are visible, but inputs, saving and listing import are off.
+function viewerMode(m){
+  document.documentElement.classList.add('viewer');
+  const main=document.querySelector('main'),b=document.createElement('div');b.className='vbanner';b.setAttribute('role','status');
+  b.innerHTML='<b>View-only test access</b><span>Browse every tool and the example numbers. Editing, saving deals and listing import are turned off'+(m.expiresAt?' · access ends '+new Date(m.expiresAt).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'')+'.</span><a href="/#pricing">See plans</a>';
+  main.insertBefore(b,main.firstChild);
+  const scopes=['#panels','#qbar'].map(q=>document.querySelector(q)).filter(Boolean);
+  const lock=root=>root.querySelectorAll('input,select,textarea,button').forEach(el=>{if(!el.disabled){el.disabled=true;el.dataset.vlock='1';}});
+  scopes.forEach(sc=>{lock(sc);new MutationObserver(()=>lock(sc)).observe(sc,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled']});
+    sc.addEventListener('submit',e=>{e.preventDefault();e.stopImmediatePropagation();},true);});
+}
 </script>
 </body></html>

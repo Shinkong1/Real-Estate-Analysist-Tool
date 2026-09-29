@@ -33,7 +33,8 @@ Accounts live in a Workers KV namespace bound as `USERS`, which Wrangler creates
   If `OWNER_PASSWORD` isn't set, the existing `APP_PASSCODE` is the owner password.
 - **Test logins** — the owner creates these from **Account → Create a 3-day test login**. Each one
   gets a random username and password (shown once) and stops working after 72 hours
-  (`TEST_LOGIN_HOURS` changes that). The owner can remove one early.
+  (`TEST_LOGIN_HOURS` changes that). Test logins are view-only: every tool and the example figures are visible,
+  but inputs, saving deals and listing import are turned off. The owner can remove one early.
 - **Members** — sign up at `/login`, pay $25/week or $100/month through Stripe Checkout, and can
   manage or cancel from **Account → Manage billing**. Access continues while Stripe reports the
   subscription as active, trialing or past due.
