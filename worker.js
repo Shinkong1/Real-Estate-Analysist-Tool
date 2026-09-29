@@ -6,6 +6,12 @@ import { extract } from './lib/extract-core.js';
 import { handleAuthApi, currentUser, access, json, redirect } from './lib/auth.js';
 
 const PRIVATE = { 'cache-control': 'private, no-cache', 'x-content-type-options': 'nosniff', 'referrer-policy': 'no-referrer', 'x-frame-options': 'DENY' };
+const VIEWER_BOOT = `<script>window.UW_VIEWER=1;(function(){try{var S=Storage.prototype,g=S.getItem,s=S.setItem,r=S.removeItem,m={},L=window.localStorage;
+function own(t,k){return t===L&&typeof k==='string'&&k.indexOf('uwdesk.')===0&&k!=='uwdesk.theme';}
+S.getItem=function(k){return own(this,k)?(Object.prototype.hasOwnProperty.call(m,k)?m[k]:null):g.call(this,k);};
+S.setItem=function(k,v){if(own(this,k)){m[k]=String(v);return;}return s.call(this,k,v);};
+S.removeItem=function(k){if(own(this,k)){delete m[k];return;}return r.call(this,k);};}catch(e){}})();</script>`;
+const NOSTORE = { ...PRIVATE, 'cache-control': 'no-store' };
 const withHeaders = (res, h) => { const r = new Response(res.body, res); for (const [k, v] of Object.entries(h)) r.headers.set(k, v); return r; };
 
 export default {
@@ -40,7 +46,14 @@ export default {
       const me = await currentUser(request, env);
       if (!me) return redirect('/login?next=' + encodeURIComponent(path + url.search));
       if (!access(me).ok) return redirect('/account');
-      return withHeaders(await env.ASSETS.fetch(request), PRIVATE);
+      // Fetch without the browser's cache validators so every account always gets its own copy of the page
+      const h = new Headers(request.headers); h.delete('if-none-match'); h.delete('if-modified-since');
+      const res = await env.ASSETS.fetch(new Request(request.url, { method: request.method, headers: h }));
+      // Testers get a fresh desk on every visit: saved deals and inputs in this browser are hidden from them
+      // (kept in memory only), so they always start from the example numbers and never see or change anyone's data.
+      if (me.role === 'test' && (res.headers.get('content-type') || '').includes('text/html'))
+        return withHeaders(new HTMLRewriter().on('head', { element(e) { e.prepend(VIEWER_BOOT, { html: true }); } }).transform(res), NOSTORE);
+      return withHeaders(res, NOSTORE);
     }
     if (path === '/account' || path === '/account.html') {
       const me = await currentUser(request, env);
